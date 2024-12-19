@@ -58,7 +58,8 @@
             android:id="@+id/detail_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button_background"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"
             android:text="詳細"/>
         <!--按钮跳转到浏览器-->
 

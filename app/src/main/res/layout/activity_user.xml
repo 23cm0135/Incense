@@ -45,11 +45,16 @@
 
         <!-- 收藏功能 -->
         <LinearLayout
+            android:id="@+id/layout_favorites"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button_background"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:background="@drawable/rounded_button_background"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageButton
                 android:id="@+id/btn_favorites"
@@ -63,47 +68,60 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
+                android:backgroundTint="@color/purple_500"
                 android:gravity="center_vertical"
                 android:text="お気に入り"
+                android:paddingStart="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="30sp" />
+                android:textSize="18sp"/>
         </LinearLayout>
 
         <!-- 历史记录功能 -->
         <LinearLayout
+            android:id="@+id/layout_history"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button_background"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:background="@drawable/rounded_button_background"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageButton
                 android:id="@+id/btn_history"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginEnd="10dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/history" />
+                android:src="@drawable/history"/>
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
                 android:text="歴史"
                 android:textColor="@android:color/black"
-                android:textSize="30sp" />
+                android:textSize="18sp"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp" />
         </LinearLayout>
+
+
 
         <!-- 个人使用感受功能 -->
         <LinearLayout
+            android:id="@+id/layout_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_button_background"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:background="@drawable/rounded_button_background"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageButton
                 android:id="@+id/btn_feedback"
@@ -120,7 +138,8 @@
                 android:gravity="center_vertical"
                 android:text="評価"
                 android:textColor="@android:color/black"
-                android:textSize="30sp" />
+                android:paddingStart="10dp"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>
