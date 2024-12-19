@@ -275,7 +275,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/app" />
+            android:src="@drawable/page" />
 
         <!-- User 按钮 -->
         <ImageButton

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white" />
+    <corners android:radius="40dp" /> <!-- 圆形边框，设置为大于图片的一半宽度 -->
+    <stroke
+        android:width="2dp"
+        android:color="#E0E0E0" />  <!-- 边框宽度 -->
+</shape>

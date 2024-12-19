@@ -1,19 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 背景颜色 -->
-    <solid android:color="#FFFFFF" />
+    <!-- 设置按钮的背景颜色 -->
+    <solid android:color="#00796B"/> <!-- 绿色 -->
 
-    <!-- 圆角效果 -->
-    <corners android:radius="12dp" />
+    <!-- 设置圆角 -->
+    <corners android:radius="16dp"/> <!-- 圆角半径为 16dp -->
 
-    <!-- 阴影效果 -->
-    <elevation android:value="4dp" />
+    <!-- 设置按钮的内边距 -->
+    <padding android:left="16dp" android:right="16dp" android:top="12dp" android:bottom="12dp"/>
 
-    <!-- 边框颜色 -->
-    <stroke
-        android:color="#D1D1D1"
-        android:width="1dp" />
-
-    <!-- 外阴影颜色 -->
-    <padding android:left="6dp" android:top="6dp" android:right="6dp" android:bottom="6dp" />
+    <!-- 设置按钮的阴影效果 -->
+    <elevation android:value="4dp"/> <!-- 4dp 的阴影效果 -->
 </shape>

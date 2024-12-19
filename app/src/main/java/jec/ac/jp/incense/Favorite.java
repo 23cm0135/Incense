@@ -36,7 +36,7 @@ public class Favorite extends AppCompatActivity {
         // 创建和初始化收藏项数据列表
         favoriteItems = new ArrayList<>();
         favoriteItems.add(new FavoriteItem("收藏项 1", R.drawable.user));
-        favoriteItems.add(new FavoriteItem("收藏项 2", R.drawable.app));
+        favoriteItems.add(new FavoriteItem("收藏项 2", R.drawable.user));
 
         // 初始化适配器并设置给 RecyclerView
         favoritesAdapter = new FavoritesAdapter(this, favoriteItems);

@@ -1,200 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient"
-    android:orientation="vertical"
     tools:context=".Question">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="match_parent"
-            android:layout_height="98dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon" />
-
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/question_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:padding="16dp"
-        android:text="1. 欲しいの効果を選択してください"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <GridLayout
-        android:id="@+id/recommendation_grid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:alignmentMode="alignMargins"
-        android:columnCount="3"
-        android:rowCount="3"
-        android:useDefaultMargins="true">
-
-        <RadioButton
-            android:id="@+id/check_relax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="リラックス"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_clean"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="空間浄化"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_change"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="気分転換"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_bedroom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="寝室用"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_meditation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="瞑想"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_seaion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="季節の行事"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_daily_use"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="デイリーユース"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/check_adoration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="礼拝・儀式"
-            android:textSize="16sp" />
-
-    </GridLayout>
-
-    <TextView
-        android:id="@+id/question_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:padding="16dp"
-        android:text="2. 材料を選択してください"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
-    <RadioGroup
-        android:id="@+id/radio_group_gender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <RadioButton
-            android:id="@+id/radio_male"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="16dp"
-            android:text="香料"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/radio_female"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="香木"
-            android:textSize="16sp" />
-
-    </RadioGroup>
-
-    <!-- 提交按钮 -->
-    <Button
-        android:id="@+id/submit_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:elevation="4dp"
-        android:text="選択"
-        android:textColor="@android:color/white"
-        android:textSize="18sp" />
-
     <LinearLayout
-        android:id="@+id/bottom_navigation_layout"
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:background="@drawable/background_gradient"
+        android:orientation="vertical">
 
-        <!-- Home 按钮 -->
-        <ImageButton
-            android:id="@+id/btn_home"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/home" />
+        <!-- 问题 1 -->
+        <TextView
+            android:id="@+id/question_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp"
+            android:text="1. 欲しいの効果を選択してください"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
-        <!-- App 按钮 -->
-        <ImageButton
-            android:id="@+id/btn_app"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/app" />
+        <!-- 效果选择 -->
+        <RadioGroup
+            android:id="@+id/recommendation_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:alignmentMode="alignMargins"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:useDefaultMargins="true">
 
-        <!-- User 按钮 -->
-        <ImageButton
-            android:id="@+id/btn_user"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:src="@drawable/user" />
+            <RadioButton
+                android:id="@+id/check_relax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="リラックス"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_clean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="空間浄化"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="気分転換"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_bedroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="寝室用"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_meditation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="瞑想"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_seaion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="季節行事"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_daily_use"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="デイリーユース"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/check_adoration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="仏事"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <!-- 问题 2 -->
+        <TextView
+            android:id="@+id/question_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp"
+            android:text="2. 材料を選択してください"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <!-- 材料选择 -->
+        <RadioGroup
+            android:id="@+id/radio_group_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <RadioButton
+                android:id="@+id/radio_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="16dp"
+                android:text="香料"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radio_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="香木"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <!-- 提交按钮 -->
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:elevation="4dp"
+            android:text="選択"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

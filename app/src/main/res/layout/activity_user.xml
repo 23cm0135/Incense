@@ -39,7 +39,7 @@
     <!-- 收藏、历史记录、使用感受功能模块 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="450dp"
         android:layout_marginTop="24dp"
         android:orientation="vertical">
 
@@ -64,7 +64,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="收藏"
+                android:text="お気に入り"
                 android:textColor="@android:color/black"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -91,7 +91,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="历史记录"
+                android:text="歴史"
                 android:textColor="@android:color/black"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -118,7 +118,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:text="个人使用感受"
+                android:text="評価"
                 android:textColor="@android:color/black"
                 android:textSize="30sp" />
         </LinearLayout>
@@ -153,7 +153,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/app" />
+            android:src="@drawable/page" />
 
         <!-- User 按钮 -->
         <ImageButton

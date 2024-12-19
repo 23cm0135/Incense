@@ -51,7 +51,7 @@
             android:background="@drawable/text_background"
             android:gravity="center"
             android:padding="16dp"
-            android:text="这里将显示很多很多的文本信息。"
+            android:text="詳細情報"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="打开链接"
+        android:text="購入画面へ"
         android:visibility="gone" />
 
     <LinearLayout
@@ -92,7 +92,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/app" />
+            android:src="@drawable/page" />
 
         <!-- User 按钮 -->
         <ImageButton

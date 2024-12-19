@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
+
+        ImageButton question = findViewById(R.id.btn_app);
+        question.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, Question.class);
+            startActivity(intent);
+        });
     }
 
     /**

@@ -1,4 +1,4 @@
-// ButtonEnum.java
+
 package jec.ac.jp.incense;
 
 public enum ButtonEnum {

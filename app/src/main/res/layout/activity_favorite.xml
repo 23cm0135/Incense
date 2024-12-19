@@ -22,8 +22,6 @@
             android:textStyle="bold"
             android:scaleType="centerCrop" />
 
-
-
     <!-- RecyclerView 用于展示收藏内容 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRecyclerView"
@@ -59,7 +57,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/app" />
+            android:src="@drawable/page" />
 
         <!-- User 按钮 -->
         <ImageButton
