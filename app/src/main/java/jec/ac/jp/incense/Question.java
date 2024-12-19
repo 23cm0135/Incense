@@ -97,8 +97,9 @@ public class Question extends AppCompatActivity {
                 String material = itemObject.get("material").getAsString();
                 String imageUrl = itemObject.get("imageUrl").getAsString();
                 String description = itemObject.get("description").getAsString();
+                String url = itemObject.get("url").getAsString();
 
-                Incense incense = new Incense(name, effect, material, imageUrl,description);
+                Incense incense = new Incense(name, effect, material, imageUrl,description,url);
                 incenseList.add(incense);
             }
         } catch (Exception e) {

@@ -35,6 +35,17 @@
             android:layout_height="wrap_content"
             android:text="描述"
             android:textSize="16sp"
-            android:textColor="@android:color/darker_gray" />
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 打开链接按钮 -->
+        <Button
+            android:id="@+id/open_url_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="购买链接"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"
+            android:padding="12dp" />
     </LinearLayout>
 </ScrollView>

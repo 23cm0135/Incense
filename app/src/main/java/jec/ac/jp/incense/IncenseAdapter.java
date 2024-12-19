@@ -37,23 +37,21 @@ public class IncenseAdapter extends RecyclerView.Adapter<IncenseAdapter.IncenseV
 
     @Override
     public void onBindViewHolder(@NonNull IncenseViewHolder holder, int position) {
-        // 获取当前的香数据
         Incense incense = incenseList.get(position);
-
-        // 绑定数据到控件
         holder.nameTextView.setText(incense.getName());
         holder.effectTextView.setText(incense.getEffect());
         Glide.with(context).load(incense.getImageUrl()).into(holder.imageView);
 
-        // 设置按钮点击事件，跳转到详细信息界面
         holder.detailButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, IncenseDetailActivity.class);
             intent.putExtra("name", incense.getName());
             intent.putExtra("imageUrl", incense.getImageUrl());
             intent.putExtra("description", incense.getDescription());
+            intent.putExtra("url", incense.getUrl()); // 传递 URL
             context.startActivity(intent);
         });
     }
+
 
     @Override
     public int getItemCount() {
