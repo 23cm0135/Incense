@@ -6,12 +6,18 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 public class IncenseDetailActivity extends AppCompatActivity {
+
+    // 静态列表存储收藏的商品
+    public static ArrayList<String> favoriteItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,23 +28,35 @@ public class IncenseDetailActivity extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         String imageUrl = getIntent().getStringExtra("imageUrl");
         String description = getIntent().getStringExtra("description");
-        String url = getIntent().getStringExtra("url"); // 获取 URL
+        String url = getIntent().getStringExtra("url");
 
         // 初始化视图
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         ImageView imageView = findViewById(R.id.incense_detail_image);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         Button openUrlButton = findViewById(R.id.open_url_button);
+        Button favoriteButton = findViewById(R.id.favorite_button);
 
         // 设置数据到视图
         nameTextView.setText(name);
         Glide.with(this).load(imageUrl).into(imageView);
         descriptionTextView.setText(description);
 
-        // 设置按钮点击事件，打开浏览器
+        // 设置"购买"按钮点击事件，打开浏览器
         openUrlButton.setOnClickListener(v -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
         });
+
+        // 设置"收藏"按钮点击事件
+        favoriteButton.setOnClickListener(v -> {
+            if (!favoriteItems.contains(name)) {
+                favoriteItems.add(name); // 将商品名称添加到收藏列表
+                Toast.makeText(this, "已收藏: " + name, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "商品已在收藏列表中", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

@@ -146,6 +146,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:elevation="4dp"
+            android:backgroundTint="@color/purple_500"
             android:text="選択"
             android:textColor="@android:color/white"
             android:textSize="18sp" />

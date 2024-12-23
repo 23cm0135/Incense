@@ -1,20 +1,25 @@
 package jec.ac.jp.incense;
 
 public class FavoriteItem {
+    private final String name;
+    private final String effect;
+    private final String imageUrl;
 
-    private String title;
-    private int imageResId;
-
-    public FavoriteItem(String title, int imageResId) {
-        this.title = title;
-        this.imageResId = imageResId;
+    public FavoriteItem(String name, String effect, String imageUrl) {
+        this.name = name;
+        this.effect = effect;
+        this.imageUrl = imageUrl;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public String getEffect() {
+        return effect;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

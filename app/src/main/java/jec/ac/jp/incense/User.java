@@ -3,6 +3,7 @@ package jec.ac.jp.incense;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +24,15 @@ public class User extends AppCompatActivity {
             return insets;
         });
 
-        ImageButton favoriteButton = findViewById(R.id.btn_favorites);
-        favoriteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(User.this, Favorite.class);
+        // 获取收藏功能模块的布局
+        LinearLayout favoritesLayout = findViewById(R.id.layout_favorites);
+
+        // 设置点击事件
+        favoritesLayout.setOnClickListener(v -> {
+            // 跳转到收藏列表界面
+            Intent intent = new Intent(User.this, FavoritesActivity.class);
             startActivity(intent);
         });
+
     }
 }

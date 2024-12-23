@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -31,8 +34,8 @@ public class Question extends AppCompatActivity {
 
         // 获取控件
         submitButton = findViewById(R.id.submit_button);
-        effectGroup = findViewById(R.id.recommendation_grid); // 假设选择效果的 GridLayout
-        materialGroup = findViewById(R.id.radio_group_gender); // 假设选择材料的 RadioGroup
+        effectGroup = findViewById(R.id.recommendation_grid);
+        materialGroup = findViewById(R.id.radio_group_gender);
 
         // 设置按钮点击事件
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +102,7 @@ public class Question extends AppCompatActivity {
                 String description = itemObject.get("description").getAsString();
                 String url = itemObject.get("url").getAsString();
 
-                Incense incense = new Incense(name, effect, material, imageUrl,description,url);
+                Incense incense = new Incense(name, effect, material, imageUrl, description, url);
                 incenseList.add(incense);
             }
         } catch (Exception e) {
