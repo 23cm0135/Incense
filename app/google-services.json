@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "556406728240",
-    "project_id": "xiangdaoapp",
-    "storage_bucket": "xiangdaoapp.firebasestorage.app"
+    "project_number": "967059251680",
+    "project_id": "incense-acd36",
+    "storage_bucket": "incense-acd36.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:556406728240:android:90d69329abb0c91088eff5",
+        "mobilesdk_app_id": "1:967059251680:android:46291ef9e3f16188430b85",
         "android_client_info": {
           "package_name": "jec.ac.jp.incense"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "967059251680-gkg3es9n83i3d2aduoku33j0pui0fmdp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCJe9NMw-E0nW5ux4SMeLcRKX2_EQNBNks"
+          "current_key": "AIzaSyArh2mD_BF5rY4if5ldST7oGPFEl577McA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "967059251680-gkg3es9n83i3d2aduoku33j0pui0fmdp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

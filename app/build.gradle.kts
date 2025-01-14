@@ -1,6 +1,8 @@
 plugins {
-    alias(libs.plugins.androidApplication)
+
     //id("com.android.application")
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
 }
 
@@ -35,14 +37,19 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
 
+    // Firebase libraries
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-database-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-firestore:24.0.0")
     implementation ("androidx.recyclerview:recyclerview:1.3.1")
     implementation ("com.google.code.gson:gson:2.8.8")
     implementation ("com.github.bumptech.glide:glide:4.14.2")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.14.2")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-analytics")
 
     implementation ("com.squareup.okhttp3:okhttp:4.9.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

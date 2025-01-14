@@ -26,7 +26,7 @@ public class Question extends AppCompatActivity {
     private Button submitButton;
     private RadioGroup effectGroup;
     private RadioGroup materialGroup;
-   
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
