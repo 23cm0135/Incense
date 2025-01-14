@@ -52,7 +52,7 @@
             android:id="@+id/favorite_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="收藏"
+            android:text="お気に入り"
             android:backgroundTint="@color/purple_500"
             android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"
