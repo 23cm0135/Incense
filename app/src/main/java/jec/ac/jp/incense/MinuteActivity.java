@@ -55,18 +55,10 @@ public class MinuteActivity extends AppCompatActivity {
             }
         });
         //TODO： 收藏按钮
-        ImageButton favoriteButton = findViewById(R.id.favoriteButton);
-        favoriteButton.setOnClickListener(v -> {
-
-        });
-
-        // 设置返回主界面的按钮
-        ImageButton homeButton = findViewById(R.id.btn_home);
-        homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MinuteActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+//        ImageButton favoriteButton = findViewById(R.id.favoriteButton);
+//        favoriteButton.setOnClickListener(v -> {
+//
+//        });
 
         // 如果有 URL，设置点击事件打开链接
         if (url != null && !url.isEmpty()) {
