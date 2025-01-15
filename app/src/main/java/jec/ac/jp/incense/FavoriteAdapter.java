@@ -1,6 +1,5 @@
 package jec.ac.jp.incense;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +11,33 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
     private final List<FavoriteItem> favoriteItems;
-    private final OnItemRemoveListener removeListener;
+    private final OnFavoriteItemRemoveListener removeListener;
 
-    public interface OnItemRemoveListener {
-        void onItemRemove(FavoriteItem item);
+    /**
+     * 接口定义用于处理项删除操作的回调
+     */
+    public interface OnFavoriteItemRemoveListener {
+        void onFavoriteItemRemove(int position);
     }
 
-    public FavoriteAdapter(List<FavoriteItem> favoriteItems, OnItemRemoveListener removeListener) {
+    /**
+     * 构造函数
+     */
+    public FavoriteAdapter(List<FavoriteItem> favoriteItems, OnFavoriteItemRemoveListener removeListener) {
         this.favoriteItems = favoriteItems;
         this.removeListener = removeListener;
     }
 
+    /**
+     * 创建 ViewHolder
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -36,17 +45,25 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+    /**
+     * 绑定 ViewHolder
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FavoriteItem item = favoriteItems.get(position);
-        holder.bind(item, removeListener);
+        holder.bind(favoriteItems.get(position), position, removeListener);
     }
 
+    /**
+     * 返回项目数
+     */
     @Override
     public int getItemCount() {
         return favoriteItems.size();
     }
 
+    /**
+     * 内部 ViewHolder 类
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView incenseImage;
@@ -62,12 +79,16 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             deleteButton = itemView.findViewById(R.id.delete_button);
         }
 
-        public void bind(FavoriteItem item, OnItemRemoveListener removeListener) {
+        /**
+         * 绑定数据到视图
+         */
+        public void bind(FavoriteItem item, int position, OnFavoriteItemRemoveListener removeListener) {
+            // 设置文本
             incenseName.setText(item.getName());
             incenseEffect.setText(item.getEffect());
-            Glide.with(itemView.getContext()).load(item.getImageUrl()).into(incenseImage);
 
-            deleteButton.setOnClickListener(v -> removeListener.onItemRemove(item));
+            // 设置删除按钮点击事件
+            deleteButton.setOnClickListener(v -> removeListener.onFavoriteItemRemove(position));
         }
     }
 }

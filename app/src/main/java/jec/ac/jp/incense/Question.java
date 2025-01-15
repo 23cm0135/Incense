@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -77,6 +78,19 @@ public class Question extends AppCompatActivity {
                     Log.e("Question", "No incense data available.");
                 }
             }
+        });
+
+        ImageButton homeButton = findViewById(R.id.btn_home);
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Question.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
+
+        ImageButton user = findViewById(R.id.btn_user);
+        user.setOnClickListener(v -> {
+            Intent intent = new Intent(Question.this, User.class);
+            startActivity(intent);
         });
     }
 

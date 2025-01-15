@@ -33,6 +33,17 @@ public class User extends AppCompatActivity {
             Intent intent = new Intent(User.this, FavoritesActivity.class);
             startActivity(intent);
         });
+        ImageButton homeButton = findViewById(R.id.btn_home);
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(User.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        });
 
+        ImageButton question = findViewById(R.id.btn_app);
+        question.setOnClickListener(v -> {
+            Intent intent = new Intent(User.this, Question.class);
+            startActivity(intent);
+        });
     }
 }

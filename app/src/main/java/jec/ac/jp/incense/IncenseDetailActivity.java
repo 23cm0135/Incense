@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+
 public class IncenseDetailActivity extends AppCompatActivity {
 
     // 静态列表存储收藏的商品
@@ -48,6 +49,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
             startActivity(browserIntent);
         });
 
+
         // 设置"收藏"按钮点击事件
         favoriteButton.setOnClickListener(v -> {
             if (!favoriteItems.contains(name)) {
@@ -57,6 +59,5 @@ public class IncenseDetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "商品已在收藏列表中", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }
