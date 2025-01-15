@@ -21,3 +21,11 @@ app/src/main/res/values/themes.xml
 build.gradle.kts
 gradle/libs.versions.toml
 settings.gradle.kts
+settings.gradle.kts
+gradle/libs.versions.toml
+build.gradle.kts
+app/src/main/res/values/themes.xml
+app/src/main/res/values/colors.xml
+app/src/main/AndroidManifest.xml
+app/build.gradle.kts
+.idea/.name
