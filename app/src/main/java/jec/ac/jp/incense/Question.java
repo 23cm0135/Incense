@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -51,6 +53,21 @@ public class Question extends AppCompatActivity {
                 if (incenseList != null) {
                     // 筛选符合条件的香
                     List<Incense> filteredIncenseList = filterIncenses(incenseList, selectedEffect, selectedMaterial);
+
+                    // 判断筛选结果是否为空
+                    if (filteredIncenseList.isEmpty()) {
+                        // 显示提示信息
+                        if (filteredIncenseList.isEmpty()) {
+                            new AlertDialog.Builder(Question.this)
+                                    .setTitle("お知らせ")
+                                    .setMessage("該当する製品はありません")
+                                    .setPositiveButton("OK", null)
+                                    .show();
+                            return;
+                        }
+
+                        return; // 保持当前界面
+                    }
 
                     // 启动新的 Activity 并传递筛选后的数据
                     Intent intent = new Intent(Question.this, IncenseListActivity.class);
