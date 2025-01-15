@@ -13,3 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea/.name
+app/build.gradle.kts
+app/src/main/AndroidManifest.xml
+app/src/main/res/values/colors.xml
+app/src/main/res/values/themes.xml
+build.gradle.kts
+gradle/libs.versions.toml
+settings.gradle.kts
