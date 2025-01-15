@@ -41,44 +41,37 @@ public class Question extends AppCompatActivity {
         materialGroup = findViewById(R.id.radio_group_gender);
 
         // 设置按钮点击事件
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 获取用户选择的效果和材料
-                String selectedEffect = getSelectedEffect();
-                String selectedMaterial = getSelectedMaterial();
+        submitButton.setOnClickListener(v -> {
+            String selectedEffect = getSelectedEffect();
+            String selectedMaterial = getSelectedMaterial();
 
-                // 从 assets 读取并解析 JSON 数据
-                List<Incense> incenseList = loadIncenseData();
-
-                if (incenseList != null) {
-                    // 筛选符合条件的香
-                    List<Incense> filteredIncenseList = filterIncenses(incenseList, selectedEffect, selectedMaterial);
-
-                    // 判断筛选结果是否为空
-                    if (filteredIncenseList.isEmpty()) {
-                        // 显示提示信息
-                        if (filteredIncenseList.isEmpty()) {
-                            new AlertDialog.Builder(Question.this)
-                                    .setTitle("お知らせ")
-                                    .setMessage("該当する製品はありません")
-                                    .setPositiveButton("OK", null)
-                                    .show();
-                            return;
-                        }
-
-                        return; // 保持当前界面
-                    }
-
-                    // 启动新的 Activity 并传递筛选后的数据
-                    Intent intent = new Intent(Question.this, IncenseListActivity.class);
-                    intent.putParcelableArrayListExtra("incenseList", new ArrayList<>(filteredIncenseList));
-                    startActivity(intent);
-                } else {
-                    Log.e("Question", "No incense data available.");
-                }
+            if (selectedEffect.isEmpty() || selectedMaterial.isEmpty()) {
+                Toast.makeText(this, "すべての選択肢を選択してください", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // 加载数据并筛选
+            List<Incense> incenseList = loadIncenseData();
+            if (incenseList == null) {
+                Log.e("Question", "No incense data available.");
+                return;
+            }
+
+            List<Incense> filteredIncenseList = filterIncenses(incenseList, selectedEffect, selectedMaterial);
+            if (filteredIncenseList.isEmpty()) {
+                new AlertDialog.Builder(Question.this)
+                        .setTitle("お知らせ")
+                        .setMessage("該当する製品はありません")
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
+
+            Intent intent = new Intent(Question.this, IncenseListActivity.class);
+            intent.putParcelableArrayListExtra("incenseList", new ArrayList<>(filteredIncenseList));
+            startActivity(intent);
         });
+
 
         ImageButton homeButton = findViewById(R.id.btn_home);
         homeButton.setOnClickListener(v -> {

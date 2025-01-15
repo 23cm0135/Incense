@@ -1,10 +1,12 @@
 package jec.ac.jp.incense;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +50,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         private final TextView incenseEffect;
         private final ImageView incenseImage;
         private final Button deleteButton;
+        private final LinearLayout itemLayout;
 
         public FavoriteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +58,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             incenseEffect = itemView.findViewById(R.id.incense_effect);
             incenseImage = itemView.findViewById(R.id.incense_image);
             deleteButton = itemView.findViewById(R.id.delete_button);
+            itemLayout = itemView.findViewById(R.id.item_layout);
         }
 
         public void bind(FavoriteItem item) {
@@ -64,10 +68,21 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
             // 删除按钮点击事件
             deleteButton.setOnClickListener(v -> onDeleteClickListener.onDeleteClick(item));
+
+            // 点击整项跳转到详情页面
+            itemLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(itemView.getContext(), IncenseDetailActivity.class);
+                intent.putExtra("name", item.getName());
+                intent.putExtra("effect", item.getEffect());
+                intent.putExtra("imageUrl", item.getImageUrl());
+                intent.putExtra("description", item.getDescription()); // 传递描述
+                itemView.getContext().startActivity(intent);
+            });
         }
     }
 
     public interface OnDeleteClickListener {
         void onDeleteClick(FavoriteItem item);
     }
+
 }
