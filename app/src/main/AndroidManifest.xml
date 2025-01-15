@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
         <activity
+            android:name=".Account"
+            android:exported="false" />
+        <activity
             android:name=".FavoritesActivity"
             android:exported="false" />
         <activity
