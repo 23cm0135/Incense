@@ -2,6 +2,7 @@ package jec.ac.jp.incense;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -49,6 +51,8 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
             browsingHistory.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, browsingHistory.size());
+
+            saveBrowsingHistory(context);
         });
 
         // 单元点击事件（如跳转详情页）
@@ -62,6 +66,18 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
             context.startActivity(intent);
         });
     }
+
+    private void saveBrowsingHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("FavoritesPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(browsingHistory); // 将当前浏览历史转换为JSON字符串
+
+        editor.putString("browsing_history", json); // 保存到SharedPreferences
+        editor.apply();
+    }
+
 
     @Override
     public int getItemCount() {

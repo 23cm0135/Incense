@@ -100,6 +100,12 @@ public class IncenseDetailActivity extends AppCompatActivity {
     }
 
     private void addToBrowsingHistory(FavoriteItem item, Context context) {
+        for (FavoriteItem historyItem : browsingHistory) {
+            if (historyItem.getName().equals(item.getName())) {
+                return; // 如果已经存在，则不添加
+            }
+        }
+
         browsingHistory.add(0, item); // 将最新浏览记录添加到顶部
         saveBrowsingHistory(context);
     }
