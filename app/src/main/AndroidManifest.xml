@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
+        <activity android:name=".EmailLogin" />
+        <activity android:name=".NewAccount" />
+
         <activity
             android:name=".Account"
             android:exported="false" />
@@ -26,9 +29,9 @@
         <activity
             android:name=".IncenseListActivity"
             android:exported="false" />
-        <activity
-            android:name=".Favorite"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".Favorite"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".Question"
             android:exported="false" />
