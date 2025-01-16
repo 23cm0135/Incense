@@ -35,19 +35,6 @@
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
-        <!-- 搜索栏 -->
-        <EditText
-            android:id="@+id/searchEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp"
-            android:hint="搜索"
-            android:inputType="text"
-            android:padding="12dp"
-            android:textSize="16sp" />
-
     </androidx.cardview.widget.CardView>
 
     <!-- "オススメ"标题 -->
@@ -65,7 +52,7 @@
     <GridLayout
         android:id="@+id/recommendation_grid"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="400dp"
         android:layout_margin="16dp"
         android:alignmentMode="alignMargins"
         android:padding="16dp"

@@ -1,7 +1,6 @@
 package jec.ac.jp.incense;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,44 +8,42 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class FavoritesActivity extends AppCompatActivity implements FavoriteAdapter.OnFavoriteItemRemoveListener {
+public class FavoritesActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private FavoriteAdapter favoriteAdapter;
-    private List<FavoriteItem> favoriteItems;
+    // 声明适配器
+    private FavoriteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        recyclerView = findViewById(R.id.favorites_list);
+        // 加载收藏数据
+        IncenseDetailActivity.loadFavorites(this);
 
-        // 初始化收藏的商品数据
-        favoriteItems = new ArrayList<>();
-
-        // 假设我们将这些商品作为收藏的初始数据
-        favoriteItems.add(new FavoriteItem("香名 1", "效果 1", "https://example.com/image1.jpg"));
-        favoriteItems.add(new FavoriteItem("香名 2", "效果 2", "https://example.com/image2.jpg"));
-        favoriteItems.add(new FavoriteItem("香名 3", "效果 3", "https://example.com/image3.jpg"));
-
-        // 初始化适配器并设置
-        favoriteAdapter = new FavoriteAdapter(favoriteItems, this);
+        // 初始化 RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.favorites_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(favoriteAdapter);
+
+        // 初始化适配器并设置回调
+        adapter = new FavoriteAdapter(IncenseDetailActivity.favoriteItems, this::onDeleteItem);
+        recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onFavoriteItemRemove(int position) {
-        // 从列表中删除该项
-        favoriteItems.remove(position);
-
-        // 通知适配器更新列表
-        favoriteAdapter.notifyItemRemoved(position);
-
-        // 给用户反馈
-        Toast.makeText(this, "已删除收藏", Toast.LENGTH_SHORT).show();
+    /**
+     * 删除商品的回调方法
+     *
+     * @param item 要删除的收藏商品
+     */
+    private void onDeleteItem(FavoriteItem item) {
+        // 从收藏列表中移除商品
+        IncenseDetailActivity.favoriteItems.remove(item);
+        // 更新本地存储
+        IncenseDetailActivity.saveFavorites(this);
+        // 通知适配器数据已更改
+        adapter.notifyDataSetChanged();
+        // 提示用户已删除
+        Toast.makeText(this, "已删除: " + item.getName(), Toast.LENGTH_SHORT).show();
     }
 }

@@ -24,6 +24,19 @@ public class User extends AppCompatActivity {
             return insets;
         });
 
+        // 确保首次启动时加载历史数据
+        IncenseDetailActivity.loadBrowsingHistory(this);
+
+        LinearLayout historyLayout = findViewById(R.id.layout_history);
+
+        historyLayout.setOnClickListener(v -> {
+            // 启动历史记录界面
+            Intent intent = new Intent(User.this, BrowsingHistoryActivity.class);
+            startActivity(intent);
+
+           // overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        });
+
         // 获取收藏功能模块的布局
         LinearLayout favoritesLayout = findViewById(R.id.layout_favorites);
 

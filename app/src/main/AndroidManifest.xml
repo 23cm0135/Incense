@@ -21,6 +21,9 @@
             android:name=".Account"
             android:exported="false" />
         <activity
+            android:name=".BrowsingHistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".FavoritesActivity"
             android:exported="false" />
         <activity
