@@ -141,8 +141,15 @@
                 android:paddingStart="10dp"
                 android:textSize="18sp" />
         </LinearLayout>
-
+        <Button
+            android:id="@+id/btn_logout"
+            app:icon="@drawable/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ログアウト"
+            android:layout_gravity="center" />
     </LinearLayout>
+
 
     <!-- 固定在底部的导航布局 -->
     <LinearLayout
