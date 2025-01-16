@@ -12,7 +12,7 @@ android {
 
 
     defaultConfig {
-        applicationId = "jec.ac.jp.incense"
+        applicationId = "jec.ac.jp.incense1"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

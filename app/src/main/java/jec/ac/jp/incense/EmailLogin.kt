@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -23,19 +22,28 @@ class EmailLogin : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.enableEdgeToEdge()
+
+        // 启用沉浸式模式
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                )
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+
         setContentView(R.layout.activity_email_login)
+
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
+
         edtEmail = findViewById(R.id.edtEmail)
         edtPassword = findViewById(R.id.edtPassword)
         val btnLogin = findViewById<Button>(R.id.btnRegister)
-        btnLogin.setOnClickListener { v: View? ->
-            val email = edtEmail.getText().toString()
-            val password = edtPassword.getText().toString()
+
+        btnLogin.setOnClickListener {
+            val email = edtEmail.text.toString()
+            val password = edtPassword.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(
-                    this@EmailLogin,
+                    this,
                     "メールとパスワード入力してください",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -46,55 +54,43 @@ class EmailLogin : AppCompatActivity() {
     }
 
     private fun loginWithEmail(email: String, password: String) {
-        firebaseAuth!!.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(
-                this
-            ) { task: Task<AuthResult?> ->
+        firebaseAuth?.signInWithEmailAndPassword(email, password)
+            ?.addOnCompleteListener(this) { task: Task<AuthResult?> ->
                 if (task.isSuccessful) {
-                    val user = firebaseAuth!!.currentUser
+                    val user = firebaseAuth?.currentUser
                     if (user != null) {
-                        Toast.makeText(this@EmailLogin, "登录成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
                         navigateToUserScreen(user)
                     }
                 } else {
-                    Toast.makeText(this@EmailLogin, "登录失败，请重试", Toast.LENGTH_SHORT).show()
-                    Log.e(
-                        TAG,
-                        "Login failed",
-                        task.exception
-                    )
+                    Toast.makeText(this, "登录失败，请重试", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "Login failed", task.exception)
                 }
             }
     }
 
     private fun saveUserToFirestore(user: FirebaseUser?) {
         if (user != null) {
-            val userData: MutableMap<String, Any?> = HashMap()
-            userData["name"] = user.displayName
-            userData["email"] = user.email
-            userData["uid"] = user.uid
-            firestore!!.collection("users")
-                .document(user.uid)
-                .set(userData)
-                .addOnSuccessListener { aVoid: Void? ->
-                    Log.d(
-                        TAG,
-                        "User data saved to Firestore"
-                    )
+            val userData = mapOf(
+                "name" to user.displayName,
+                "email" to user.email,
+                "uid" to user.uid
+            )
+            firestore?.collection("users")
+                ?.document(user.uid)
+                ?.set(userData)
+                ?.addOnSuccessListener {
+                    Log.d(TAG, "User data saved to Firestore")
                 }
-                .addOnFailureListener { e: Exception? ->
-                    Log.e(
-                        TAG,
-                        "Error saving user data",
-                        e
-                    )
+                ?.addOnFailureListener { e ->
+                    Log.e(TAG, "Error saving user data", e)
                 }
         }
     }
 
     private fun navigateToUserScreen(user: FirebaseUser?) {
         if (user != null) {
-            val intent = Intent(this@EmailLogin, User::class.java)
+            val intent = Intent(this, User::class.java)
             intent.putExtra("USER_NAME", user.displayName)
             intent.putExtra("USER_EMAIL", user.email)
             startActivity(intent)
