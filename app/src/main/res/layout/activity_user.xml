@@ -144,6 +144,16 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_logout"
+                app:icon="@drawable/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:text="ログアウト"
+                android:layout_gravity="center" />
         </LinearLayout>
     </LinearLayout>
 
