@@ -37,18 +37,30 @@
                 android:text="默认文本"
                 android:textSize="16sp"
                 android:textColor="#000" />
+
             <!-- 打开链接的按钮 -->
             <Button
                 android:id="@+id/openLinkButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
-                android:text="open_link"
+                android:text="Open Link"
                 android:visibility="gone" />
-
 
         </LinearLayout>
     </ScrollView>
+
+    <!-- 投稿按键，固定在页面底部 -->
+    <Button
+        android:id="@+id/btnSubmitImpression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="投稿する"
+        android:textSize="18sp"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@android:color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

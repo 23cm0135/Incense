@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
-
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -16,9 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
+        <activity
+            android:name=".UserImpression"
+            android:exported="false" />
         <activity android:name=".EmailLogin" />
         <activity android:name=".NewAccount" />
-
         <activity
             android:name=".Account"
             android:exported="false" />
@@ -33,10 +33,9 @@
             android:exported="false" />
         <activity
             android:name=".IncenseListActivity"
-            android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".Favorite"-->
-<!--            android:exported="false" />-->
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Favorite" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".Question"
             android:exported="false" />

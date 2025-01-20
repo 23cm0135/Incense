@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="アプリの感想をお聞かせください"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/edtUserImpression"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="ここに入力..."
+        android:gravity="top"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"/>
+
+    <Button
+        android:id="@+id/btnSubmitImpression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="送信"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
