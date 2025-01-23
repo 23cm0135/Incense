@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MinuteActivity extends AppCompatActivity {
 
     private TextView textView;
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,12 @@ public class MinuteActivity extends AppCompatActivity {
         String text = getIntent().getStringExtra("EXTRA_TEXT");
         int imageResId = getIntent().getIntExtra("EXTRA_IMAGE", R.drawable.default_image);
 
+        // 初始化 URL，如果未传递则使用默认链接
+        url = getIntent().getStringExtra("EXTRA_URL");
+        if (url == null || url.isEmpty()) {
+            url = "https://www.google.com";  // 默认值
+        }
+
         // 設置文本和圖片
         textView = findViewById(R.id.textView);
         textView.setText(text);
@@ -48,11 +54,11 @@ public class MinuteActivity extends AppCompatActivity {
             startActivityForResult(intent, 1);
         });
 
-        // 购买按钮点击事件（示例跳转到 Google 搜索）
+        // 购买按钮点击事件（示例跳转到指定 URL）
         Button btnPurchase = findViewById(R.id.btnPurchase);
         btnPurchase.setOnClickListener(v -> {
             Intent purchaseIntent = new Intent(Intent.ACTION_VIEW);
-            purchaseIntent.setData(Uri.parse("https://www.google.com/search?q=incense+buy"));
+            purchaseIntent.setData(Uri.parse(url));
             startActivity(purchaseIntent);
         });
     }

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user"
@@ -8,156 +7,161 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- 图片视图的CardView容器，增加圆角和阴影效果 -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="match_parent"
-            android:layout_height="98dp"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/icon" />
-    </androidx.cardview.widget.CardView>
-
-    <!-- 用户信息部分 -->
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="用户名　さん"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <!-- 收藏、历史记录、使用感受功能模块 -->
+    <!-- 内容部分 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginTop="24dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
-        <!-- 收藏功能 -->
-        <LinearLayout
-            android:id="@+id/layout_favorites"
+        <!-- 图片视图的CardView容器 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="match_parent"
+                android:layout_height="98dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/icon" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- 用户信息部分 -->
+        <TextView
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:background="@drawable/rounded_button_background"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center"
+            android:text="用户名　さん"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btn_favorites"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/favourite" />
+        <!-- 收藏、历史记录、使用感受功能模块 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
+            <!-- 收藏功能 -->
+            <LinearLayout
+                android:id="@+id/layout_favorites"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/btn_favorites"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/favourite" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="お気に入り"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <!-- 历史记录功能 -->
+            <LinearLayout
+                android:id="@+id/layout_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/btn_history"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/history" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="歴史"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <!-- 个人使用感受功能 -->
+            <LinearLayout
+                android:id="@+id/layout_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageButton
+                    android:id="@+id/btn_feedback"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/emotion" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:text="評価"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_logout"
+                app:icon="@drawable/logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:backgroundTint="@color/purple_500"
-                android:gravity="center_vertical"
-                android:text="お気に入り"
-                android:paddingStart="10dp"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"/>
+                android:textColor="@android:color/white"
+                android:text="ログアウト"
+                android:layout_gravity="center" />
         </LinearLayout>
-
-        <!-- 历史记录功能 -->
-        <LinearLayout
-            android:id="@+id/layout_history"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:background="@drawable/rounded_button_background"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageButton
-                android:id="@+id/btn_history"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="10dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/history"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="歴史"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                android:gravity="center_vertical"
-                android:paddingStart="10dp" />
-        </LinearLayout>
-
-
-
-        <!-- 个人使用感受功能 -->
-        <LinearLayout
-            android:id="@+id/layout_feedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:background="@drawable/rounded_button_background"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageButton
-                android:id="@+id/btn_feedback"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/emotion" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="評価"
-                android:textColor="@android:color/black"
-                android:paddingStart="10dp"
-                android:textSize="18sp" />
-        </LinearLayout>
-        <Button
-            android:id="@+id/btn_logout"
-            app:icon="@drawable/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ログアウト"
-            android:layout_gravity="center" />
     </LinearLayout>
-
 
     <!-- 固定在底部的导航布局 -->
     <LinearLayout
         android:id="@+id/bottom_navigation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
         android:background="@android:color/transparent"
         android:gravity="center"
         android:orientation="horizontal"
