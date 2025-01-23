@@ -1,22 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_gradient">
+    android:layout_height="match_parent">
 
-    <!-- 滚动视图内容 -->
+    <!-- 滚动视图，显示文本和图片 -->
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="72dp"> <!-- 留出按钮空间 -->
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
+            <!-- 图片视图 -->
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
@@ -25,6 +28,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_image" />
 
+            <!-- 文本视图 -->
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -33,6 +37,7 @@
                 android:text="默认文本"
                 android:textSize="16sp"
                 android:textColor="#000" />
+
         </LinearLayout>
     </ScrollView>
 
@@ -65,7 +70,10 @@
             android:layout_weight="1"
             android:text="購入する"
             android:textSize="18sp"
+            android:backgroundTint="@color/purple_500"
             android:textColor="@android:color/white"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
