@@ -37,7 +37,6 @@
                 android:text="默认文本"
                 android:textSize="16sp"
                 android:textColor="#000" />
-
             <!-- 打开链接的按钮 -->
             <Button
                 android:id="@+id/openLinkButton"
@@ -82,5 +81,4 @@
             android:textColor="@android:color/white"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
