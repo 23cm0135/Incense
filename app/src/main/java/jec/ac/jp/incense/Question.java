@@ -69,6 +69,11 @@ public class Question extends AppCompatActivity {
 
             Intent intent = new Intent(Question.this, IncenseListActivity.class);
             intent.putParcelableArrayListExtra("incenseList", new ArrayList<>(filteredIncenseList));
+            for (Incense incense : incenseList) {
+                String url = incense.getUrl();
+                Log.d("IncenseListActivity", "URL: " + url);
+            }
+            Log.d("Question", "filteredIncenseList size: " + (filteredIncenseList == null ? "null" : filteredIncenseList.size()));
             startActivity(intent);
         });
 
@@ -102,7 +107,6 @@ public class Question extends AppCompatActivity {
     }
 
     // 读取并解析 JSON 数据
-    // 读取并解析 JSON 数据
     private List<Incense> loadIncenseData() {
         List<Incense> incenseList = new ArrayList<>();
         try {
@@ -125,6 +129,7 @@ public class Question extends AppCompatActivity {
                 String imageUrl = itemObject.get("imageUrl").getAsString();
                 String description = itemObject.get("description").getAsString();
                 String url = itemObject.get("url").getAsString();
+                Log.d("TAG", "url: " + url);
 
                 Incense incense = new Incense(name, effect, material, imageUrl, description, url);
                 incenseList.add(incense);

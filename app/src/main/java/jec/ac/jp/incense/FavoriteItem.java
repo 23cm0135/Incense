@@ -7,14 +7,18 @@ public class FavoriteItem {
     private final String effect;
     private final String imageUrl;
     private final String description;
+    private final String url; // 添加 url 字段
 
-    public FavoriteItem(String name, String effect, String imageUrl, String description) {
+    // 更新构造函数，包含 url
+    public FavoriteItem(String name, String effect, String imageUrl, String description, String url) {
         this.name = name;
         this.effect = effect;
         this.imageUrl = imageUrl;
-        this.description = description; // 正确赋值
+        this.description = description;
+        this.url = url;
     }
 
+    // Getter 方法
     public String getName() {
         return name;
     }
@@ -31,6 +35,11 @@ public class FavoriteItem {
         return description;
     }
 
+    public String getUrl() {
+        return url; // 添加 url 的 getter
+    }
+
+    // 更新 equals 方法，包含 url
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,11 +48,13 @@ public class FavoriteItem {
         return Objects.equals(name, that.name) &&
                 Objects.equals(effect, that.effect) &&
                 Objects.equals(imageUrl, that.imageUrl) &&
-                Objects.equals(description, that.description);
+                Objects.equals(description, that.description) &&
+                Objects.equals(url, that.url); // 比较 url
     }
 
+    // 更新 hashCode 方法，包含 url
     @Override
     public int hashCode() {
-        return Objects.hash(name, effect, imageUrl, description);
+        return Objects.hash(name, effect, imageUrl, description, url);
     }
 }
