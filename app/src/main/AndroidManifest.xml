@@ -15,6 +15,9 @@
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
         <activity
+            android:name=".UserImpressionListActivity"
+            android:exported="false" />
+        <activity
             android:name=".UserImpression"
             android:exported="false" />
         <activity android:name=".EmailLogin" />

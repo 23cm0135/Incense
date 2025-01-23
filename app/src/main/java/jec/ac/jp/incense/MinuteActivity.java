@@ -3,13 +3,10 @@ package jec.ac.jp.incense;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -18,56 +15,58 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MinuteActivity extends AppCompatActivity {
 
+    private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_minute);
 
-        // 设置窗口Insets，处理边距问题
+        // 設置窗口Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // 获取传递的数据
+        // 獲取傳遞的數據
         String text = getIntent().getStringExtra("EXTRA_TEXT");
         int imageResId = getIntent().getIntExtra("EXTRA_IMAGE", R.drawable.default_image);
-        String url = getIntent().getStringExtra("EXTRA_URL"); // 获取传递的 URL
 
-        // 设置文本和图片
-        TextView textView = findViewById(R.id.textView);
+        // 設置文本和圖片
+        textView = findViewById(R.id.textView);
         textView.setText(text);
 
         ImageView imageView = findViewById(R.id.imageView);
         imageView.setImageResource(imageResId);
 
-        // 处理滚动事件，显示链接按钮
-        ScrollView scrollView = findViewById(R.id.scrollView);
-        Button openLinkButton = findViewById(R.id.openLinkButton); // 获取链接按钮
-        openLinkButton.setVisibility(View.GONE); // 默认不显示链接按钮
-
-        // 滚动监听：滚动到底部时显示链接按钮
-        scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
-            if (!scrollView.canScrollVertically(1)) { // 判断是否滚动到最底部
-                openLinkButton.setVisibility(View.VISIBLE); // 显示链接按钮
-            }
+        // 投稿按鈕點擊事件
+        Button btnSubmitImpression = findViewById(R.id.btnSubmitImpression);
+        btnSubmitImpression.setOnClickListener(v -> {
+            Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
+            startActivityForResult(intent, 1);
         });
-        //TODO： 收藏按钮
-//        ImageButton favoriteButton = findViewById(R.id.favoriteButton);
-//        favoriteButton.setOnClickListener(v -> {
-//
-//        });
 
-        // 如果有 URL，设置点击事件打开链接
-        if (url != null && !url.isEmpty()) {
-            openLinkButton.setOnClickListener(v -> {
-                // 创建 Intent 打开链接
-                Intent intentUrl = new Intent(Intent.ACTION_VIEW);
-                intentUrl.setData(Uri.parse(url)); // 使用传递的 URL
-                startActivity(intentUrl);
-            });
+        // 购买按钮点击事件（示例跳转到 Google 搜索）
+        Button btnPurchase = findViewById(R.id.btnPurchase);
+        btnPurchase.setOnClickListener(v -> {
+            Intent purchaseIntent = new Intent(Intent.ACTION_VIEW);
+            purchaseIntent.setData(Uri.parse("https://www.google.com/search?q=incense+buy"));
+            startActivity(purchaseIntent);
+        });
+    }
+
+    // 處理從投稿頁面返回的數據
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            String userEmail = data.getStringExtra("USER_NAME");
+            String submittedText = data.getStringExtra("IMPRESSION_RESULT");
+            if (userEmail != null && submittedText != null && !submittedText.isEmpty()) {
+                textView.append("\n\n" + userEmail + " の投稿:\n" + submittedText);
+            }
         }
     }
 }
