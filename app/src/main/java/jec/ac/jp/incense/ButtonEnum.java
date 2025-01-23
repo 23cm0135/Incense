@@ -5,7 +5,7 @@ public enum ButtonEnum {
 
     BUTTON_1("◆大江戸香　ブランドコンセプト◆\n「雅」と「俗」の文化交流が作りあげた、遊びと洒落の江戸文化。\n四季を楽しみ、えにしを尊び、人々がいきいきと暮らしていた江戸の町。\n江戸の匂い立つような暮らしぶりを、ここ江戸は東京の香司が香りで表現。\nひとすじのけむりが、粋でモダンな江戸の世界へとご招待。\nさあさあ、江戸の香りの世界へようこそ。\n\n◆大江戸香　伽羅姫　香りの特徴◆\n江戸の憧れ。粋な女性の嗜み。深く味わいのある伽羅をイメージした香り。",
             R.drawable.senkou1, "https://example.com/button1"),
-    BUTTON_2("古来より、各地には『神の木』といわれてきた香木があります。...",
+    BUTTON_2("234567.",
             R.drawable.senkou2, "https://example.com/button2"),
     BUTTON_3("豪華、絢爛な安土桃山文化。...",
             R.drawable.senkou3, "https://example.com/button3"),
