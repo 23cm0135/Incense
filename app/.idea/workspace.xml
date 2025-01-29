@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3cbe06a7-4f33-4649-a4a1-b359a3551bf0" name="Changes" comment="" />
+    <list default="true" id="3cbe06a7-4f33-4649-a4a1-b359a3551bf0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/ButtonEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/ButtonEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/MinuteActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jec/ac/jp/incense/MinuteActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_minute.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_minute.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_user.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_user.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +40,7 @@
     &quot;android.gradle.sync.needed&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+    &quot;git-widget-placeholder&quot;: &quot;Merging main&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

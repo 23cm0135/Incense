@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:background="@drawable/background_gradient"
@@ -33,21 +34,13 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:text="默认文本"
                 android:textSize="16sp"
                 android:textColor="#000" />
 
-            <!-- 打开链接的按钮 -->
-            <Button
-                android:id="@+id/openLinkButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
-                android:text="Open Link"
-                android:visibility="gone" />
-        </LinearLayout>
+
+        </LinearLayout> <!-- 正确关闭LinearLayout -->
+
     </ScrollView>
 
     <!-- 投稿和购买按钮 -->
@@ -56,31 +49,51 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_anchor="@+id/scrollView"
+        app:layout_anchorGravity="bottom|center">
 
-        <!-- 投稿按钮 -->
-        <Button
-            android:id="@+id/btnSubmitImpression"
-            android:layout_width="0dp"
+        <!-- 水平佈局，包含 投稿する 和 購入する 按鈕 -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="投稿する"
-            android:textSize="18sp"
-            android:backgroundTint="@color/purple_500"
-            android:textColor="@android:color/white"
-            android:layout_marginEnd="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <!-- 购买按钮 -->
+            <!-- 投稿按钮 -->
+            <Button
+                android:id="@+id/btnSubmitImpression"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="投稿する" />
+
+            <!-- 购买按钮 -->
+            <Button
+                android:id="@+id/btnPurchase"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/purple_500"
+                android:text="購入する"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- 他のユーザーの投稿按钮，置中 -->
         <Button
-            android:id="@+id/btnPurchase"
-            android:layout_width="0dp"
+            android:id="@+id/btnViewPosts"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="購入する"
-            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            android:text="他のユーザーの投稿"
             android:textColor="@android:color/white"
-            android:layout_marginStart="8dp"/>
+            android:textSize="16sp" />
+
     </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

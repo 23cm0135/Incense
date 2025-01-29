@@ -2,6 +2,7 @@ package jec.ac.jp.incense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int i = 0; i < buttonIds.length; i++) {
             ImageButton button = findViewById(buttonIds[i]);
-            ButtonEnum buttonEnum = ButtonEnum.values()[i];
+            final ButtonEnum buttonEnum = ButtonEnum.values()[i];
             button.setOnClickListener(v -> navigateToMinute(buttonEnum.getText(), buttonEnum.getImageResId(), buttonEnum.getUrl()));
         }
 
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
      * @param url       链接地址
      */
     private void navigateToMinute(String text, int imageResId, String url) {
-        Intent intent = new Intent(this, MinuteActivity.class);
+        Log.d("ButtonEnum", "Navigating with: " + text + ", " + imageResId + ", " + url);
+        Intent intent = new Intent(MainActivity.this, MinuteActivity.class);
         intent.putExtra("EXTRA_TEXT", text);
         intent.putExtra("EXTRA_IMAGE", imageResId);
         intent.putExtra("EXTRA_URL", url);

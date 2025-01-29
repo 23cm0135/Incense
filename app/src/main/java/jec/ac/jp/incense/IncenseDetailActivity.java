@@ -1,7 +1,9 @@
 package jec.ac.jp.incense;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -51,22 +53,34 @@ public class IncenseDetailActivity extends AppCompatActivity {
         String imageUrl = getIntent().getStringExtra("imageUrl");
         String description = getIntent().getStringExtra("description");
         String effect = getIntent().getStringExtra("effect");
+        String url = getIntent().getStringExtra("url");
 
-        Log.d("IntentDebug", "Received Name: " + name);
+        Log.d("url", "Received url: " + url);
 
         // 初始化视图
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         ImageView imageView = findViewById(R.id.incense_detail_image);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         Button favoriteButton = findViewById(R.id.favorite_button);
+        Button openUrlButton = findViewById(R.id.open_url_button);
 
         // 设置数据到视图
         nameTextView.setText(name);
         descriptionTextView.setText(description);
         Glide.with(this).load(imageUrl).into(imageView);
 
+        // 设置"购买"按钮点击事件，打开浏览器
+        openUrlButton.setOnClickListener(v -> {
+            if (url == null || url.isEmpty()) {
+                Toast.makeText(this, "無効なURLです", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        });
+
         // 添加到浏览历史
-        addToBrowsingHistory(new FavoriteItem(name, effect, imageUrl, description), this);
+        addToBrowsingHistory(new FavoriteItem(name, effect, imageUrl, description,url), this);
 
         // 初始化收藏按钮状态
         if (favoriteNamesSet.contains(name)) {
@@ -81,7 +95,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
             }
 
             // 添加到收藏列表
-            FavoriteItem newItem = new FavoriteItem(name, effect, imageUrl, description);
+            FavoriteItem newItem = new FavoriteItem(name, effect, imageUrl, description,url);
             favoriteItems.add(newItem);
             favoriteNamesSet.add(name);
             saveFavorites(this);

@@ -43,6 +43,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "500626586922-lsbfogfkib2srvmerau4a1n9ra0rl10p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jec.ac.jp.incense1",
+            "certificate_hash": "554045e5b77741e9c78880f7bb2a77e6eeda090f"
+          }
+        },
+        {
           "client_id": "500626586922-4dkmd7opli8mibodcjcf6okna7cut96g.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -15,7 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Incense"
+
         tools:targetApi="31">
+        <activity
+            android:name=".PostAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".UserImpressionListActivity"
+            android:exported="false" />
         <activity
             android:name=".UserImpression"
             android:exported="false" />

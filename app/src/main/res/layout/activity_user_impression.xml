@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="アプリの感想をお聞かせください"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp"/>
+    tools:context=".UserImpression">
 
     <EditText
         android:id="@+id/edtUserImpression"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:hint="ここに入力..."
-        android:gravity="top"
-        android:background="@android:drawable/edit_text"
-        android:padding="12dp"/>
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="あなたの感想を書いてください"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        android:inputType="textMultiLine"
+        android:minHeight="200dp" />
 
     <Button
-        android:id="@+id/btnSubmitImpression"
-        android:layout_width="match_parent"
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="送信"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:text="投稿する"
+        app:layout_constraintTop_toBottomOf="@id/edtUserImpression"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
