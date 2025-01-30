@@ -16,6 +16,7 @@ public class MinuteActivity extends AppCompatActivity {
 
     private TextView textView;
     private String url;
+    private String incenseId, incenseName; // ✅ 添加变量
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,14 @@ public class MinuteActivity extends AppCompatActivity {
             url = "https://www.google.com";  // 默认值
         }
 
+        // ✅ 获取 `incenseId` 和 `incenseName`
+        incenseId = getIntent().getStringExtra("EXTRA_INCENSE_ID");
+        incenseName = getIntent().getStringExtra("EXTRA_INCENSE_NAME");
+
+        // ✅ 确保它们不是 null
+        if (incenseId == null) incenseId = "unknown_id";
+        if (incenseName == null) incenseName = "不明な香";
+
         // 設置文本和圖片
         textView = findViewById(R.id.textView);
         textView.setText(text);
@@ -51,6 +60,11 @@ public class MinuteActivity extends AppCompatActivity {
         Button btnSubmitImpression = findViewById(R.id.btnSubmitImpression);
         btnSubmitImpression.setOnClickListener(v -> {
             Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
+
+            // ✅ 传递 `incenseId` 和 `incenseName`
+            intent.putExtra("INCENSE_ID", incenseId);
+            intent.putExtra("INCENSE_NAME", incenseName);
+
             startActivityForResult(intent, 1);
         });
 
@@ -60,6 +74,13 @@ public class MinuteActivity extends AppCompatActivity {
             Intent purchaseIntent = new Intent(Intent.ACTION_VIEW);
             purchaseIntent.setData(Uri.parse(url));
             startActivity(purchaseIntent);
+        });
+
+        // 查看其他用户投稿的按钮点击事件
+        Button btnViewPosts = findViewById(R.id.btnViewPosts);
+        btnViewPosts.setOnClickListener(v -> {
+            Intent intent = new Intent(MinuteActivity.this, UserImpressionListActivity.class);
+            startActivity(intent);
         });
     }
 

@@ -4,6 +4,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +24,10 @@ public class UserImpressionListActivity extends AppCompatActivity {
 
         recyclerViewImpressions = findViewById(R.id.recyclerViewImpressions);
 
-        // 初始化数据列表
+        // 初始化數據列表
         postList = new ArrayList<>();
 
-        // 设置RecyclerView
+        // 設置 RecyclerView
         recyclerViewImpressions.setLayoutManager(new LinearLayoutManager(this));
         postAdapter = new PostAdapter(postList);
         recyclerViewImpressions.setAdapter(postAdapter);
@@ -32,11 +36,18 @@ public class UserImpressionListActivity extends AppCompatActivity {
     }
 
     private void fetchPosts() {
-        // 添加一些示例数据
-        postList.add(new Post("用户A", "这是第一条投稿"));
-        postList.add(new Post("用户B", "这是第二条投稿"));
-
-        // 通知适配器数据已更新
-        postAdapter.notifyDataSetChanged();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                postList.clear();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String username = document.getString("username");
+                    String content = document.getString("content");
+                    String incenseName = document.getString("incenseName"); // 獲取香的名稱
+                    postList.add(new Post(username, content, incenseName));
+                }
+                postAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
