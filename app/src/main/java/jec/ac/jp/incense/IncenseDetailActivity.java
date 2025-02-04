@@ -31,6 +31,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
     public static ArrayList<FavoriteItem> favoriteItems = new ArrayList<>();
     public static ArrayList<FavoriteItem> browsingHistory = new ArrayList<>();
     private static Set<String> favoriteNamesSet = new HashSet<>(); // 用于快速检查是否收藏
+    private BrowsingHistoryAdapter browsingHistoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +41,11 @@ public class IncenseDetailActivity extends AppCompatActivity {
         // 加载收藏数据
         loadFavorites(this);
 
-        // 加载浏览历史数据
-        loadBrowsingHistory(this);
+        IncenseDetailActivity.loadBrowsingHistory(this);
 
-        // 初始化快速检查集合
-        for (FavoriteItem item : favoriteItems) {
-            favoriteNamesSet.add(item.getName());
-        }
+        // 获取历史记录列表
+        ArrayList<FavoriteItem> historyItems = IncenseDetailActivity.browsingHistory;
+
 
         // 获取传递的数据
         String name = getIntent().getStringExtra("name");
@@ -170,7 +169,14 @@ public class IncenseDetailActivity extends AppCompatActivity {
             Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
             browsingHistory = gson.fromJson(json, type);
         } else {
-            browsingHistory = new ArrayList<>(); // 初始化为空列表
+           // browsingHistory = new ArrayList<>(); // 初始化为空列表
         }
     }
+    private void updateHistoryUI() {
+        // 如果你使用的是 RecyclerView，则通知适配器数据更新
+        if (browsingHistoryAdapter != null) {
+            browsingHistoryAdapter.notifyDataSetChanged();
+        }
+    }
+
 }
