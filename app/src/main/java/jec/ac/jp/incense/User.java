@@ -56,6 +56,12 @@ public class User extends AppCompatActivity {
             Intent intent = new Intent(User.this, FavoritesActivity.class);
             startActivity(intent);
         });
+        //闹钟界面跳转
+        LinearLayout alarm = findViewById(R.id.layout_alarm);
+        alarm.setOnClickListener(v -> {
+            Intent intent = new Intent(User.this, TimerActivity.class);
+            startActivity(intent);
+        });
 
         ImageButton homeButton = findViewById(R.id.btn_home);
         homeButton.setOnClickListener(v -> {

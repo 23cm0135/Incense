@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 // 未登录，跳转到登录页面
                 Intent intent = new Intent(MainActivity.this, Account.class);
                 startActivity(intent);
-                Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show();
             } else {
                 // 已登录，跳转到用户页面
                 Intent intent = new Intent(MainActivity.this, User.class);
