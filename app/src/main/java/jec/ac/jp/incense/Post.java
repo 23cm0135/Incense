@@ -23,4 +23,3 @@ public class Post {
         return incenseName;
     }
 }
-

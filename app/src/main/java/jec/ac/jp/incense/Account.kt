@@ -88,23 +88,23 @@ class Account : AppCompatActivity() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             if (account != null) {
-                Log.d(TAG, "Google 登录成功: ${account.email}")
+                Log.d(TAG, "Google 登録成功: ${account.email}")
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 firebaseAuth.signInWithCredential(credential)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
                             val user = firebaseAuth.currentUser
-                            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "登録成功", Toast.LENGTH_SHORT).show()
                             navigateToUserScreen(user)
                         } else {
-                            Log.e(TAG, "Firebase 登录失败", task.exception)
-                            Toast.makeText(this, "Firebase 登录失败，请重试", Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, "Firebase 登録失敗", task.exception)
+                            Toast.makeText(this, "ログインに失敗しました。もう一度お試しください", Toast.LENGTH_SHORT).show()
                         }
                     }
             }
         } catch (e: ApiException) {
-            Log.e(TAG, "Google 登录失败", e)
-            Toast.makeText(this, "Google 登录失败，请重试", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, "Google 登録失敗", e)
+            Toast.makeText(this, "Google 登録失敗，もう一度お試しください", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -112,10 +112,10 @@ class Account : AppCompatActivity() {
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "重置密码的邮件已发送", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "パスワードのリセットメールを送信しました。メールをご確認ください。", Toast.LENGTH_SHORT).show()
                 } else {
-                    Log.e(TAG, "密码重置失败", task.exception)
-                    Toast.makeText(this, "重置失败，请重试", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "パスワードのリセットに失敗しました。", task.exception)
+                    Toast.makeText(this, "リセットに失敗しました。もう一度お試しください。", Toast.LENGTH_SHORT).show()
                 }
             }
     }

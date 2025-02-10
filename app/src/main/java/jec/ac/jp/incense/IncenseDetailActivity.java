@@ -104,7 +104,22 @@ public class IncenseDetailActivity extends AppCompatActivity {
 
             Toast.makeText(this, "お気に入りに追加しました: " + name, Toast.LENGTH_SHORT).show();
         });
+        // 1) 找到「投稿します」按鈕
+        Button userImpressionButton = findViewById(R.id.UserImpression);
+
+        // 2) 點擊時，跳到 UserImpression 這個 Activity
+        userImpressionButton.setOnClickListener(v -> {
+            // 建立 Intent
+            Intent intent = new Intent(IncenseDetailActivity.this, UserImpression.class);
+
+            // 例如把「香の名前」傳給投稿頁面
+            // (UserImpression 中可用 getIntent().getStringExtra("INCENSE_NAME") 取得)
+            intent.putExtra("INCENSE_NAME", name);
+
+            startActivity(intent);
+        });
     }
+
 
     private void setButtonAsFavorited(Button button) {
         button.setEnabled(false);

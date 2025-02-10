@@ -59,11 +59,11 @@ class EmailLogin : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth?.currentUser
                     if (user != null) {
-                        Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "登録成功", Toast.LENGTH_SHORT).show()
                         navigateToUserScreen(user)
                     }
                 } else {
-                    Toast.makeText(this, "登录失败，请重试", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "ログインに失敗しました。もう一度お試しください", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Login failed", task.exception)
                 }
             }

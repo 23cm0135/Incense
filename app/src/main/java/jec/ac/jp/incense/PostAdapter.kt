@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 class PostAdapter(private val postList: List<Post>) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_post, parent, false)
         return PostViewHolder(view)
     }
 
@@ -17,7 +18,7 @@ class PostAdapter(private val postList: List<Post>) :
         val post = postList[position]
         holder.usernameTextView.text = post.username
         holder.contentTextView.text = post.content
-        holder.incenseNameTextView.setText(post.getIncenseName())
+        holder.incenseNameTextView.text = post.incenseName
     }
 
     override fun getItemCount(): Int {
@@ -25,9 +26,8 @@ class PostAdapter(private val postList: List<Post>) :
     }
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var usernameTextView: TextView = itemView.findViewById<TextView>(R.id.usernameTextView)
-        var contentTextView: TextView = itemView.findViewById<TextView>(R.id.contentTextView)
-        var incenseNameTextView: TextView =
-            itemView.findViewById<TextView>(R.id.incenseNameTextView)
+        var usernameTextView: TextView = itemView.findViewById(R.id.usernameTextView)
+        var contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
+        var incenseNameTextView: TextView = itemView.findViewById(R.id.incenseNameTextView)
     }
 }

@@ -57,5 +57,15 @@
             android:textColor="@android:color/white"
             android:layout_marginBottom="16dp"
             android:padding="12dp" />
+
+        <Button
+            android:id="@+id/UserImpression"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="投稿します"
+            android:backgroundTint="@color/purple_500"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="16dp"
+            android:padding="12dp" />
     </LinearLayout>
 </ScrollView>

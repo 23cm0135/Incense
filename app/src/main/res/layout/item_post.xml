@@ -1,32 +1,35 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- res/layout/item_post.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="10dp">
 
+    <!-- 投稿ユーザー名 -->
     <TextView
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ユーザー名"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/incenseNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="香の名前"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:paddingTop="2dp"/>
-
+    <!-- 投稿本文 -->
     <TextView
         android:id="@+id/contentTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="投稿内容"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp" />
+
+    <!-- 香の名前 -->
+    <TextView
+        android:id="@+id/incenseNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="香の名前"
+        android:layout_marginTop="4dp"
         android:textSize="14sp"
-        android:paddingTop="4dp"/>
+        android:textColor="#FF5722"/>
 </LinearLayout>
