@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -50,16 +52,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 设置其他按钮
+        // **獲取隨機 9 個商品**
+        List<ButtonEnum> randomButtons = ButtonEnum.getRandomButtons();
+
+        // **與 UI 按鈕綁定**
         int[] buttonIds = {
                 R.id.imgbutton1, R.id.imgbutton2, R.id.imgbutton3,
                 R.id.imgbutton4, R.id.imgbutton5, R.id.imgbutton6,
                 R.id.imgbutton7, R.id.imgbutton8, R.id.imgbutton9
         };
 
-        for (int i = 0; i < buttonIds.length; i++) {
+        for (int i = 0; i < randomButtons.size(); i++) {
             ImageButton button = findViewById(buttonIds[i]);
-            final ButtonEnum buttonEnum = ButtonEnum.values()[i];
+            final ButtonEnum buttonEnum = randomButtons.get(i);
+
+            // **設置圖片**
+            button.setImageResource(buttonEnum.getImageResId());
+
+            // **點擊事件**
             button.setOnClickListener(v -> navigateToMinute(buttonEnum.getText(), buttonEnum.getImageResId(), buttonEnum.getUrl()));
         }
 

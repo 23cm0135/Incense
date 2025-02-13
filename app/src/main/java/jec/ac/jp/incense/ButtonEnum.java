@@ -1,5 +1,8 @@
 package jec.ac.jp.incense;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 public enum ButtonEnum {
 
     BUTTON_1( "大江戸香 伽羅姫","◆大江戸香　ブランドコンセプト◆\n「雅」と「俗」の文化交流が作りあげた、遊びと洒落の江戸文化。\n四季を楽しみ、えにしを尊び、人々がいきいきと暮らしていた江戸の町。\n江戸の匂い立つような暮らしぶりを、ここ江戸は東京の香司が香りで表現。\nひとすじのけむりが、粋でモダンな江戸の世界へとご招待。\nさあさあ、江戸の香りの世界へようこそ。\n\n◆大江戸香　伽羅姫　香りの特徴◆\n江戸の憧れ。粋な女性の嗜み。深く味わいのある伽羅をイメージした香り。",
@@ -34,12 +37,17 @@ public enum ButtonEnum {
             R.drawable.senkou8, "https://www.nipponkodo.co.jp/shop/products/detail/38881"),
 
     BUTTON_9("癒しのラベンダー","日本の小京都ともいわれる兵庫県出石にある福住。癒しに良いと言われるラベンダーの香りのお香です。",
-            R.drawable.senkou9, "https://www.nipponkodo.co.jp/shop/products/detail/38878");
+            R.drawable.senkou9, "https://www.nipponkodo.co.jp/shop/products/detail/38878"),
+
+    BUTTON_10("伽羅静玄 棒状","大自然に育まれた香木は、古来より人の心をとらえ、高貴で貴重なものとして、大切に扱われてきました。",
+             R.drawable.senkou10, "https://www.koju.co.jp/shop/products/detail/1668"),
+    BUTTON_11("高井十右衛門","清和源氏の末裔、安田又右衛門源光弘を初代とする香十は、天正年間の初め、京で創業し御所御用も務めていました。",
+            R.drawable.senkou11, "https://www.koju.co.jp/shop/products/detail/1357");
 
     private final String text;
     private final int imageResId;
     private final String url;
-    private final String incenseName;   // 香的名稱
+    private final String incenseName;
 
 
     // 构造函数
@@ -65,5 +73,10 @@ public enum ButtonEnum {
     // 获取链接
     public String getUrl() {
         return url;
+    }
+    public static List<ButtonEnum> getRandomButtons() {
+        List<ButtonEnum> buttonList = Arrays.asList(ButtonEnum.values());
+        Collections.shuffle(buttonList);
+        return buttonList.subList(0, Math.min(9, buttonList.size())); // 取前9個
     }
 }
