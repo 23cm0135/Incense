@@ -42,7 +42,11 @@ public enum ButtonEnum {
     BUTTON_10("伽羅静玄 棒状","大自然に育まれた香木は、古来より人の心をとらえ、高貴で貴重なものとして、大切に扱われてきました。",
              R.drawable.senkou10, "https://www.koju.co.jp/shop/products/detail/1668"),
     BUTTON_11("高井十右衛門","清和源氏の末裔、安田又右衛門源光弘を初代とする香十は、天正年間の初め、京で創業し御所御用も務めていました。",
-            R.drawable.senkou11, "https://www.koju.co.jp/shop/products/detail/1357");
+            R.drawable.senkou11, "https://www.koju.co.jp/shop/products/detail/1357"),
+    BUTTON_12("いろは 玄関先のおとめ椿","千重咲きの「乙女椿」グリーンフローラルの美しくエレガントな香りで表現しました",
+            R.drawable.senkou12, "https://www.koju.co.jp/shop/products/detail/1536"),
+    BUTTON_13("福住　招福の柚子","縁起が良く⾦運を招くと言われる柚子の香りのお香です。",
+              R.drawable.senkou13, "https://www.nipponkodo.co.jp/shop/products/detail/38882");
 
     private final String text;
     private final int imageResId;
