@@ -7,8 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,27 +22,33 @@ public class User extends AppCompatActivity {
 
         // 初始化 FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
-
-        // 获取当前登录的用户
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        // 更新用户名
-        TextView userNameTextView = findViewById(R.id.user_name);
-        if (user != null) {
-            String userName = user.getDisplayName(); // 获取用户的显示名
-            String email = user.getEmail(); // 获取用户的邮箱（备用）
-
-            if (userName != null && !userName.isEmpty()) {
-                userNameTextView.setText(userName + " さん");
-            } else {
-                // 如果显示名不可用，则使用邮箱
-                userNameTextView.setText(email + " さん");
-            }
-        } else {
-            userNameTextView.setText("ゲスト さん");
+        // **檢查用戶是否已登入**
+        if (user == null) {
+            // **如果未登入，則跳轉到登入頁面**
+            Intent intent = new Intent(User.this, Account.class);
+            startActivity(intent);
+            finish(); // 結束當前頁面，防止返回
+            return;
         }
 
-        // 其他逻辑...
+        // **如果已登入，顯示用戶名稱**
+        TextView userNameTextView = findViewById(R.id.user_name);
+        String userName = user.getDisplayName();
+        String email = user.getEmail();
+
+        if (userName != null && !userName.isEmpty()) {
+            userNameTextView.setText(userName + " さん");
+        } else {
+            userNameTextView.setText(email + " さん");
+        }
+
+        // **設置 UI 事件**
+        setupUI();
+    }
+
+    private void setupUI() {
         LinearLayout historyLayout = findViewById(R.id.layout_history);
         historyLayout.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, BrowsingHistoryActivity.class);
@@ -56,13 +60,15 @@ public class User extends AppCompatActivity {
             Intent intent = new Intent(User.this, FavoritesActivity.class);
             startActivity(intent);
         });
-        //闹钟界面跳转
+
+        // 跳轉到鬧鐘界面
         LinearLayout alarm = findViewById(R.id.layout_alarm);
         alarm.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, TimerActivity.class);
             startActivity(intent);
         });
 
+        // 返回主頁
         ImageButton homeButton = findViewById(R.id.btn_home);
         homeButton.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, MainActivity.class);
@@ -70,18 +76,20 @@ public class User extends AppCompatActivity {
             startActivity(intent);
         });
 
+        // 跳轉到問題頁面
         ImageButton question = findViewById(R.id.btn_app);
         question.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, Question.class);
             startActivity(intent);
         });
 
-        findViewById(R.id.btn_logout).setOnClickListener(v -> {
+        // **登出按鈕**
+        LinearLayout logoutLayout = findViewById(R.id.layout_logout);
+        logoutLayout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(User.this, Account.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            startActivity(new Intent(User.this, Account.class));
             finish();
         });
+
     }
 }

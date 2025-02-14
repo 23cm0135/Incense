@@ -3,21 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/background_gradient"
+
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/txtTitle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="他のユーザーの投稿"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="16dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#FFF8E1">  <!-- 🔥 設置背景顏色 -->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewImpressions"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="他のユーザーの投稿"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="#333333"/> <!-- 🔥 黑色字體 -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewImpressions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

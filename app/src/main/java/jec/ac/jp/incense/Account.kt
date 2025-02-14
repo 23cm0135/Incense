@@ -24,6 +24,9 @@ class Account : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
 
+        // **顯示 Toast 提示**
+        Toast.makeText(this, "ログインしてください", Toast.LENGTH_LONG).show()
+
         // 初始化 Firebase 身份验证
         firebaseAuth = FirebaseAuth.getInstance()
 

@@ -1,35 +1,67 @@
-<!-- res/layout/item_post.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
-    <!-- 投稿ユーザー名 -->
-    <TextView
-        android:id="@+id/usernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ユーザー名"
-        android:textStyle="bold"
-        android:textSize="16sp" />
-
-    <!-- 投稿本文 -->
-    <TextView
-        android:id="@+id/contentTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="投稿内容"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:padding="12dp">
 
-    <!-- 香の名前 -->
-    <TextView
-        android:id="@+id/incenseNameTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="香の名前"
-        android:layout_marginTop="4dp"
-        android:textSize="14sp"
-        android:textColor="#FF5722"/>
-</LinearLayout>
+        <!-- 投稿ユーザー名 -->
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ユーザー名"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#333333"/>
+
+        <!-- 投稿本文 -->
+        <TextView
+            android:id="@+id/contentTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="投稿内容"
+            android:layout_marginTop="6dp"
+            android:textSize="16sp"
+            android:textColor="#444444"/>
+
+        <!-- 分隔線 -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="8dp"/>
+
+        <!-- 香の名前 -->
+        <TextView
+            android:id="@+id/incenseNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="香の名前"
+            android:layout_marginTop="6dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#D32F2F"/>
+
+        <!-- 投稿時間 -->
+        <TextView
+            android:id="@+id/timestampTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="投稿時間"
+            android:textSize="12sp"
+            android:textColor="#777777"
+            android:layout_marginTop="4dp"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

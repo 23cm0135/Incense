@@ -60,6 +60,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="10dp">
 
                 <ImageButton
@@ -92,6 +93,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="10dp">
 
                 <ImageButton
@@ -105,10 +107,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="歴史"
+                    android:text="履歴"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -155,6 +157,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:foreground="?attr/selectableItemBackground"
                 android:padding="10dp">
 
                 <ImageButton
@@ -175,17 +178,37 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_logout"
-                app:icon="@drawable/logout"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout_logout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/purple_500"
-                android:textColor="@android:color/white"
-                android:text="ログアウト"
-                android:layout_gravity="center" />
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rounded_button_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:foreground="?attr/selectableItemBackground"
+                android:padding="10dp">
+                <ImageButton
+                    android:id="@+id/btn_logout"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/logout" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="ログアウト"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
     <!-- 固定在底部的导航布局 -->

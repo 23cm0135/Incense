@@ -42,8 +42,9 @@ public class MinuteActivity extends AppCompatActivity {
         }
 
         // 取得 incenseId & incenseName
-        incenseId = getIntent().getStringExtra("EXTRA_INCENSE_ID");
-        incenseName = getIntent().getStringExtra("EXTRA_INCENSE_NAME");
+        incenseId = getIntent().getStringExtra("INCENSE_ID");  // **修正這裡**
+        incenseName = getIntent().getStringExtra("INCENSE_NAME");  // **修正這裡**
+
         if (incenseId == null)  incenseId = "unknown_id";
         if (incenseName == null)  incenseName = "不明な香";
 

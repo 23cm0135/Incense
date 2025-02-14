@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             button.setImageResource(buttonEnum.getImageResId());
 
             // **點擊事件**
-            button.setOnClickListener(v -> navigateToMinute(buttonEnum.getText(), buttonEnum.getImageResId(), buttonEnum.getUrl()));
+            button.setOnClickListener(v -> navigateToMinute(buttonEnum));
         }
 
         // 问题按钮点击事件
@@ -84,16 +84,25 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 跳转到 MinuteActivity 的方法
      *
-     * @param text      传递的文本内容
-     * @param imageResId 图片资源 ID
-     * @param url       链接地址
+     * @param buttonEnum 选中的 `ButtonEnum` 对象
      */
-    private void navigateToMinute(String text, int imageResId, String url) {
-        Log.d("ButtonEnum", "Navigating with: " + text + ", " + imageResId + ", " + url);
+    private void navigateToMinute(ButtonEnum buttonEnum) {
+        Log.d("ButtonEnum", "Navigating with: " + buttonEnum.getText() +
+                ", ImageResId: " + buttonEnum.getImageResId() +
+                ", URL: " + buttonEnum.getUrl() +
+                ", INCENSE_ID: " + buttonEnum.getId() +
+                ", INCENSE_NAME: " + buttonEnum.getIncenseName());
+
         Intent intent = new Intent(MainActivity.this, MinuteActivity.class);
-        intent.putExtra("EXTRA_TEXT", text);
-        intent.putExtra("EXTRA_IMAGE", imageResId);
-        intent.putExtra("EXTRA_URL", url);
+        intent.putExtra("EXTRA_TEXT", buttonEnum.getText());
+        intent.putExtra("EXTRA_IMAGE", buttonEnum.getImageResId());
+        intent.putExtra("EXTRA_URL", buttonEnum.getUrl());
+
+        // **確認 `INCENSE_ID` 和 `INCENSE_NAME` 是否正確**
+        intent.putExtra("INCENSE_ID", buttonEnum.name()); // ✅ 確保傳遞 ButtonEnum 的 ID
+        intent.putExtra("INCENSE_NAME", buttonEnum.getIncenseName());
+
         startActivity(intent);
     }
+
 }
