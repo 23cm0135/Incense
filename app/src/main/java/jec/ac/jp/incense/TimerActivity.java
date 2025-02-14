@@ -126,6 +126,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void sendNotification() {
-        Toast.makeText(this, "倒计时结束！", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "カウントダウンは終わった！", Toast.LENGTH_LONG).show();
     }
 }
