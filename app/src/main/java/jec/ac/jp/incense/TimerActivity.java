@@ -34,8 +34,8 @@ public class TimerActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         // 设置音乐选择
-        String[] musicOptions = {"雨", "音乐2", "音乐3"};
-        final int[] musicResIds = {R.raw.music1};
+        String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
+        final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         spinnerMusic.setAdapter(adapter);
         spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
