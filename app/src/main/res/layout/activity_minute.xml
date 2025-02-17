@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
+    android:paddingTop="30dp"
     android:layout_height="match_parent">
 
     <!-- 滚动视图，显示文本和图片 -->

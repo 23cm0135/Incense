@@ -1,6 +1,8 @@
 package jec.ac.jp.incense;
 
 import android.os.Bundle;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,8 @@ public class UserImpressionListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_impression_list);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         recyclerViewImpressions = findViewById(R.id.recyclerViewImpressions);
         postList = new ArrayList<>();

@@ -1,17 +1,50 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_gradient"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/background_gradient">
 
-    android:padding="16dp">
+    <!-- 香の名前を自動表示する TextView -->
+    <TextView
+        android:id="@+id/incenseNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="香の名前がここに表示される"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
 
+    <!-- ユーザーが入力するお香の感想 -->
+    <EditText
+        android:id="@+id/edtUserImpression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="ここに感想を入力..."
+        android:textSize="16sp"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        android:gravity="top"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 投稿ボタン -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="投稿する"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 他のユーザーの投稿リスト -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#FFF8E1">  <!-- 🔥 設置背景顏色 -->
+        android:background="#FFF8E1">
 
         <TextView
             android:layout_width="match_parent"
@@ -21,7 +54,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:textColor="#333333"/> <!-- 🔥 黑色字體 -->
+            android:textColor="#333333"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewImpressions"

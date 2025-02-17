@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -37,6 +38,8 @@ public class IncenseDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incense_detail);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         // 加载收藏数据
         loadFavorites(this);
