@@ -34,8 +34,10 @@ public class TimerActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         // 设置音乐选择
-        String[] musicOptions = {"雨", "雨", "雨   "};
-        final int[] musicResIds = {R.raw.music1};
+
+        String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
+        final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
+ 7ef077858f4a5a65b42a277829cdbd4a455adf86
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         spinnerMusic.setAdapter(adapter);
         spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -126,6 +128,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void sendNotification() {
-        Toast.makeText(this, "倒计时结束！", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "カウントダウンは終わった！", Toast.LENGTH_LONG).show();
     }
 }
