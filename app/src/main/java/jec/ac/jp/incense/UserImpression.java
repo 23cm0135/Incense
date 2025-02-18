@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +29,8 @@ public class UserImpression extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_impression);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         edtUserImpression = findViewById(R.id.edtUserImpression);
         incenseNameTextView = findViewById(R.id.incenseNameTextView);

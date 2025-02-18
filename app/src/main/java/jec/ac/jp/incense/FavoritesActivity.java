@@ -3,6 +3,7 @@ package jec.ac.jp.incense;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,8 @@ public class FavoritesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         // 加载收藏数据
         IncenseDetailActivity.loadFavorites(this);

@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
@@ -21,7 +22,9 @@ public class CountdownTimerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        createNotificationChannel();  // 适配 Android 8.0+
+        createNotificationChannel();
+        // 启用 Edge-to-Edge 显示效果
+       // EdgeToEdge.enable(this);// 适配 Android 8.0+
         startForeground(1, getNotification()); // 让服务在前台运行
     }
 

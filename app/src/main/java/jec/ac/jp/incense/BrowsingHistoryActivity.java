@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,8 @@ public class BrowsingHistoryActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browsing_history);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         // 初始化 RecyclerView
         browsingHistoryRecyclerView = findViewById(R.id.browsing_history_recycler_view);

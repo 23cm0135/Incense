@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.*;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class TimerActivity extends AppCompatActivity {
@@ -25,6 +27,8 @@ public class TimerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        // 启用 Edge-to-Edge 显示效果
+        EdgeToEdge.enable(this);
 
         etTime = findViewById(R.id.etTime);
         btnStart = findViewById(R.id.btnStart);
@@ -37,7 +41,7 @@ public class TimerActivity extends AppCompatActivity {
 
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
         final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
- 7ef077858f4a5a65b42a277829cdbd4a455adf86
+// 7ef077858f4a5a65b42a277829cdbd4a455adf86
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         spinnerMusic.setAdapter(adapter);
         spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
