@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,6 +26,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="16dp"/>
 
+    <!-- 呼吸引导动画 -->
+    <View
+        android:id="@+id/breathingCircle"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/circle_shape"
+        app:layout_constraintTop_toBottomOf="@id/tvCountdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
     <!-- 进度条 -->
     <ProgressBar
         android:id="@+id/progressBar"
@@ -34,7 +46,7 @@
         android:max="100"
         android:progress="100"
         android:progressDrawable="@drawable/progress_bar_style"
-        app:layout_constraintTop_toBottomOf="@id/tvCountdown"
+        app:layout_constraintTop_toBottomOf="@id/breathingCircle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>
@@ -92,6 +104,20 @@
         android:backgroundTint="@color/purple_500"
         android:textColor="@android:color/white"
         app:layout_constraintTop_toBottomOf="@id/btnStart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"/>
+
+    <!-- 查看记录按钮 -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewRecords"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="記録を見る"
+        app:cornerRadius="50dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/btnStop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"/>

@@ -1,47 +1,58 @@
 package jec.ac.jp.incense;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.*;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Locale;
+
+
 public class TimerActivity extends AppCompatActivity {
     private EditText etTime;
-    private Button btnStart, btnStop;
+    private Button btnStart, btnStop, btnViewRecords;
     private Spinner spinnerMusic;
     private TextView tvCountdown;
     private ProgressBar progressBar;
     private CountDownTimer countDownTimer;
     private boolean isCounting = false;
     private int selectedMusicResId = R.raw.music1; // 默认音乐
-    private long totalTimeInMillis;  // 总倒计时时间
+    private long totalTimeInMillis;
     private Handler uiHandler = new Handler(Looper.getMainLooper());
+    private View breathingCircle; // 呼吸动画的视图
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
-        // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
         etTime = findViewById(R.id.etTime);
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
+        btnViewRecords = findViewById(R.id.btnViewRecords);
         spinnerMusic = findViewById(R.id.spinnerMusic);
         tvCountdown = findViewById(R.id.tvCountdown);
         progressBar = findViewById(R.id.progressBar);
+        breathingCircle = findViewById(R.id.breathingCircle); // 获取呼吸引导动画的 View
 
         // 设置音乐选择
-
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
-        final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
-// 7ef077858f4a5a65b42a277829cdbd4a455adf86
+        final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         spinnerMusic.setAdapter(adapter);
         spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -49,12 +60,17 @@ public class TimerActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedMusicResId = musicResIds[position];
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         btnStart.setOnClickListener(v -> startCountdown());
         btnStop.setOnClickListener(v -> stopCountdown());
+        btnViewRecords.setOnClickListener(v -> {
+            Intent intent = new Intent(TimerActivity.this, RecordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void startCountdown() {
@@ -62,12 +78,11 @@ public class TimerActivity extends AppCompatActivity {
 
         String inputTime = etTime.getText().toString().trim();
         if (inputTime.isEmpty()) {
-            Toast.makeText(this, "時間を入力してください！", Toast.LENGTH_SHORT).show(); // 输入提示改为日文
+            Toast.makeText(this, "時間を入力してください！", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // 将用户输入的分钟数转换为毫秒
-        totalTimeInMillis = Long.parseLong(inputTime) * 60 * 1000; // 乘以 60 秒和 1000 毫秒
+        totalTimeInMillis = Long.parseLong(inputTime) * 60 * 1000;
         if (totalTimeInMillis <= 0) return;
 
         isCounting = true;
@@ -77,12 +92,14 @@ public class TimerActivity extends AppCompatActivity {
         progressBar.setMax((int) (totalTimeInMillis / 1000));
         progressBar.setProgress((int) (totalTimeInMillis / 1000));
 
+        startBreathingAnimation(); // 开始呼吸引导动画
+
         countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 long secondsLeft = millisUntilFinished / 1000;
                 uiHandler.post(() -> {
-                    tvCountdown.setText(formatTime(secondsLeft)); // 格式化时间显示
+                    tvCountdown.setText(formatTime(secondsLeft));
                     progressBar.setProgress((int) secondsLeft);
                 });
             }
@@ -96,19 +113,18 @@ public class TimerActivity extends AppCompatActivity {
                     btnStart.setVisibility(View.VISIBLE);
                     btnStop.setVisibility(View.GONE);
                     etTime.setEnabled(true);
+                    saveMeditationRecord(inputTime);
                 });
 
                 sendNotification();
-                stopService(new Intent(TimerActivity.this, CountdownTimerService.class)); // 停止音乐播放
+                stopService(new Intent(TimerActivity.this, CountdownTimerService.class));
             }
         }.start();
 
-        // 立即播放音乐
         Intent serviceIntent = new Intent(this, CountdownTimerService.class);
         serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
-        startService(serviceIntent); // 立即启动音乐服务
+        startService(serviceIntent);
     }
-
 
     private void stopCountdown() {
         if (countDownTimer != null) {
@@ -120,18 +136,36 @@ public class TimerActivity extends AppCompatActivity {
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setVisibility(View.GONE);
         etTime.setEnabled(true);
-
-        // 停止音乐
         stopService(new Intent(this, CountdownTimerService.class));
     }
 
     private String formatTime(long seconds) {
-        long min = seconds / 60; // 分钟
-        long sec = seconds % 60; // 秒
-        return String.format("%02d:%02d", min, sec); // 格式化为 00:00
+        long min = seconds / 60;
+        long sec = seconds % 60;
+        return String.format("%02d:%02d", min, sec);
     }
 
     private void sendNotification() {
         Toast.makeText(this, "カウントダウンは終わった！", Toast.LENGTH_LONG).show();
+    }
+
+    private void startBreathingAnimation() {
+        ScaleAnimation animation = new ScaleAnimation(
+                1.0f, 1.5f, 1.0f, 1.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+        );
+        animation.setDuration(4000);
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(Animation.INFINITE);
+        breathingCircle.startAnimation(animation);
+    }
+
+    private void saveMeditationRecord(String minutes) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
+        editor.putString(timestamp, minutes + " 分");
+        editor.apply();
     }
 }
