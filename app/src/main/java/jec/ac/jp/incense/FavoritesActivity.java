@@ -47,6 +47,6 @@ public class FavoritesActivity extends AppCompatActivity {
         // 通知适配器数据已更改
         adapter.notifyDataSetChanged();
         // 提示用户已删除
-        Toast.makeText(this, "已删除: " + item.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "削除対象"+ item.getName(), Toast.LENGTH_SHORT).show();
     }
 }
