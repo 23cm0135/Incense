@@ -130,14 +130,29 @@ public class TimerActivity extends AppCompatActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+
+        // 计算已冥想的时间（总时间 - 剩余时间）
+        long elapsedTime = (totalTimeInMillis / 1000) - (progressBar.getProgress()); // 计算已冥想秒数
+        long elapsedMinutes = elapsedTime / 60; // 转换成分钟
+        long elapsedSeconds = elapsedTime % 60; // 剩余秒数
+
+        // 只有冥想时间超过 10 秒才保存记录
+        if (elapsedTime >= 3) {
+            String timeText = elapsedMinutes + "分" + elapsedSeconds + "秒";
+            saveMeditationRecord(timeText);
+        }
+
         isCounting = false;
         tvCountdown.setText("00:00");
         progressBar.setProgress(0);
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setVisibility(View.GONE);
         etTime.setEnabled(true);
-        stopService(new Intent(this, CountdownTimerService.class));
+
+        // 停止音乐
+        stopService(new Intent(TimerActivity.this, CountdownTimerService.class));
     }
+
 
     private String formatTime(long seconds) {
         long min = seconds / 60;
@@ -150,16 +165,40 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void startBreathingAnimation() {
-        ScaleAnimation animation = new ScaleAnimation(
+        View breathingCircle = findViewById(R.id.breathingCircle);
+        TextView breathingText = findViewById(R.id.breathingText);
+
+        // 创建呼吸循环动画
+        ScaleAnimation scaleUp = new ScaleAnimation(
                 1.0f, 1.5f, 1.0f, 1.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f
         );
-        animation.setDuration(4000);
-        animation.setRepeatMode(Animation.REVERSE);
-        animation.setRepeatCount(Animation.INFINITE);
-        breathingCircle.startAnimation(animation);
+        scaleUp.setDuration(4000); // 4 秒吸气
+        scaleUp.setRepeatMode(Animation.REVERSE);
+        scaleUp.setRepeatCount(Animation.INFINITE);
+
+        breathingCircle.startAnimation(scaleUp);
+
+        // 使用 Handler 切换 "吸气" 和 "呼气" 文字
+        Handler handler = new Handler();
+        Runnable breathingRunnable = new Runnable() {
+            boolean isInhale = true;
+
+            @Override
+            public void run() {
+                if (isInhale) {
+                    breathingText.setText("吸って...");
+                } else {
+                    breathingText.setText("吐いて...");
+                }
+                isInhale = !isInhale;
+                handler.postDelayed(this, 4000); // 每 4 秒切换
+            }
+        };
+        handler.post(breathingRunnable);
     }
+
 
     private void saveMeditationRecord(String minutes) {
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
