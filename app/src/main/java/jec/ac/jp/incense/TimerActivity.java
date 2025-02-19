@@ -69,11 +69,11 @@ public class TimerActivity extends AppCompatActivity {
 
     private void setupMusicSpinner() {
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
-<<<<<<< Updated upstream
+
         final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
-=======
+
         final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
->>>>>>> Stashed changes
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
