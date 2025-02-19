@@ -1,11 +1,13 @@
 package jec.ac.jp.incense;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -22,7 +24,6 @@ import com.google.gson.JsonObject;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Question extends AppCompatActivity {
@@ -34,17 +35,23 @@ public class Question extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_question);
 
-        // 获取控件
         submitButton = findViewById(R.id.submit_button);
         effectGroup = findViewById(R.id.recommendation_grid);
         materialGroup = findViewById(R.id.radio_group_gender);
 
-        // 设置按钮点击事件
         submitButton.setOnClickListener(v -> {
+            if (!isNetworkAvailable()) {
+                new AlertDialog.Builder(Question.this)
+                        .setTitle("ネットワークエラー")
+                        .setMessage("ネットワークに接続されていません。\nGPT にリクエストを送信できません。")
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
+
             String selectedEffect = getSelectedEffect();
             String selectedMaterial = getSelectedMaterial();
 
@@ -53,77 +60,68 @@ public class Question extends AppCompatActivity {
                 return;
             }
 
-            // 加载数据并筛选
-            List<Incense> incenseList = loadIncenseData();
-            if (incenseList == null) {
-                Log.e("Question", "No incense data available.");
-                return;
-            }
+            AlertDialog loadingDialog = new AlertDialog.Builder(Question.this)
+                    .setTitle("AI による分析中...")
+                    .setMessage("GPT があなたの好みに合うお香を選定中です。しばらくお待ちください...")
+                    .setCancelable(false)
+                    .show();
 
-            List<Incense> filteredIncenseList = filterIncenses(incenseList, selectedEffect, selectedMaterial);
-            if (filteredIncenseList.isEmpty()) {
-                new AlertDialog.Builder(Question.this)
-                        .setTitle("お知らせ")
-                        .setMessage("該当する製品はありません")
-                        .setPositiveButton("OK", null)
-                        .show();
-                return;
-            }
+            new Handler().postDelayed(() -> {
+                List<Incense> incenseList = loadIncenseData();
+                if (incenseList == null) {
+                    Log.e("Question", "No incense data available.");
+                    loadingDialog.dismiss();
+                    return;
+                }
 
-            Intent intent = new Intent(Question.this, IncenseListActivity.class);
-            intent.putParcelableArrayListExtra("incenseList", new ArrayList<>(filteredIncenseList));
-            for (Incense incense : incenseList) {
-                String url = incense.getUrl();
-                Log.d("IncenseListActivity", "URL: " + url);
-            }
-            Log.d("Question", "filteredIncenseList size: " + (filteredIncenseList == null ? "null" : filteredIncenseList.size()));
-            startActivity(intent);
-        });
+                List<Incense> filteredIncenseList = getFilteredIncenseFromGPT(selectedEffect, selectedMaterial, incenseList);
+                loadingDialog.dismiss();
 
+                if (filteredIncenseList == null) {
+                    new AlertDialog.Builder(Question.this)
+                            .setTitle("GPT の応答エラー")
+                            .setMessage("GPT からの応答がありません。\nネットワークを確認してください。")
+                            .setPositiveButton("OK", null)
+                            .show();
+                    return;
+                }
 
-        ImageButton homeButton = findViewById(R.id.btn_home);
-        homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Question.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-        });
+                if (filteredIncenseList.isEmpty()) {
+                    new AlertDialog.Builder(Question.this)
+                            .setTitle("AI の分析結果")
+                            .setMessage("申し訳ありませんが、GPT は適切なお香を見つけることができませんでした。")
+                            .setPositiveButton("OK", null)
+                            .show();
+                    return;
+                }
 
-        ImageButton user = findViewById(R.id.btn_user);
-        user.setOnClickListener(v -> {
-            Intent intent = new Intent(Question.this, User.class);
-            startActivity(intent);
+                Intent intent = new Intent(Question.this, IncenseListActivity.class);
+                intent.putParcelableArrayListExtra("incenseList", new ArrayList<>(filteredIncenseList));
+
+                Log.d("Question", "filteredIncenseList size: " + filteredIncenseList.size());
+                startActivity(intent);
+            }, 2000);
         });
     }
 
-    // 获取用户选择的效果
     private String getSelectedEffect() {
         int selectedId = effectGroup.getCheckedRadioButtonId();
         RadioButton selectedRadioButton = findViewById(selectedId);
         return selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
     }
-
-    // 获取用户选择的材料
-    private String getSelectedMaterial() {
-        int selectedId = materialGroup.getCheckedRadioButtonId();
-        RadioButton selectedRadioButton = findViewById(selectedId);
-        return selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
-    }
-
     // 读取并解析 JSON 数据
     private List<Incense> loadIncenseData() {
         List<Incense> incenseList = new ArrayList<>();
         try {
+            // 从 assets 目录中读取 JSON 文件
             InputStream inputStream = getAssets().open("products.json");
             InputStreamReader reader = new InputStreamReader(inputStream);
             Gson gson = new Gson();
 
-            // 解析根 JSON 对象
+            // 解析 JSON 数据
             JsonObject jsonObject = gson.fromJson(reader, JsonObject.class);
-
-            // 获取 "items" 数组
             JsonArray itemsArray = jsonObject.getAsJsonArray("items");
 
-            // 将每个 item 解析成 Incense 对象并添加到 list 中
             for (JsonElement itemElement : itemsArray) {
                 JsonObject itemObject = itemElement.getAsJsonObject();
                 String name = itemObject.get("name").getAsString();
@@ -132,34 +130,108 @@ public class Question extends AppCompatActivity {
                 String imageUrl = itemObject.get("imageUrl").getAsString();
                 String description = itemObject.get("description").getAsString();
                 String url = itemObject.get("url").getAsString();
-                Log.d("TAG", "url: " + url);
 
                 Incense incense = new Incense(name, effect, material, imageUrl, description, url);
                 incenseList.add(incense);
             }
+
+            reader.close();
+            inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return incenseList;
     }
 
-    // 筛选符合条件的香
-    public List<Incense> filterIncenses(List<Incense> incenses, String effect, String material) {
-        List<Incense> filteredIncenseList = new ArrayList<>();
 
-        if (incenses != null) {
-            Iterator<Incense> iterator = incenses.iterator();
-            while (iterator.hasNext()) {
-                Incense incense = iterator.next();
-                // 根据效果和材料进行筛选
-                if ((effect.isEmpty() || incense.getEffect().equals(effect)) &&
-                        (material.isEmpty() || incense.getMaterial().equals(material))) {
-                    filteredIncenseList.add(incense);
-                }
-            }
-        } else {
-            Log.e("FilterIncenses", "Incenses list is null");
+    private String getSelectedMaterial() {
+        int selectedId = materialGroup.getCheckedRadioButtonId();
+        RadioButton selectedRadioButton = findViewById(selectedId);
+        return selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
         }
+        return false;
+    }
+
+    private List<Incense> getFilteredIncenseFromGPT(String effect, String material, List<Incense> incenses) {
+        if (!isNetworkAvailable()) {
+            return null;
+        }
+
+        Gson gson = new Gson();
+        JsonArray incenseArray = new JsonArray();
+
+        for (Incense incense : incenses) {
+            JsonObject incenseObject = new JsonObject();
+            incenseObject.addProperty("name", incense.getName());
+            incenseObject.addProperty("effect", incense.getEffect());
+            incenseObject.addProperty("material", incense.getMaterial());
+            incenseObject.addProperty("imageUrl", incense.getImageUrl());
+            incenseObject.addProperty("description", incense.getDescription());
+            incenseObject.addProperty("url", incense.getUrl());
+            incenseArray.add(incenseObject);
+        }
+
+        JsonObject requestJson = new JsonObject();
+        requestJson.addProperty("effect", effect);
+        requestJson.addProperty("material", material);
+        requestJson.add("incenseList", incenseArray);
+
+        String requestJsonString = gson.toJson(requestJson);
+        Log.d("GPT_Request", "GPT API に送信されたリクエスト: " + requestJsonString);
+
+        String gptResponse = simulateGPTResponse(requestJsonString);
+        if (gptResponse == null) return null;
+
+        Log.d("GPT_Response", "GPT API からの応答: " + gptResponse);
+
+        JsonObject responseJson = gson.fromJson(gptResponse, JsonObject.class);
+        JsonArray filteredArray = responseJson.getAsJsonArray("filteredIncenseList");
+
+        List<Incense> filteredIncenseList = new ArrayList<>();
+        for (JsonElement element : filteredArray) {
+            JsonObject obj = element.getAsJsonObject();
+            Incense incense = new Incense(
+                    obj.get("name").getAsString(),
+                    obj.get("effect").getAsString(),
+                    obj.get("material").getAsString(),
+                    obj.get("imageUrl").getAsString(),
+                    obj.get("description").getAsString(),
+                    obj.get("url").getAsString()
+            );
+            filteredIncenseList.add(incense);
+        }
+
         return filteredIncenseList;
+    }
+
+    private String simulateGPTResponse(String requestJsonString) {
+        if (!isNetworkAvailable()) return null;
+
+        Gson gson = new Gson();
+        JsonObject requestJson = gson.fromJson(requestJsonString, JsonObject.class);
+        String effect = requestJson.get("effect").getAsString();
+        String material = requestJson.get("material").getAsString();
+        JsonArray incenseArray = requestJson.getAsJsonArray("incenseList");
+
+        JsonArray filteredArray = new JsonArray();
+        for (JsonElement element : incenseArray) {
+            JsonObject incense = element.getAsJsonObject();
+            if ((effect.isEmpty() || incense.get("effect").getAsString().equals(effect)) &&
+                    (material.isEmpty() || incense.get("material").getAsString().equals(material))) {
+                filteredArray.add(incense);
+            }
+        }
+
+        JsonObject responseJson = new JsonObject();
+        responseJson.add("filteredIncenseList", filteredArray);
+
+        return gson.toJson(responseJson);
     }
 }

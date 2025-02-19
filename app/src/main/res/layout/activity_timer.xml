@@ -28,8 +28,8 @@
 
     <View
         android:id="@+id/breathingCircle"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
         android:background="@drawable/breathing_circle"
         app:layout_constraintTop_toBottomOf="@id/tvCountdown"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,8 +40,8 @@
         android:id="@+id/breathingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="吸って"
-        android:textSize="40sp"
+        android:text="吸って..."
+        android:textSize="42sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"
         android:gravity="center"
@@ -51,8 +51,22 @@
         android:shadowRadius="3"
         app:layout_constraintTop_toTopOf="@id/breathingCircle"
         app:layout_constraintBottom_toBottomOf="@id/breathingCircle"
-        app:layout_constraintStart_toStartOf="@id/breathingCircle"
-        app:layout_constraintEnd_toEndOf="@id/breathingCircle"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/breathingGuideText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="深く吸って..."
+        android:textSize="18sp"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/breathingText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
 
 
 
