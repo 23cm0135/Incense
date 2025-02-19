@@ -124,11 +124,11 @@ public class IncenseDetailActivity extends AppCompatActivity {
     }
 
 
-    private void setButtonAsFavorited(Button button) {
-        button.setEnabled(false);
-        button.setText("お気に入り済み");
-        button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-    }
+        private void setButtonAsFavorited(Button button) {
+            button.setEnabled(false);
+            button.setText("お気に入り済み");
+            button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+        }
 
     private void addToBrowsingHistory(FavoriteItem item, Context context) {
         for (FavoriteItem historyItem : browsingHistory) {

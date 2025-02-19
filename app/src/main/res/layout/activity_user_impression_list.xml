@@ -7,37 +7,11 @@
     android:gravity="center_vertical"
     android:background="@drawable/background_gradient">
 
-    <!-- 香の名前を自動表示する TextView -->
-    <TextView
-        android:id="@+id/incenseNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="香の名前がここに表示される"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
 
-    <!-- ユーザーが入力するお香の感想 -->
-    <EditText
-        android:id="@+id/edtUserImpression"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="ここに感想を入力..."
-        android:textSize="16sp"
-        android:inputType="textMultiLine"
-        android:minLines="3"
-        android:gravity="top"
-        android:layout_marginBottom="16dp"/>
 
-    <!-- 投稿ボタン -->
-    <Button
-        android:id="@+id/btnSubmit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="投稿する"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"/>
+
+
+
 
     <!-- 他のユーザーの投稿リスト -->
     <LinearLayout

@@ -63,7 +63,7 @@ class EmailLogin : AppCompatActivity() {
                         navigateToUserScreen(user)
                     }
                 } else {
-                    Toast.makeText(this, "ログインに失敗しました。もう一度お試しください", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "アカウントまたはパスワードが間違っています", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Login failed", task.exception)
                 }
             }

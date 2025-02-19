@@ -5,96 +5,124 @@
     android:id="@+id/main"
     android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
-    android:paddingTop="30dp"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="30dp">
 
-    <!-- 滚动视图，显示文本和图片 -->
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- 图片视图 -->
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="16dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/default_image" />
-
-            <!-- 文本视图 -->
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="默认文本"
-                android:textSize="16sp"
-                android:textColor="#000" />
-
-
-        </LinearLayout> <!-- 正确关闭LinearLayout -->
-
-    </ScrollView>
-
-    <!-- 投稿和购买按钮 -->
+    <!-- 使用 LinearLayout 让 ScrollView 和 按钮区域分开 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_anchor="@+id/scrollView"
-        app:layout_anchorGravity="bottom|center">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- 水平佈局，包含 投稿する 和 購入する 按鈕 -->
+        <!-- 可滚动内容区域 -->
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- 图片视图 -->
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="16dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_image" />
+
+                <!-- 文本视图 -->
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="本文"
+                    android:textSize="16sp"
+                    android:textColor="#000"
+                    android:layout_marginBottom="16dp" />
+            </LinearLayout>
+
+        </ScrollView>
+
+        <!-- 底部按钮区域 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:background="@android:color/white"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:gravity="bottom">
 
-            <!-- 投稿按钮 -->
-            <Button
-                android:id="@+id/btnSubmitImpression"
-                android:layout_width="0dp"
+            <!-- 第一行：投稿 + 購入 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="投稿する" />
+                android:orientation="horizontal"
+                android:gravity="center"
 
-            <!-- 购买按钮 -->
-            <Button
-                android:id="@+id/btnPurchase"
-                android:layout_width="0dp"
+                android:layout_marginBottom="8dp">
+
+                <!-- 投稿按钮 -->
+                <Button
+                    android:id="@+id/btnSubmitImpression"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="投稿"
+                    android:backgroundTint="@color/purple_500"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <!-- 購入按钮 -->
+                <Button
+                    android:id="@+id/btnPurchase"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="購入"
+                    android:backgroundTint="@color/purple_500"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 第二行：お気に入り + 他のユーザーの投稿 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/purple_500"
-                android:text="購入する"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- お気に入り按钮 -->
+                <Button
+                    android:id="@+id/btnFavorite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="お気に入りに追加"
+                    android:backgroundTint="@color/purple_500"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <!-- 他のユーザーの投稿按钮 -->
+                <Button
+                    android:id="@+id/btnViewPosts"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="他のユーザーの投稿"
+                    android:backgroundTint="@color/purple_500"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <!-- 他のユーザーの投稿按钮，置中 -->
-        <Button
-            android:id="@+id/btnViewPosts"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="他のユーザーの投稿"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-
     </LinearLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
