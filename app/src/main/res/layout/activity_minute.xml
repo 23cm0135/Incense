@@ -8,119 +8,126 @@
     android:layout_height="match_parent"
     android:paddingTop="30dp">
 
-    <!-- 使用 LinearLayout 让 ScrollView 和 按钮区域分开 -->
-    <LinearLayout
+    <!-- 滚动视图 -->
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_margin="16dp"
+        android:fillViewport="true">
 
-        <!-- 可滚动内容区域 -->
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <!-- 图片视图 -->
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="16dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/default_image" />
-
-                <!-- 文本视图 -->
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="本文"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:layout_marginBottom="16dp" />
-            </LinearLayout>
-
-        </ScrollView>
-
-        <!-- 底部按钮区域 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:padding="16dp"
             android:orientation="vertical"
-            android:gravity="bottom">
+            android:padding="16dp">
 
-            <!-- 第一行：投稿 + 購入 -->
-            <LinearLayout
+            <!-- 产品图片 -->
+            <ImageView
+                android:id="@+id/incense_detail_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="16dp" />
+
+            <!-- 产品名称 -->
+            <TextView
+                android:id="@+id/incense_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
+                android:text="香名"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp" />
 
-                android:layout_marginBottom="8dp">
-
-                <!-- 投稿按钮 -->
-                <Button
-                    android:id="@+id/btnSubmitImpression"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="投稿"
-                    android:backgroundTint="@color/purple_500"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
-                <!-- 購入按钮 -->
-                <Button
-                    android:id="@+id/btnPurchase"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="購入"
-                    android:backgroundTint="@color/purple_500"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <!-- 第二行：お気に入り + 他のユーザーの投稿 -->
-            <LinearLayout
+            <!-- 产品描述 -->
+            <TextView
+                android:id="@+id/incense_detail_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:text="描述"
+                android:textSize="16sp"
+                android:textColor="@android:color/darker_gray"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
 
-                <!-- お気に入り按钮 -->
-                <Button
-                    android:id="@+id/btnFavorite"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="お気に入りに追加"
-                    android:backgroundTint="@color/purple_500"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
+    </ScrollView>
 
-                <!-- 他のユーザーの投稿按钮 -->
-                <Button
-                    android:id="@+id/btnViewPosts"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="他のユーザーの投稿"
-                    android:backgroundTint="@color/purple_500"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
+    <!-- 底部按钮布局 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_anchor="@+id/scrollView"
+        app:layout_anchorGravity="bottom|center">
 
+        <!-- 水平布局，包含 投稿 和 购买 按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- 投稿按钮 -->
+            <Button
+                android:id="@+id/btnSubmitImpression"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="投稿する"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <!-- 购买按钮 -->
+            <Button
+                android:id="@+id/btnPurchase"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="購入する"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- 水平布局，包含 お気に入り 和 他のユーザーの投稿 按钮 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp">
+
+            <!-- お気に入り按钮 -->
+            <Button
+                android:id="@+id/btnFavorite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="お気に入りに追加"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <!-- 他のユーザーの投稿按钮 -->
+            <Button
+                android:id="@+id/btnViewPosts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="他のユーザーの投稿"
+                android:backgroundTint="@color/purple_500"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>

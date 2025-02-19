@@ -16,16 +16,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 
-//j248JCEX9gVX
 class Account : AppCompatActivity() {
+
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
+
+    companion object {
+        private const val TAG = "GoogleSignIn"
+        private const val RC_GOOGLE_SIGN_IN = 100
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
 
-        // **顯示 Toast 提示**
+        // 提示用户「請ログイン」
         Toast.makeText(this, "ログインしてください", Toast.LENGTH_LONG).show()
 
         // 初始化 Firebase 身份验证
@@ -34,10 +39,10 @@ class Account : AppCompatActivity() {
         // 配置 Google Sign-In
         setupGoogleSignIn()
 
-        // 按钮设置
+        // 设置按钮点击事件
         setupUI()
 
-        // 检查当前用户是否已登录
+        // 检查用户是否已登录
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             navigateToUserScreen(currentUser)
@@ -53,22 +58,28 @@ class Account : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        // Google 登录按钮
         findViewById<Button>(R.id.btnGoogleLogin).setOnClickListener {
             startGoogleSignIn()
         }
 
+        // Email 登录按钮
         findViewById<Button>(R.id.btnEmailLogin).setOnClickListener {
             startActivity(Intent(this, EmailLogin::class.java))
         }
 
+        // 注册新账号按钮
         findViewById<Button>(R.id.btnNewAccount).setOnClickListener {
             startActivity(Intent(this, NewAccount::class.java))
         }
 
+        // 「パスワード忘れ」按钮 → 跳转到 Java 写的 ResetPasswordActivity
         findViewById<Button>(R.id.btnPassword).setOnClickListener {
-            resetPassword("user@example.com") // 替换为用户输入的邮箱
+            val intent = Intent(this, ResetPasswordActivity::class.java)
+            startActivity(intent)
         }
 
+        // 返回主界面按钮
         findViewById<Button>(R.id.btn_back).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -77,12 +88,12 @@ class Account : AppCompatActivity() {
 
     private fun startGoogleSignIn() {
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, 100)
+        startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 100) {
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
@@ -95,13 +106,13 @@ class Account : AppCompatActivity() {
                 Log.d(TAG, "Google 登録成功: ${account.email}")
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 firebaseAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
+                    .addOnCompleteListener(this) { signInTask ->
+                        if (signInTask.isSuccessful) {
                             val user = firebaseAuth.currentUser
                             Toast.makeText(this, "登録成功", Toast.LENGTH_SHORT).show()
                             navigateToUserScreen(user)
                         } else {
-                            Log.e(TAG, "Firebase 登録失敗", task.exception)
+                            Log.e(TAG, "Firebase 登録失敗", signInTask.exception)
                             Toast.makeText(this, "ログインに失敗しました。もう一度お試しください", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -112,18 +123,9 @@ class Account : AppCompatActivity() {
         }
     }
 
-    private fun resetPassword(email: String) {
-        firebaseAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "パスワードのリセットメールを送信しました。メールをご確認ください。", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.e(TAG, "パスワードのリセットに失敗しました。", task.exception)
-                    Toast.makeText(this, "リセットに失敗しました。もう一度お試しください。", Toast.LENGTH_SHORT).show()
-                }
-            }
-    }
-
+    /**
+     * 登录后跳转到用户界面
+     */
     private fun navigateToUserScreen(user: FirebaseUser?) {
         if (user != null) {
             val intent = Intent(this, User::class.java)
@@ -132,9 +134,5 @@ class Account : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-    }
-
-    companion object {
-        private const val TAG = "GoogleSignIn"
     }
 }

@@ -36,6 +36,7 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
     }
 
     @Override
+
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FavoriteItem item = browsingHistory.get(position);
 
@@ -43,8 +44,17 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
         holder.nameTextView.setText(item.getName());
         holder.effectTextView.setText(item.getEffect());
 
-        // 加载图片
-        Glide.with(context).load(item.getImageUrl()).into(holder.imageView);
+        // **区分本地图片和网络图片**
+        if (item.getImageResId() != 0) {
+            // 如果是本地图片
+            holder.imageView.setImageResource(item.getImageResId());
+        } else if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            // 如果是网络图片
+            Glide.with(context).load(item.getImageUrl()).into(holder.imageView);
+        } else {
+            // 都没有 → 使用默认图
+            holder.imageView.setImageResource(R.drawable.default_image);
+        }
 
         // 删除按钮点击事件
         holder.deleteButton.setOnClickListener(v -> {
@@ -57,15 +67,29 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
 
         // 单元点击事件（如跳转详情页）
         holder.itemLayout.setOnClickListener(v -> {
-            // 跳转到商品详情页面
-            Intent intent = new Intent(context, IncenseDetailActivity.class);
-            intent.putExtra("name", item.getName());
-            intent.putExtra("imageUrl", item.getImageUrl());
-            intent.putExtra("description", item.getDescription());
-            intent.putExtra("effect", item.getEffect());
-            context.startActivity(intent);
+            // 如果是本地香 → 跳转到 MinuteActivity
+            if (item.getImageResId() != 0) {
+                Intent intent = new Intent(context, MinuteActivity.class);
+                intent.putExtra("EXTRA_TEXT", item.getDescription());
+                intent.putExtra("EXTRA_IMAGE", item.getImageResId());
+                intent.putExtra("EXTRA_URL", item.getUrl());
+                intent.putExtra("INCENSE_ID", item.getName());
+                intent.putExtra("INCENSE_NAME", item.getName());
+                context.startActivity(intent);
+
+            } else {
+                // 如果是网络香 → 跳转到 IncenseDetailActivity
+                Intent intent = new Intent(context, IncenseDetailActivity.class);
+                intent.putExtra("name", item.getName());
+                intent.putExtra("imageUrl", item.getImageUrl());
+                intent.putExtra("description", item.getDescription());
+                intent.putExtra("effect", item.getEffect());
+                intent.putExtra("url", item.getUrl());
+                context.startActivity(intent);
+            }
         });
     }
+
 
     private void saveBrowsingHistory(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("FavoritesPrefs", Context.MODE_PRIVATE);

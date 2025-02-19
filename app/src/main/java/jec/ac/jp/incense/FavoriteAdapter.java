@@ -64,25 +64,55 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         public void bind(FavoriteItem item) {
             incenseName.setText(item.getName());
             incenseEffect.setText(item.getEffect());
-            Glide.with(itemView.getContext()).load(item.getImageUrl()).into(incenseImage);
 
-            // 删除按钮点击事件
+            // **處理圖片顯示**
+            if (item.getImageResId() != 0) {
+                // 如果是本地圖片
+                incenseImage.setImageResource(item.getImageResId());
+            } else if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+                // 如果是網絡圖片
+                Glide.with(itemView.getContext()).load(item.getImageUrl()).into(incenseImage);
+            } else {
+                // 預設圖片
+                incenseImage.setImageResource(R.drawable.default_image);
+            }
+
+            // **删除按钮点击事件**
             deleteButton.setOnClickListener(v -> onDeleteClickListener.onDeleteClick(item));
 
-            // 点击整项跳转到详情页面
+            // **點擊整個項目時，跳轉到 `IncenseDetailActivity`**
             itemLayout.setOnClickListener(v -> {
-                Intent intent = new Intent(itemView.getContext(), IncenseDetailActivity.class);
-                intent.putExtra("name", item.getName());
-                intent.putExtra("effect", item.getEffect());
-                intent.putExtra("imageUrl", item.getImageUrl());
-                intent.putExtra("description", item.getDescription()); // 传递描述
-                itemView.getContext().startActivity(intent);
+                if (item.getImageResId() != 0) {
+                    // **本地图片** -> 跳转到 `MinuteActivity`
+                    Intent intent = new Intent(itemView.getContext(), MinuteActivity.class);
+
+                    intent.putExtra("EXTRA_TEXT", item.getDescription());
+                    intent.putExtra("EXTRA_IMAGE", item.getImageResId());
+                    intent.putExtra("EXTRA_URL", item.getUrl());
+                    intent.putExtra("INCENSE_ID", item.getName());
+                    intent.putExtra("INCENSE_NAME", item.getName());
+
+                    itemView.getContext().startActivity(intent);
+
+                } else {
+                    // **网络图片** -> 跳转到 `IncenseDetailActivity`
+                    Intent intent = new Intent(itemView.getContext(), IncenseDetailActivity.class);
+
+                    intent.putExtra("name", item.getName());
+                    intent.putExtra("effect", item.getEffect());
+                    intent.putExtra("imageUrl", item.getImageUrl());
+                    intent.putExtra("description", item.getDescription());
+                    intent.putExtra("url", item.getUrl());
+
+                    itemView.getContext().startActivity(intent);
+                }
             });
+
+
         }
     }
 
     public interface OnDeleteClickListener {
         void onDeleteClick(FavoriteItem item);
     }
-
 }
