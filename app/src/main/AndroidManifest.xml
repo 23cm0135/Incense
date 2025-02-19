@@ -20,7 +20,11 @@
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
         <activity
+<<<<<<< HEAD
             android:name=".ResetPasswordActivity"
+=======
+            android:name=".MeditationFeedbackActivity"
+>>>>>>> d2fcb69f574f8b61700a469b648c82666d874571
             android:exported="false" />
         <activity
             android:name=".RecordActivity"
