@@ -69,7 +69,11 @@ public class TimerActivity extends AppCompatActivity {
 
     private void setupMusicSpinner() {
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
+<<<<<<< Updated upstream
         final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
+=======
+        final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
+>>>>>>> Stashed changes
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,8 +136,16 @@ public class TimerActivity extends AppCompatActivity {
         countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+<<<<<<< Updated upstream
                 progressBar.setProgress((int) (millisUntilFinished / 1000));
                 tvCountdown.setText(formatTime(millisUntilFinished / 1000));
+=======
+                long secondsLeft = millisUntilFinished / 1000;
+                uiHandler.post(() -> {
+                    tvCountdown.setText(formatTime(secondsLeft));
+                    progressBar.setProgress((int) secondsLeft);
+                });
+>>>>>>> Stashed changes
             }
 
             @Override
@@ -144,6 +156,14 @@ public class TimerActivity extends AppCompatActivity {
                 }
             }
         }.start();
+<<<<<<< Updated upstream
+=======
+
+        // 立即播放音乐
+        Intent serviceIntent = new Intent(this, CountdownTimerService.class);
+        serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
+        startService(serviceIntent);
+>>>>>>> Stashed changes
     }
     private void stopCountdown() {
         if (!isCounting) return;
