@@ -19,12 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
-        <activity
+        <activity android:name=".RecordActivity"
+            android:exported="true"/>
 
-            android:name=".ResetPasswordActivity"/>
-
         <activity
-            android:name=".RecordActivity"
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeditationFeedbackActivity"
             android:exported="false" />
         <activity
             android:name=".TimerActivity"

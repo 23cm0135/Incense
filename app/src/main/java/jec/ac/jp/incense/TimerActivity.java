@@ -61,6 +61,8 @@ public class TimerActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         // **恢复音乐选择功能**
         setupMusicSpinner();
+        // **检查上次冥想状态**
+        checkLastMeditationStatus();
 
         btnStart.setOnClickListener(v -> startMeditationWithCountdown());
         btnStop.setOnClickListener(v -> stopCountdown());
@@ -259,23 +261,30 @@ public class TimerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         if (requestCode == FEEDBACK_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null) { // **确保 data 不为 null**
+            if (resultCode == RESULT_OK && data != null) {
                 long meditationDuration = data.getLongExtra("meditationDuration", 0);
                 String usedIncense = data.getStringExtra("usedIncense");
 
                 if (meditationDuration > 0) {
                     saveMeditationRecord(meditationDuration, usedIncense);
+                    editor.putString("lastMeditationStatus", "saved"); // **记录“已保存”状态**
                 } else {
                     Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
                 showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
+                editor.putString("lastMeditationStatus", "discarded"); // **记录“已废弃”状态**
             }
 
+            editor.apply(); // **保存数据**
             resetUI();
         }
     }
+
     private void saveMeditationRecord(long duration, String incense) {
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -286,8 +295,23 @@ public class TimerActivity extends AppCompatActivity {
         editor.putString(timestamp, record);
         editor.apply();
     }
+    private void checkLastMeditationStatus() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        String lastStatus = sharedPreferences.getString("lastMeditationStatus", "");
 
+        if (!lastStatus.isEmpty()) {
+            if (lastStatus.equals("saved")) {
+                showMeditationSuggestionDialog("前回の冥想が正常に記録されました。");
+            } else if (lastStatus.equals("discarded")) {
+                showMeditationSuggestionDialog("前回の冥想記録は保存されませんでした。");
+            }
 
+            // **弹窗只显示一次，清除记录**
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("lastMeditationStatus");
+            editor.apply();
+        }
+    }
     private void showMeditationSuggestionDialog(String message) {
         new AlertDialog.Builder(this)
                 .setTitle("冥想ヒント")
