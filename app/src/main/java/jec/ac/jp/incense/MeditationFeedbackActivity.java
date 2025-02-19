@@ -9,11 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +38,7 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
     private long meditationDuration;
     private SharedPreferences sharedPreferences;
     private RadioGroup rgDistraction;
+    private EditText etUsedIncense;
     private RadioButton rbNoDistraction, rbLittleDistraction, rbMuchDistraction;
 
     @Override
@@ -46,6 +49,7 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
 
         loadMeditationProducts(); // **加载推荐产品**
+        etUsedIncense = findViewById(R.id.etUsedIncense); // **获取输入框**
 
         sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
         meditationDuration = getIntent().getLongExtra("meditationDuration", 0);
@@ -57,19 +61,23 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         Button btnSave = findViewById(R.id.btnSave);
         Button btnDiscard = findViewById(R.id.btnDiscard);
 
-        // **用户点击“保存”时**
         btnSave.setOnClickListener(v -> {
-            saveMeditationRecord(meditationDuration);
+            long meditationDuration = getIntent().getLongExtra("meditationDuration", 0);
+            String usedIncense = etUsedIncense.getText().toString().trim(); // **获取用户输入的香**
+
+            if (meditationDuration <= 0) {
+                Toast.makeText(this, "エラー: 冥想時間が無効です！", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             Intent intent = new Intent();
-            if (rbMuchDistraction.isChecked()) {
-                intent.putExtra("meditationSuggestion", "shorter"); // **下次尝试更短**
-            } else if (rbNoDistraction.isChecked() || rbLittleDistraction.isChecked()) {
-                intent.putExtra("meditationSuggestion", "longer"); // **下次尝试更长**
-            }
+            intent.putExtra("meditationDuration", meditationDuration);
+            intent.putExtra("usedIncense", usedIncense); // **确保传递用户输入的香**
+
             setResult(RESULT_OK, intent);
-            finish();
+            finish(); // **返回 `TimerActivity`**
         });
+
 
         // **用户点击“废弃”时**
         btnDiscard.setOnClickListener(v -> {
