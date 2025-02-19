@@ -51,6 +51,27 @@
                 android:text="雑念が多かった"/>
         </RadioGroup>
 
+        <!-- 询问用户使用的香 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="今回の冥想で使用した香を入力してください"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/etUsedIncense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="例: 白檀、沈香、ラベンダー"
+            android:textSize="16sp"
+            android:background="@android:color/white"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"/>
+
+
         <!-- 分割线 -->
         <View
             android:layout_width="match_parent"

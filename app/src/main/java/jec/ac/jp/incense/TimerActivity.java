@@ -17,6 +17,11 @@ import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class TimerActivity extends AppCompatActivity {
     private EditText etTime;
     private Button btnStart, btnStop, btnViewRecords;
@@ -54,11 +59,33 @@ public class TimerActivity extends AppCompatActivity {
         breathingText = findViewById(R.id.breathingText);
         breathingGuideText = findViewById(R.id.breathingGuideText);
         progressBar = findViewById(R.id.progressBar);
+        // **恢复音乐选择功能**
+        setupMusicSpinner();
 
         btnStart.setOnClickListener(v -> startMeditationWithCountdown());
         btnStop.setOnClickListener(v -> stopCountdown());
         btnViewRecords.setOnClickListener(v -> startActivity(new Intent(TimerActivity.this, RecordActivity.class)));
     }
+
+    private void setupMusicSpinner() {
+        String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
+        final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMusic.setAdapter(adapter);
+
+        spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedMusicResId = musicResIds[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
     private void startMeditationWithCountdown() {
         new CountDownTimer(5000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -88,6 +115,11 @@ public class TimerActivity extends AppCompatActivity {
 
         totalTimeInMillis = inputMinutes * 60 * 1000;
         isCounting = true;
+
+        Intent serviceIntent = new Intent(this, CountdownTimerService.class);
+        serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
+        startService(serviceIntent); // **播放用户选择的音乐**
+
 
         btnStop.setVisibility(View.VISIBLE);
         btnStart.setVisibility(View.GONE);
@@ -121,7 +153,10 @@ public class TimerActivity extends AppCompatActivity {
         }
 
         isCounting = false;
-        stopGuidedMeditation();
+        stopGuidedMeditation(); // **停止音乐播放**
+
+        // **确保停止音乐服务**
+        stopMusicService();
 
         long elapsedTime = (totalTimeInMillis / 1000) - progressBar.getProgress();
         if (elapsedTime < 1) {
@@ -131,6 +166,14 @@ public class TimerActivity extends AppCompatActivity {
         }
 
         openFeedbackScreen(elapsedTime);
+    }
+    private void stopMusicService() {
+        try {
+            Intent serviceIntent = new Intent(this, CountdownTimerService.class);
+            stopService(serviceIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void startBreathingAnimation() {
@@ -207,23 +250,33 @@ public class TimerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == FEEDBACK_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) { // **用户选择“保存”**
-                String suggestion = data.getStringExtra("meditationSuggestion");
-                if (suggestion != null) {
-                    if (suggestion.equals("shorter")) {
-                        showMeditationSuggestionDialog("次回は短めの冥想を試してみませんか？");
-                    } else if (suggestion.equals("longer")) {
-                        showMeditationSuggestionDialog("次回はもう少し長めの冥想を試してみませんか？");
-                    }
+            if (resultCode == RESULT_OK && data != null) { // **确保 data 不为 null**
+                long meditationDuration = data.getLongExtra("meditationDuration", 0);
+                String usedIncense = data.getStringExtra("usedIncense");
+
+                if (meditationDuration > 0) {
+                    saveMeditationRecord(meditationDuration, usedIncense);
+                } else {
+                    Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
                 }
             } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
-                // **用户点击了“废弃”**
                 showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
             }
 
-            resetUI(); // **确保无论用户选择“保存”还是“废弃”，UI 都会被正确重置**
+            resetUI();
         }
     }
+    private void saveMeditationRecord(long duration, String incense) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
+        String record = "時間: " + (duration / 60) + "分 " + (duration % 60) + "秒 | 使用した香: " + (incense == null || incense.isEmpty() ? "不明" : incense);
+
+        editor.putString(timestamp, record);
+        editor.apply();
+    }
+
 
     private void showMeditationSuggestionDialog(String message) {
         new AlertDialog.Builder(this)
