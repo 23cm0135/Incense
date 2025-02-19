@@ -70,7 +70,6 @@ public class TimerActivity extends AppCompatActivity {
     private void setupMusicSpinner() {
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
 
-        final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
 
         final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
 
@@ -102,6 +101,26 @@ public class TimerActivity extends AppCompatActivity {
             }
         }.start();
     }
+    private void stopCountdown() {
+        if (!isCounting) return; // 确保当前正在倒计时才执行
+
+        if (countDownTimer != null) {
+            countDownTimer.cancel(); // 取消倒计时
+        }
+
+        isCounting = false;
+        stopMusicService(); // **确保音乐停止**
+
+        long elapsedTime = (totalTimeInMillis / 1000) - progressBar.getProgress();
+        if (elapsedTime < 1) {
+            Toast.makeText(this, "冥想時間が短すぎます", Toast.LENGTH_SHORT).show();
+            resetUI();
+            return;
+        }
+
+        openFeedbackScreen(elapsedTime);
+    }
+
     private void startCountdown() {
         if (isCounting) return;
 
@@ -120,10 +139,8 @@ public class TimerActivity extends AppCompatActivity {
         totalTimeInMillis = inputMinutes * 60 * 1000;
         isCounting = true;
 
-        Intent serviceIntent = new Intent(this, CountdownTimerService.class);
-        serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
-        startService(serviceIntent); // **播放用户选择的音乐**
-
+        // **启动倒计时音乐服务**
+        startMusicService();
 
         btnStop.setVisibility(View.VISIBLE);
         btnStart.setVisibility(View.GONE);
@@ -136,63 +153,38 @@ public class TimerActivity extends AppCompatActivity {
         countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-
                 progressBar.setProgress((int) (millisUntilFinished / 1000));
                 tvCountdown.setText(formatTime(millisUntilFinished / 1000));
-
-                long secondsLeft = millisUntilFinished / 1000;
-                uiHandler.post(() -> {
-                    tvCountdown.setText(formatTime(secondsLeft));
-                    progressBar.setProgress((int) secondsLeft);
-                });
-
             }
 
             @Override
             public void onFinish() {
                 if (isCounting) {
                     isCounting = false;
+                    stopMusicService(); // **冥想结束，停止音乐**
                     openFeedbackScreen(totalTimeInMillis / 1000);
                 }
             }
         }.start();
+    }
 
-        // 立即播放音乐
+    /**
+     * 启动音乐播放服务
+     */
+    private void startMusicService() {
         Intent serviceIntent = new Intent(this, CountdownTimerService.class);
         serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
         startService(serviceIntent);
-
     }
-    private void stopCountdown() {
-        if (!isCounting) return;
 
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
-
-        isCounting = false;
-        stopGuidedMeditation(); // **停止音乐播放**
-
-        // **确保停止音乐服务**
-        stopMusicService();
-
-        long elapsedTime = (totalTimeInMillis / 1000) - progressBar.getProgress();
-        if (elapsedTime < 1) {
-            Toast.makeText(this, "冥想時間が短すぎます", Toast.LENGTH_SHORT).show();
-            resetUI();
-            return;
-        }
-
-        openFeedbackScreen(elapsedTime);
-    }
+    /**
+     * 停止音乐播放服务
+     */
     private void stopMusicService() {
-        try {
-            Intent serviceIntent = new Intent(this, CountdownTimerService.class);
-            stopService(serviceIntent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Intent serviceIntent = new Intent(this, CountdownTimerService.class);
+        stopService(serviceIntent);
     }
+
 
     private void startBreathingAnimation() {
         breathingCircle = findViewById(R.id.breathingCircle);
