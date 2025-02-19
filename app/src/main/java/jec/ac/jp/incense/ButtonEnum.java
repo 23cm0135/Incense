@@ -46,7 +46,17 @@ public enum ButtonEnum {
     BUTTON_12("id_12","いろは 玄関先のおとめ椿","千重咲きの「乙女椿」グリーンフローラルの美しくエレガントな香りで表現しました",
             R.drawable.senkou12, "https://www.koju.co.jp/shop/products/detail/1536"),
     BUTTON_13("id_13","福住　招福の柚子","縁起が良く⾦運を招くと言われる柚子の香りのお香です。",
-              R.drawable.senkou13, "https://www.nipponkodo.co.jp/shop/products/detail/38882");
+              R.drawable.senkou13, "https://www.nipponkodo.co.jp/shop/products/detail/38882"),
+    BUTTON_14("id_14","ｲﾝｾﾝｽ ﾌﾟﾚﾐｱﾑ 紫野","最高品質の沈香や白檀を合わせた、平安時代から伝わる奥深い香りです。",
+            R.drawable.senkou14, "https://www.kyukyodo-shop.co.jp/?pid=182693179"),
+    BUTTON_15("id_15","ｲﾝｾﾝｽ ﾌﾟﾚﾐｱﾑ 武蔵野","最高級の伽羅に沈香や白檀など天然の香料を合わせた、凛とした幽玄な香りです。",
+            R.drawable.senkou15, "https://www.kyukyodo-shop.co.jp/?pid=182693710"),
+    BUTTON_16("id_16","ｲﾝｾﾝｽ ﾌﾟﾚﾐｱﾑ 冬の夜","老山白檀を主体に沈香など天然香料を合わせた、甘く爽やかな香りです。",
+            R.drawable.senkou16, "https://www.kyukyodo-shop.co.jp/?pid=182693811"),
+    BUTTON_17("id_17","お香 六種の薫物 黒方","平安時代から伝わる煉香の香りを、手軽に楽しめるスティックタイプのお香に仕立てました。\n" +
+            "黒方は慶事の他、四季を通じて用いられ、玄妙な香りが特長のお香です。",
+            R.drawable.senkou17, "https://www.kyukyodo-shop.co.jp/?pid=136583045");
+
 
     private final String id;
     private final String text;

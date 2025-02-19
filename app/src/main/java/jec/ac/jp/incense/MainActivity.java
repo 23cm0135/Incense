@@ -18,6 +18,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int[] buttonIds = {
+            R.id.imgbutton1, R.id.imgbutton2, R.id.imgbutton3,
+            R.id.imgbutton4, R.id.imgbutton5, R.id.imgbutton6,
+            R.id.imgbutton7, R.id.imgbutton8, R.id.imgbutton9
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,39 +58,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // **獲取隨機 9 個商品**
-        List<ButtonEnum> randomButtons = ButtonEnum.getRandomButtons();
-
-        // **與 UI 按鈕綁定**
-        int[] buttonIds = {
-                R.id.imgbutton1, R.id.imgbutton2, R.id.imgbutton3,
-                R.id.imgbutton4, R.id.imgbutton5, R.id.imgbutton6,
-                R.id.imgbutton7, R.id.imgbutton8, R.id.imgbutton9
-        };
-
-        for (int i = 0; i < randomButtons.size(); i++) {
-            ImageButton button = findViewById(buttonIds[i]);
-            final ButtonEnum buttonEnum = randomButtons.get(i);
-
-            // **設置圖片**
-            button.setImageResource(buttonEnum.getImageResId());
-
-            // **點擊事件**
-            button.setOnClickListener(v -> navigateToMinute(buttonEnum));
-        }
-
         // 问题按钮点击事件
         ImageButton question = findViewById(R.id.btn_app);
         question.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, Question.class);
             startActivity(intent);
         });
+
+        // **初始化推荐商品**
+        updateRecommendedProducts();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // **每次返回 `MainActivity` 时刷新推荐商品**
+        updateRecommendedProducts();
     }
 
     /**
-     * 跳转到 MinuteActivity 的方法
-     *
-     * @param buttonEnum 选中的 `ButtonEnum` 对象
+     * 随机获取 9 个推荐商品并更新 UI
+     */
+    private void updateRecommendedProducts() {
+        List<ButtonEnum> randomButtons = ButtonEnum.getRandomButtons();
+
+        for (int i = 0; i < randomButtons.size(); i++) {
+            ImageButton button = findViewById(buttonIds[i]);
+            final ButtonEnum buttonEnum = randomButtons.get(i);
+
+            // **设定图片**
+            button.setImageResource(buttonEnum.getImageResId());
+
+            // **设置点击事件**
+            button.setOnClickListener(v -> navigateToMinute(buttonEnum));
+        }
+    }
+
+    /**
+     * 跳转到 MinuteActivity
      */
     private void navigateToMinute(ButtonEnum buttonEnum) {
         Log.d("ButtonEnum", "Navigating with: " + buttonEnum.getText() +
@@ -98,11 +109,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("EXTRA_IMAGE", buttonEnum.getImageResId());
         intent.putExtra("EXTRA_URL", buttonEnum.getUrl());
 
-        // **確認 `INCENSE_ID` 和 `INCENSE_NAME` 是否正確**
-        intent.putExtra("INCENSE_ID", buttonEnum.name()); // ✅ 確保傳遞 ButtonEnum 的 ID
+        // **确保 `INCENSE_ID` 和 `INCENSE_NAME` 正确**
+        intent.putExtra("INCENSE_ID", buttonEnum.name());
         intent.putExtra("INCENSE_NAME", buttonEnum.getIncenseName());
 
         startActivity(intent);
     }
-
 }
