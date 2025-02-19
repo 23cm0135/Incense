@@ -48,6 +48,18 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
+        // ✅ 确保正确获取冥想时间
+        Intent intent = getIntent();
+        // ✅ 获取一次，不重复定义
+        meditationDuration = getIntent().getLongExtra("meditationDuration", -1);
+        String usedIncense = getIntent().getStringExtra("usedIncense");
+
+        if (meditationDuration == -1) {
+            Toast.makeText(this, "エラー: 冥想時間を取得できませんでした。", Toast.LENGTH_SHORT).show();
+            finish(); // **防止错误数据进入**
+            return;
+        }
+
         loadMeditationProducts(); // **加载推荐产品**
         etUsedIncense = findViewById(R.id.etUsedIncense); // **获取输入框**
 
@@ -61,41 +73,61 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         Button btnSave = findViewById(R.id.btnSave);
         Button btnDiscard = findViewById(R.id.btnDiscard);
 
-        btnSave.setOnClickListener(v -> {
-            long meditationDuration = getIntent().getLongExtra("meditationDuration", 0);
-            String usedIncense = etUsedIncense.getText().toString().trim(); // **获取用户输入的香**
-
-            if (meditationDuration <= 0) {
-                Toast.makeText(this, "エラー: 冥想時間が無効です！", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Intent intent = new Intent();
-            intent.putExtra("meditationDuration", meditationDuration);
-            intent.putExtra("usedIncense", usedIncense); // **确保传递用户输入的香**
-
-            setResult(RESULT_OK, intent);
-            finish(); // **返回 `TimerActivity`**
-        });
+        // ✅ 绑定点击事件
+        btnSave.setOnClickListener(v -> saveMeditationRecord());
+        btnDiscard.setOnClickListener(v -> discardMeditationRecord());
 
 
-        // **用户点击“废弃”时**
-        btnDiscard.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.putExtra("meditationDiscarded", true); // **通知 TimerActivity 用户放弃记录**
-            setResult(RESULT_CANCELED, intent);
-            finish();
-        });
+//        // **用户点击“废弃”时**
+//        btnDiscard.setOnClickListener(v -> {
+////            Intent intent = new Intent();
+//            intent.putExtra("meditationDiscarded", true); // **通知 TimerActivity 用户放弃记录**
+//            setResult(RESULT_CANCELED, intent);
+//            finish();
+//        });
 
     }
 
-    // **保存冥想记录**
-    private void saveMeditationRecord(long duration) {
+    private void saveMeditationRecord() {
+        if (meditationDuration <= 0) {
+            Toast.makeText(this, "エラー: 冥想時間が取得できませんでした。", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int selectedId = rgDistraction.getCheckedRadioButtonId();
+        String distractionLevel = "なし"; // 默认无杂念
+
+        if (selectedId == R.id.rbMuchDistraction) {
+            distractionLevel = "多い";
+        } else if (selectedId == R.id.rbLittleDistraction) {
+            distractionLevel = "少し";
+        }
+
+        // ✅ 获取用户输入的香
+        String usedIncense = etUsedIncense.getText().toString().trim();
+        if (usedIncense.isEmpty()) {
+            usedIncense = "不明";
+        }
+
+        // ✅ 存储冥想记录
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
-        editor.putString(timestamp, duration + " 秒");
+        String record = "時間: " + (meditationDuration / 60) + "分 " + (meditationDuration % 60) + "秒 | 使用した香: " + usedIncense + " | 雑念: " + distractionLevel;
+
+        editor.putString(timestamp, record);
+        editor.putString("lastDistractionLevel", distractionLevel); // ✅ 记录上次杂念情况
         editor.apply();
+
+        // ✅ 返回 `TimerActivity`
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("meditationSuggestion", distractionLevel);
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
+
+
+
+
 
     private class Product {
         String name;
@@ -177,5 +209,12 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
     private class ProductResponse {
         List<Product> items;
     }
+    private void discardMeditationRecord() {
+        Intent discardIntent = new Intent(); // ✅ 重新创建 Intent
+        discardIntent.putExtra("meditationDiscarded", true);
+        setResult(RESULT_CANCELED, discardIntent);
+        finish();
+    }
+
 
 }

@@ -49,6 +49,17 @@ public class TimerActivity extends AppCompatActivity {
         // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
+        // 读取上次反馈信息
+        // **🔍 读取上次冥想的杂念情况**
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", ""); // **获取存储的值**
+//        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+//        String lastFeedback = sharedPreferences.getString("lastMeditationFeedback", "");
+
+        if (!lastDistractionLevel.isEmpty()) {
+            showMeditationSuggestionDialog(lastDistractionLevel); // **调用弹窗**
+        }
+
         etTime = findViewById(R.id.etTime);
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
@@ -122,6 +133,7 @@ public class TimerActivity extends AppCompatActivity {
 
         openFeedbackScreen(elapsedTime);
     }
+
 
     private void startCountdown() {
         if (isCounting) return;
@@ -261,29 +273,23 @@ public class TimerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (requestCode == FEEDBACK_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            // **获取冥想时间**
+            long meditationDuration = data.getLongExtra("meditationDuration", 0);
+            String usedIncense = data.getStringExtra("usedIncense");
 
-        if (requestCode == FEEDBACK_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null) {
-                long meditationDuration = data.getLongExtra("meditationDuration", 0);
-                String usedIncense = data.getStringExtra("usedIncense");
-
-                if (meditationDuration > 0) {
-                    saveMeditationRecord(meditationDuration, usedIncense);
-                    editor.putString("lastMeditationStatus", "saved"); // **记录“已保存”状态**
-                } else {
-                    Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
-                }
-            } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
-                showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
-                editor.putString("lastMeditationStatus", "discarded"); // **记录“已废弃”状态**
+            if (meditationDuration > 0) {
+                saveMeditationRecord(meditationDuration, usedIncense);
+            } else {
+               // Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
             }
-
-            editor.apply(); // **保存数据**
-            resetUI();
+        } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
+            showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
         }
+
+        resetUI();
     }
+
 
     private void saveMeditationRecord(long duration, String incense) {
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
@@ -312,13 +318,25 @@ public class TimerActivity extends AppCompatActivity {
             editor.apply();
         }
     }
-    private void showMeditationSuggestionDialog(String message) {
+    private void showMeditationSuggestionDialog(String lastDistractionLevel) {
+        String message = "";
+
+        if (lastDistractionLevel.equals("多い")) {
+            message = "前回の冥想では雑念が多かったです。次回は短めの冥想を試してみませんか？";
+        } else if (lastDistractionLevel.equals("少し") || lastDistractionLevel.equals("なし")) {
+            message = "前回の冥想では雑念が少なかったです。次回はもっと長めの冥想に挑戦してみませんか？";
+        } else {
+            return; // **如果数据无效，不弹窗**
+        }
+
         new AlertDialog.Builder(this)
                 .setTitle("冥想ヒント")
                 .setMessage(message)
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
+
+
     private String formatTime(long seconds) {
         long min = seconds / 60;
         long sec = seconds % 60;
