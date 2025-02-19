@@ -86,6 +86,19 @@ public class MinuteActivity extends AppCompatActivity {
             Intent purchaseIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(purchaseIntent);
         });
+// 找到「投稿」按鈕
+        Button btnSubmitImpression = findViewById(R.id.btnSubmitImpression);
+        btnSubmitImpression.setOnClickListener(v -> {
+            // 創建 Intent 跳轉到 UserImpression 活動
+            Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
+
+            // 傳遞香的名稱與 ID，以便在投稿頁面顯示
+            intent.putExtra("INCENSE_ID", incenseId);
+            intent.putExtra("INCENSE_NAME", incenseName);
+
+            // 啟動 UserImpression 活動
+            startActivity(intent);
+        });
 
         // 6) 「查看其他用户投稿」按钮
         Button btnViewPosts = findViewById(R.id.btnViewPosts);
