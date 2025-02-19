@@ -89,17 +89,18 @@ public class IncenseDetailActivity extends AppCompatActivity {
             setButtonAsFavorited(favoriteButton);
         }
 
-        // 收藏按钮点击事件
+// 收藏按钮点击事件
         favoriteButton.setOnClickListener(v -> {
             if (favoriteNamesSet.contains(name)) {
                 Toast.makeText(this, "商品はすでにお気に入りに追加されています", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 添加到收藏列表
-            FavoriteItem newItem = new FavoriteItem(name, effect, imageUrl, description,url);
-            favoriteItems.add(newItem);
-            favoriteNamesSet.add(name);
+
+            // 添加到收藏列表 - 在列表顶部插入，而不是追加到最后
+            FavoriteItem newItem = new FavoriteItem(name, effect, imageUrl, description, url);
+            favoriteItems.add(0, newItem); // 新加入的收藏产品放在列表的最上方
+            favoriteNamesSet.add(name); // 更新 HashSet，防止重复收藏
             saveFavorites(this);
 
             // 动态更新按钮状态
@@ -107,6 +108,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
 
             Toast.makeText(this, "お気に入りに追加しました: " + name, Toast.LENGTH_SHORT).show();
         });
+
         // 1) 找到「投稿します」按鈕
         Button userImpressionButton = findViewById(R.id.UserImpression);
 
@@ -150,12 +152,17 @@ public class IncenseDetailActivity extends AppCompatActivity {
 
         editor.putString(FAVORITES_KEY, json);
         editor.apply();
+        // 同步 favoriteNamesSet
+        favoriteNamesSet.clear();
+        for (FavoriteItem item : favoriteItems) {
+            favoriteNamesSet.add(item.getName());
+        }
     }
 
     public static void loadFavorites(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-
         String json = prefs.getString(FAVORITES_KEY, null);
+
         if (json != null) {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
@@ -163,7 +170,14 @@ public class IncenseDetailActivity extends AppCompatActivity {
         } else {
             favoriteItems = new ArrayList<>();
         }
+
+        // 更新 favoriteNamesSet，确保存储的收藏状态正确加载
+        favoriteNamesSet.clear();
+        for (FavoriteItem item : favoriteItems) {
+            favoriteNamesSet.add(item.getName());
+        }
     }
+
 
     private void saveBrowsingHistory(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

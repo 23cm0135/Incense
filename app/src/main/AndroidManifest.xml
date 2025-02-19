@@ -19,6 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Incense"
         tools:targetApi="31">
+        <activity android:name=".RecordActivity"
+            android:exported="false"/>
         <activity
             android:name=".TimerActivity"
             android:exported="false" />
