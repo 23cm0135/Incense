@@ -42,6 +42,27 @@ public class RecordActivity extends AppCompatActivity {
         listViewRecords = findViewById(R.id.listViewRecords);
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
         Map<String, ?> allEntries = sharedPreferences.getAll();
+        listViewRecords.setOnItemLongClickListener((parent, view, position, id) -> {
+            // **获取用户长按的记录**
+            String selectedRecord = (String) parent.getItemAtPosition(position);
+
+            // **从记录中提取时间戳**
+            String timestamp = selectedRecord.split(" - ")[0]; // 记录格式: "yyyy-MM-dd HH:mm - 其他信息"
+
+            // **弹出确认对话框**
+            new androidx.appcompat.app.AlertDialog.Builder(RecordActivity.this)
+                    .setTitle("記録の削除")
+                    .setMessage("本当にこの記録を削除しますか？")
+                    .setPositiveButton("削除", (dialog, which) -> {
+                        deleteMeditationRecord(timestamp); // **调用删除方法**
+                        loadMeditationRecords(); // **刷新列表**
+                    })
+                    .setNegativeButton("キャンセル", (dialog, which) -> dialog.dismiss())
+                    .show();
+
+            return true; // **返回 true，表示事件已处理**
+        });
+
 
         ArrayList<String> recordList = new ArrayList<>();
         ArrayList<RecordEntry> sortedRecords = new ArrayList<>();
@@ -81,6 +102,56 @@ public class RecordActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recordList);
         listViewRecords.setAdapter(adapter);
     }
+    private void deleteMeditationRecord(String timestamp) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        if (sharedPreferences.contains(timestamp)) {
+            editor.remove(timestamp); // **删除特定时间戳的冥想记录**
+            editor.apply();
+            Toast.makeText(this, "記録が削除されました: " + timestamp, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "削除する記録が見つかりません", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void loadMeditationRecords() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+
+        ArrayList<String> recordList = new ArrayList<>();
+        ArrayList<RecordEntry> sortedRecords = new ArrayList<>();
+
+        // **解析时间戳并存入临时列表**
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            try {
+                Date date = dateFormat.parse(entry.getKey()); // 解析时间戳
+                if (date != null) {
+                    sortedRecords.add(new RecordEntry(date, entry.getKey() + " - " + entry.getValue().toString()));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // **按时间从最新到最旧排序**
+        Collections.sort(sortedRecords, (o1, o2) -> o2.date.compareTo(o1.date));
+
+        // **将排序后的记录添加到 `recordList`**
+        for (RecordEntry entry : sortedRecords) {
+            recordList.add(entry.recordText);
+        }
+
+        // **如果没有记录，显示 "記録がありません"**
+        if (recordList.isEmpty()) {
+            recordList.add("記録がありません");
+            Toast.makeText(this, "記録が見つかりません", Toast.LENGTH_SHORT).show();
+        }
+
+        // **显示记录**
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recordList);
+        listViewRecords.setAdapter(adapter);
+    }
+
 
     // **记录类**
     private static class RecordEntry {

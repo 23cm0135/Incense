@@ -104,8 +104,6 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
 
         editor.putString("browsing_history", json); // 保存到SharedPreferences
         editor.apply();
-        //Log.d("BrowsingHistory", "Saved browsing history: " + json);
-
     }
     // 添加新的浏览记录，并确保同一产品不会重复
     private void addNewBrowsingHistory(FavoriteItem newItem, Context context) {
