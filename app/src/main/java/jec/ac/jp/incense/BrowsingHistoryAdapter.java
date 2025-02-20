@@ -89,7 +89,25 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
             }
         });
     }
+    // 添加新的浏览记录，并确保同一产品不会重复
+    private void addNewBrowsingHistory(FavoriteItem newItem, Context context) {
+        // 检查是否已经有该产品的历史记录
+        for (int i = 0; i < browsingHistory.size(); i++) {
+            FavoriteItem item = browsingHistory.get(i);
+            if (item.getName().equals(newItem.getName())) {
+                browsingHistory.remove(i); // 删除旧的记录
+                notifyItemRemoved(i);
+                break;
+            }
+        }
 
+        // 将新的历史记录插入到最前面
+        browsingHistory.add(0, newItem);
+        notifyItemInserted(0); // 新记录显示在最上面
+
+        // 保存更新后的历史记录
+        saveBrowsingHistory(context);
+    }
 
     private void saveBrowsingHistory(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("FavoritesPrefs", Context.MODE_PRIVATE);

@@ -56,6 +56,36 @@ public class BrowsingHistoryActivity extends AppCompatActivity {
             browsingHistoryAdapter.notifyDataSetChanged();
         }
     }
+    private void addNewBrowsingHistory(FavoriteItem newItem) {
+        // 遍历浏览历史，检查是否已有该产品
+        for (int i = 0; i < browsingHistory.size(); i++) {
+            if (browsingHistory.get(i).getName().equals(newItem.getName())) {
+                // 如果有，移除旧记录
+                browsingHistory.remove(i);
+                break;
+            }
+        }
+
+        // 将新记录添加到列表最前面
+        browsingHistory.add(0, newItem);
+
+        // 保存更新后的浏览历史到 SharedPreferences
+        saveBrowsingHistory(this);
+
+        // 更新 RecyclerView UI
+        updateHistoryUI();
+    }
+    private void saveBrowsingHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(browsingHistory); // 将浏览历史转换为 JSON 字符串
+
+        editor.putString(BROWSING_HISTORY_KEY, json); // 保存到 SharedPreferences
+        editor.apply();
+    }
+
 
     private void loadBrowsingHistory(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);

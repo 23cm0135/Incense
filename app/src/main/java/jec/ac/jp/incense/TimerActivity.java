@@ -149,6 +149,7 @@ public class TimerActivity extends AppCompatActivity {
         }
         restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
+        //stopBreathingAnimation();
     }
 
     private void startCountdown() {
@@ -288,6 +289,22 @@ public class TimerActivity extends AppCompatActivity {
         };
         breathingHandler.post(breathingRunnable);
     }
+    // 停止按钮点击时，重置圆圈的大小
+    private void stopBreathingAnimation() {
+        if (breathingRunnable != null) {
+            breathingHandler.removeCallbacks(breathingRunnable);
+        }
+
+        // 恢复圆圈的大小到最小
+        if (breathingCircle != null) {
+            breathingCircle.getLayoutParams().width = breathingCircle.getLayoutParams().height = (int) (breathingCircle.getLayoutParams().width / 1.4);
+            breathingCircle.requestLayout();
+        }
+
+        breathingCircle.setVisibility(View.INVISIBLE);
+        breathingText.setVisibility(View.INVISIBLE);
+        breathingGuideText.setVisibility(View.INVISIBLE);
+    }
 
     private void openFeedbackScreen(long meditationDuration) {
         if (meditationDuration < 1) {
@@ -322,6 +339,13 @@ public class TimerActivity extends AppCompatActivity {
         btnStop.setVisibility(View.GONE);
         etTime.setEnabled(true);
         etTime.setText(""); // **清除用户输入的时间**
+        // **恢复圆圈大小到初始大小**
+        if (breathingCircle != null) {
+            final int initialSize = breathingCircle.getLayoutParams().width;
+            breathingCircle.getLayoutParams().width = initialSize;
+            breathingCircle.getLayoutParams().height = initialSize;
+            breathingCircle.requestLayout();
+        }
     }
 
     @Override
@@ -351,7 +375,7 @@ public class TimerActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
-        String record = "時間: " + (duration / 60) + "分 " + (duration % 60) + "秒 | 使用した香: " + (incense == null || incense.isEmpty() ? "不明" : incense);
+        String record = "時間: " + (duration / 60) + "分 " + (duration % 60) + "秒 | 使用した香: " + (incense == null || incense.isEmpty() ? "未入力" : incense);
 
         editor.putString(timestamp, record);
         editor.apply();

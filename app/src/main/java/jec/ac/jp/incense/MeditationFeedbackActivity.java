@@ -128,6 +128,10 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
 
         int selectedId = rgDistraction.getCheckedRadioButtonId();
         String distractionLevel = "なし"; // 默认无杂念
+        if (selectedId == -1) {
+            Toast.makeText(this, "エラー: 雑念レベルを選択してください。", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (selectedId == R.id.rbMuchDistraction) {
             distractionLevel = "多い";
@@ -241,12 +245,12 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
     private class ProductResponse {
         List<Product> items;
     }
-    private void discardMeditationRecord() {
-        Intent discardIntent = new Intent(); // ✅ 重新创建 Intent
-        discardIntent.putExtra("meditationDiscarded", true);
-        setResult(RESULT_CANCELED, discardIntent);
-        finish();
-    }
+//    private void discardMeditationRecord() {
+//        Intent discardIntent = new Intent(); // ✅ 重新创建 Intent
+//        discardIntent.putExtra("meditationDiscarded", true);
+//        setResult(RESULT_CANCELED, discardIntent);
+//        finish();
+//    }
 
 
 }

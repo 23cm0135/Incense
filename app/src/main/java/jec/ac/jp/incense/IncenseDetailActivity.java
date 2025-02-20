@@ -133,14 +133,53 @@ public class IncenseDetailActivity extends AppCompatActivity {
         }
 
     private void addToBrowsingHistory(FavoriteItem item, Context context) {
-        for (FavoriteItem historyItem : browsingHistory) {
-            if (historyItem.getName().equals(item.getName())) {
-                return; // 如果已经存在，则不添加
+        // 遍历历史记录，如果有相同项，则删除旧的记录
+        for (int i = 0; i < browsingHistory.size(); i++) {
+            if (browsingHistory.get(i).getName().equals(item.getName())) {
+                browsingHistory.remove(i); // 删除旧的记录
+                break; // 一旦删除，跳出循环
             }
         }
 
-        browsingHistory.add(0, item); // 将最新浏览记录添加到顶部
+        // 将新的记录添加到最上方
+        browsingHistory.add(0, item);
+
+        // 保存更新后的浏览记录
         saveBrowsingHistory(context);
+
+        // 确保 UI 更新
+        updateHistoryUI();
+    }
+
+    public static void saveBrowsingHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(browsingHistory);
+
+        editor.putString(BROWSING_HISTORY_KEY, json);
+        editor.apply();
+    }
+
+    public static void loadBrowsingHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String json = prefs.getString(BROWSING_HISTORY_KEY, null);
+
+        if (json != null) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
+            browsingHistory = gson.fromJson(json, type);
+        } else {
+            browsingHistory = new ArrayList<>(); // 初始化为空列表
+        }
+    }
+
+    // 更新历史记录UI
+    private void updateHistoryUI() {
+        if (browsingHistoryAdapter != null) {
+            browsingHistoryAdapter.notifyDataSetChanged(); // 刷新适配器
+        }
     }
 
     public static void saveFavorites(Context context) {
@@ -179,36 +218,36 @@ public class IncenseDetailActivity extends AppCompatActivity {
     }
 
 
-    private void saveBrowsingHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(browsingHistory);
-
-        editor.putString(BROWSING_HISTORY_KEY, json);
-        editor.apply();
-    }
-    /*
-    加载浏览历史
-     */
-    public static void loadBrowsingHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String json = prefs.getString(BROWSING_HISTORY_KEY, null);
-
-        if (json != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
-            browsingHistory = gson.fromJson(json, type);
-        } else {
-           // browsingHistory = new ArrayList<>(); // 初始化为空列表
-        }
-    }
-    private void updateHistoryUI() {
-        // 如果你使用的是 RecyclerView，则通知适配器数据更新
-        if (browsingHistoryAdapter != null) {
-            browsingHistoryAdapter.notifyDataSetChanged();
-        }
-    }
+//    private void saveBrowsingHistory(Context context) {
+//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//
+//        Gson gson = new Gson();
+//        String json = gson.toJson(browsingHistory);
+//
+//        editor.putString(BROWSING_HISTORY_KEY, json);
+//        editor.apply();
+//    }
+//    /*
+//    加载浏览历史
+//     */
+//    public static void loadBrowsingHistory(Context context) {
+//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+//        String json = prefs.getString(BROWSING_HISTORY_KEY, null);
+//
+//        if (json != null) {
+//            Gson gson = new Gson();
+//            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
+//            browsingHistory = gson.fromJson(json, type);
+//        } else {
+//           // browsingHistory = new ArrayList<>(); // 初始化为空列表
+//        }
+//    }
+//    private void updateHistoryUI() {
+//        // 如果你使用的是 RecyclerView，则通知适配器数据更新
+//        if (browsingHistoryAdapter != null) {
+//            browsingHistoryAdapter.notifyDataSetChanged();
+//        }
+//    }
 
 }
