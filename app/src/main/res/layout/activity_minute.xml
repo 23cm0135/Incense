@@ -27,7 +27,7 @@
                 android:id="@+id/incense_detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 android:layout_marginBottom="16dp" />
 
             <!-- 产品名称 -->
