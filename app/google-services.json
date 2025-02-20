@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:500626586922:android:e5f4bea9fd21575cf7f253",
-        "android_client_info": {
-          "package_name": "jec.ac.jp.incense"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "500626586922-4dkmd7opli8mibodcjcf6okna7cut96g.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA-WuuBzNS5pHTXXYI8A6UO8eXV97G_ekQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "500626586922-4dkmd7opli8mibodcjcf6okna7cut96g.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:500626586922:android:d4ea6dd34f255bb2f7f253",
         "android_client_info": {
           "package_name": "jec.ac.jp.incense1"
