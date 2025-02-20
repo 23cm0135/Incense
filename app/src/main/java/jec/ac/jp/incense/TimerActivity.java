@@ -374,9 +374,9 @@ public class TimerActivity extends AppCompatActivity {
         // **如果没有废弃，检查杂念情况**
         else if (!lastDistractionLevel.isEmpty()) {
             if (lastDistractionLevel.equals("多い")) {
-                showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n次回は短めの瞑想を試してみましょう！");
+                showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n今回は短めの瞑想を試してみましょう！");
             } else if (lastDistractionLevel.equals("なし") || lastDistractionLevel.equals("少し")) {
-                showMeditationSuggestionDialog("前回の瞑想では雑念が少なかったですね。\n次回はもう少し長めの瞑想に挑戦してみませんか？");
+                showMeditationSuggestionDialog("前回の瞑想では雑念が少なかったですね。\n今回はもう少し長めの瞑想に挑戦してみませんか？");
             }
         }
     }
@@ -390,9 +390,9 @@ public class TimerActivity extends AppCompatActivity {
         final String[] messageHolder = new String[1];
 
         if (lastDistractionLevel.equals("多い")) {
-            messageHolder[0] = "前回の冥想では雑念が多かったです。次回は短めの冥想を試してみませんか？";
+            messageHolder[0] = "前回の冥想では雑念が多かったです。今回は短めの冥想を試してみませんか？";
         } else if (lastDistractionLevel.equals("少し") || lastDistractionLevel.equals("なし")) {
-            messageHolder[0] = "前回の冥想では雑念が少なかったです。次回はもっと長めの冥想に挑戦してみませんか？";
+            messageHolder[0] = "前回の冥想では雑念が少なかったです。今回はもっと長めの冥想に挑戦してみませんか？";
         } else {
             return;
         }
