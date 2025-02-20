@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,7 +77,7 @@ public class MinuteActivity extends AppCompatActivity {
 
         // 4) 自動添加到履歴
         //   用本地圖片版本的 FavoriteItem 建構函式
-        addToBrowsingHistory(new FavoriteItem(incenseName, /* effect= */ "",
+        addNewBrowsingHistory(new FavoriteItem(incenseName, /* effect= */ "",
                         imageResId, text, url),
                 this);
 
@@ -138,13 +139,24 @@ public class MinuteActivity extends AppCompatActivity {
     }
 
     // **添加到履歴**
-    private void addToBrowsingHistory(FavoriteItem item, Context context) {
-        for (FavoriteItem historyItem : browsingHistory) {
-            if (historyItem.getName().equals(item.getName())) {
-                return; // 已存在就不重複添加
+    private void addNewBrowsingHistory(FavoriteItem newItem, Context context) {
+        Log.d("BrowsingHistory", "addNewBrowsingHistory triggered for: " + newItem.getName());
+        // 检查是否已经有该产品的历史记录
+        for (int i = 0; i < browsingHistory.size(); i++) {
+            FavoriteItem item = browsingHistory.get(i);
+            if (item.getName().equals(newItem.getName())) {
+                browsingHistory.remove(i); // 删除旧的记录
+              //  notifyItemRemoved(i);
+                break;
             }
         }
-        browsingHistory.add(0, item);
+
+        // 将新的历史记录插入到最前面
+        browsingHistory.add(0, newItem);
+       // notifyItemInserted(0);
+        Log.d("BrowsingHistory", "Browsing history after update: " + browsingHistory.toString());
+
+        // 保存更新后的历史记录
         saveBrowsingHistory(context);
     }
 

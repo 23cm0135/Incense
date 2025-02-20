@@ -89,7 +89,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
             setButtonAsFavorited(favoriteButton);
         }
 
-// 收藏按钮点击事件
+        // 收藏按钮点击事件
         favoriteButton.setOnClickListener(v -> {
             if (favoriteNamesSet.contains(name)) {
                 Toast.makeText(this, "商品はすでにお気に入りに追加されています", Toast.LENGTH_SHORT).show();
@@ -216,38 +216,4 @@ public class IncenseDetailActivity extends AppCompatActivity {
             favoriteNamesSet.add(item.getName());
         }
     }
-
-
-//    private void saveBrowsingHistory(Context context) {
-//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = prefs.edit();
-//
-//        Gson gson = new Gson();
-//        String json = gson.toJson(browsingHistory);
-//
-//        editor.putString(BROWSING_HISTORY_KEY, json);
-//        editor.apply();
-//    }
-//    /*
-//    加载浏览历史
-//     */
-//    public static void loadBrowsingHistory(Context context) {
-//        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-//        String json = prefs.getString(BROWSING_HISTORY_KEY, null);
-//
-//        if (json != null) {
-//            Gson gson = new Gson();
-//            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
-//            browsingHistory = gson.fromJson(json, type);
-//        } else {
-//           // browsingHistory = new ArrayList<>(); // 初始化为空列表
-//        }
-//    }
-//    private void updateHistoryUI() {
-//        // 如果你使用的是 RecyclerView，则通知适配器数据更新
-//        if (browsingHistoryAdapter != null) {
-//            browsingHistoryAdapter.notifyDataSetChanged();
-//        }
-//    }
-
 }

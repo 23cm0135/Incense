@@ -3,6 +3,7 @@ package jec.ac.jp.incense;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,6 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
     }
 
     @Override
-
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FavoriteItem item = browsingHistory.get(position);
 
@@ -69,6 +69,9 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
         holder.itemLayout.setOnClickListener(v -> {
             // 如果是本地香 → 跳转到 MinuteActivity
             if (item.getImageResId() != 0) {
+                // 添加浏览历史（本地香）
+                addNewBrowsingHistory(item, context);
+
                 Intent intent = new Intent(context, MinuteActivity.class);
                 intent.putExtra("EXTRA_TEXT", item.getDescription());
                 intent.putExtra("EXTRA_IMAGE", item.getImageResId());
@@ -89,8 +92,24 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
             }
         });
     }
+    private void saveBrowsingHistory(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("FavoritesPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(browsingHistory); // 将当前浏览历史转换为JSON字符串
+
+        // 打印保存的浏览历史 JSON 数据
+        Log.d("BrowsingHistory", "Saving browsing history: " + json);
+
+        editor.putString("browsing_history", json); // 保存到SharedPreferences
+        editor.apply();
+        //Log.d("BrowsingHistory", "Saved browsing history: " + json);
+
+    }
     // 添加新的浏览记录，并确保同一产品不会重复
     private void addNewBrowsingHistory(FavoriteItem newItem, Context context) {
+        Log.d("BrowsingHistory", "addNewBrowsingHistory triggered for: " + newItem.getName());
         // 检查是否已经有该产品的历史记录
         for (int i = 0; i < browsingHistory.size(); i++) {
             FavoriteItem item = browsingHistory.get(i);
@@ -103,21 +122,12 @@ public class BrowsingHistoryAdapter extends RecyclerView.Adapter<BrowsingHistory
 
         // 将新的历史记录插入到最前面
         browsingHistory.add(0, newItem);
-        notifyItemInserted(0); // 新记录显示在最上面
+        //notifyItemInserted(0);
+        notifyDataSetChanged();// 新记录显示在最上面
+        Log.d("BrowsingHistory", "Browsing history after update: " + browsingHistory.toString());
 
         // 保存更新后的历史记录
         saveBrowsingHistory(context);
-    }
-
-    private void saveBrowsingHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("FavoritesPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(browsingHistory); // 将当前浏览历史转换为JSON字符串
-
-        editor.putString("browsing_history", json); // 保存到SharedPreferences
-        editor.apply();
     }
 
 
