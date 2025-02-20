@@ -27,7 +27,8 @@ import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity {
     private EditText etTime;
-    private Button btnStart, btnStop, btnViewRecords;
+    private Button btnStart;
+    private Button btnStop;
     private Spinner spinnerMusic;
     private TextView tvCountdown, breathingText, breathingGuideText;
     private ProgressBar progressBar;
@@ -38,10 +39,10 @@ public class TimerActivity extends AppCompatActivity {
     private long totalTimeInMillis;
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
-    private Handler uiHandler = new Handler(Looper.getMainLooper());
-    private int inhaleTime = 4000;  // 吸气 4 秒
-    private int exhaleTime = 4000;  // 呼气 4 秒
-    private Handler breathingHandler = new Handler();
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
+    private final int inhaleTime = 4000;  // 吸气 4 秒
+    private final int exhaleTime = 4000;  // 呼气 4 秒
+    private final Handler breathingHandler = new Handler();
     private static final int FEEDBACK_REQUEST_CODE = 1;
     private Runnable breathingRunnable;
 
@@ -51,16 +52,13 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
         // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
-
         // **🔍 读取上次冥想的杂念情况**
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
         boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
         String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", ""); // **获取存储的值**
-
         // ✅ 添加日志，确保数据正确
         Log.d("DEBUG", "📌 读取数据: 雑念: " + lastDistractionLevel + " | 废弃状态: " + lastMeditationDiscarded);
-
-// ✅ **如果上次冥想被废弃，优先弹出废弃提示**
+        // ✅ **如果上次冥想被废弃，优先弹出废弃提示**
         if (lastMeditationDiscarded) {
             showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
 
@@ -80,11 +78,10 @@ public class TimerActivity extends AppCompatActivity {
         if (!lastDistractionLevel.isEmpty()) {
             showMeditationSuggestionDialog(lastDistractionLevel); // **调用弹窗**
         }
-
         etTime = findViewById(R.id.etTime);
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
-        btnViewRecords = findViewById(R.id.btnViewRecords);
+        Button btnViewRecords = findViewById(R.id.btnViewRecords);
         spinnerMusic = findViewById(R.id.spinnerMusic);
         tvCountdown = findViewById(R.id.tvCountdown);
         breathingCircle = findViewById(R.id.breathingCircle);
@@ -95,7 +92,6 @@ public class TimerActivity extends AppCompatActivity {
         setupMusicSpinner();
         // **检查上次冥想状态**
         checkLastMeditationStatus();
-
         btnStart.setOnClickListener(v -> startMeditationWithCountdown());
         btnStop.setOnClickListener(v -> stopCountdown());
         btnViewRecords.setOnClickListener(v -> startActivity(new Intent(TimerActivity.this, RecordActivity.class)));
@@ -104,14 +100,11 @@ public class TimerActivity extends AppCompatActivity {
     private void setupMusicSpinner() {
         String[] musicOptions = {"雨", "Relax", "Forest Lullaby"};
 
-
-        final int[] musicResIds = {R.raw.music1,R.raw.relax,R.raw.forest_lullaby};
-
+        final int[] musicResIds = {R.raw.music1, R.raw.relax, R.raw.forest_lullaby};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, musicOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMusic.setAdapter(adapter);
-
         spinnerMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -119,7 +112,8 @@ public class TimerActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
     }
 
@@ -128,6 +122,7 @@ public class TimerActivity extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 btnStart.setText("開始まで " + millisUntilFinished / 1000 + " 秒");
             }
+
             @Override
             public void onFinish() {
                 btnStart.setText("冥想開始");
@@ -135,6 +130,7 @@ public class TimerActivity extends AppCompatActivity {
             }
         }.start();
     }
+
     private void stopCountdown() {
         if (!isCounting) return; // 确保当前正在倒计时才执行
 
@@ -154,6 +150,7 @@ public class TimerActivity extends AppCompatActivity {
         restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
     }
+
     private void startCountdown() {
         if (isCounting) return;
 
@@ -224,6 +221,7 @@ public class TimerActivity extends AppCompatActivity {
         layoutParams.screenBrightness = 0.1f; // 设置为最暗，0表示最暗，1表示最亮
         getWindow().setAttributes(layoutParams);
     }
+
     private void restoreScreenBrightness() {
         try {
             ContentResolver contentResolver = getContentResolver();
@@ -235,6 +233,7 @@ public class TimerActivity extends AppCompatActivity {
             e.printStackTrace(); // 错误处理
         }
     }
+
     /**
      * 启动音乐播放服务
      */
@@ -265,6 +264,7 @@ public class TimerActivity extends AppCompatActivity {
 
         breathingRunnable = new Runnable() {
             boolean isInhale = true;
+
             @Override
             public void run() {
                 if (!isCounting) return;
@@ -288,6 +288,7 @@ public class TimerActivity extends AppCompatActivity {
         };
         breathingHandler.post(breathingRunnable);
     }
+
     private void openFeedbackScreen(long meditationDuration) {
         if (meditationDuration < 1) {
             Toast.makeText(this, "冥想時間が短すぎます", Toast.LENGTH_SHORT).show();
@@ -322,6 +323,7 @@ public class TimerActivity extends AppCompatActivity {
         etTime.setEnabled(true);
         etTime.setText(""); // **清除用户输入的时间**
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -334,7 +336,7 @@ public class TimerActivity extends AppCompatActivity {
             if (meditationDuration > 0) {
                 saveMeditationRecord(meditationDuration, usedIncense);
             } else {
-               // Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
             showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
@@ -354,6 +356,7 @@ public class TimerActivity extends AppCompatActivity {
         editor.putString(timestamp, record);
         editor.apply();
     }
+
     private void checkLastMeditationStatus() {
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
         boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
@@ -380,6 +383,7 @@ public class TimerActivity extends AppCompatActivity {
             }
         }
     }
+
     private void showMeditationSuggestionDialog(String lastDistractionLevel) {
         if (lastDistractionLevel == null || lastDistractionLevel.isEmpty()) {
             Log.d("DEBUG", "📌 showMeditationSuggestionDialog() -> lastDistractionLevel 为空，不弹窗");
@@ -415,6 +419,7 @@ public class TimerActivity extends AppCompatActivity {
         long sec = seconds % 60;
         return String.format("%02d:%02d", min, sec);
     }
+
     private void stopGuidedMeditation() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
