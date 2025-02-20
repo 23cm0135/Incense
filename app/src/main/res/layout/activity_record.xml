@@ -43,7 +43,8 @@
         android:layout_height="0dp"
         android:layout_weight="0.8"
         android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        />
 
     <!-- 让按钮稍微往上移动 -->
     <LinearLayout
