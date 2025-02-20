@@ -29,7 +29,6 @@ public class UserImpression extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_impression);
-        // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
         edtUserImpression = findViewById(R.id.edtUserImpression);
@@ -39,13 +38,11 @@ public class UserImpression extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // **修正：確保正確接收 `INCENSE_ID` 和 `INCENSE_NAME`**
         Intent intent = getIntent();
         if (intent != null) {
             incenseId = intent.getStringExtra("INCENSE_ID");
             incenseName = intent.getStringExtra("INCENSE_NAME");
 
-            // **如果收到 null，則設置預設值**
             if (incenseId == null || incenseId.isEmpty()) {
                 incenseId = "unknown_id";
             }

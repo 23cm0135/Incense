@@ -22,20 +22,16 @@ public class User extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_user);
 
-        // 初始化 FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        // **檢查用戶是否已登入**
         if (user == null) {
-            // **如果未登入，則跳轉到登入頁面**
             Intent intent = new Intent(User.this, Account.class);
             startActivity(intent);
-            finish(); // 結束當前頁面，防止返回
+            finish();
             return;
         }
 
-        // **如果已登入，顯示用戶名稱**
         TextView userNameTextView = findViewById(R.id.user_name);
         String userName = user.getDisplayName();
         String email = user.getEmail();
@@ -46,7 +42,6 @@ public class User extends AppCompatActivity {
             userNameTextView.setText(email + " さん");
         }
 
-        // **設置 UI 事件**
         setupUI();
     }
 
@@ -63,14 +58,12 @@ public class User extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        // 跳轉到鬧鐘界面
 //        LinearLayout alarm = findViewById(R.id.layout_alarm);
 //        alarm.setOnClickListener(v -> {
 //            Intent intent = new Intent(User.this, TimerActivity.class);
 //            startActivity(intent);
 //        });
 
-        // 返回主頁
         ImageButton homeButton = findViewById(R.id.btn_home);
         homeButton.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, MainActivity.class);
@@ -78,7 +71,6 @@ public class User extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // 跳轉到問題頁面
         ImageButton question = findViewById(R.id.btn_app);
         question.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, Question.class);
@@ -91,7 +83,7 @@ public class User extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // **登出按鈕**
+
         LinearLayout logoutLayout = findViewById(R.id.layout_logout);
         logoutLayout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();

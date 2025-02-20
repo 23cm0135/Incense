@@ -30,19 +30,14 @@ class Account : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account)
 
-        // 提示用户「請ログイン」
         Toast.makeText(this, "ログインしてください", Toast.LENGTH_LONG).show()
 
-        // 初始化 Firebase 身份验证
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // 配置 Google Sign-In
         setupGoogleSignIn()
 
-        // 设置按钮点击事件
         setupUI()
 
-        // 检查用户是否已登录
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             navigateToUserScreen(currentUser)
@@ -58,28 +53,23 @@ class Account : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Google 登录按钮
         findViewById<Button>(R.id.btnGoogleLogin).setOnClickListener {
             startGoogleSignIn()
         }
 
-        // Email 登录按钮
         findViewById<Button>(R.id.btnEmailLogin).setOnClickListener {
             startActivity(Intent(this, EmailLogin::class.java))
         }
 
-        // 注册新账号按钮
         findViewById<Button>(R.id.btnNewAccount).setOnClickListener {
             startActivity(Intent(this, NewAccount::class.java))
         }
 
-        // 「パスワード忘れ」按钮 → 跳转到 Java 写的 ResetPasswordActivity
         findViewById<Button>(R.id.btnPassword).setOnClickListener {
             val intent = Intent(this, ResetPasswordActivity::class.java)
             startActivity(intent)
         }
 
-        // 返回主界面按钮
         findViewById<Button>(R.id.btn_back).setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -123,9 +113,7 @@ class Account : AppCompatActivity() {
         }
     }
 
-    /**
-     * 登录后跳转到用户界面
-     */
+
     private fun navigateToUserScreen(user: FirebaseUser?) {
         if (user != null) {
             val intent = Intent(this, User::class.java)

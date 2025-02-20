@@ -28,17 +28,15 @@ class NewAccount : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_account)
 
-        // 初始化 FirebaseAuth & Firestore
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-        // 初始化 UI 元素
         edtEmail = findViewById(R.id.etEmail)
         edtPassword = findViewById(R.id.etPassword)
-        edtDisplayName = findViewById(R.id.etDisplayName) // 获取显示名输入框
+        edtDisplayName = findViewById(R.id.etDisplayName)
         val btnRegister: Button = findViewById(R.id.btnRegister)
 
-        // 设置注册按钮的点击事件
+
         btnRegister.setOnClickListener {
             val email = edtEmail.text.toString()
             val password = edtPassword.text.toString()
@@ -52,22 +50,19 @@ class NewAccount : AppCompatActivity() {
         }
     }
 
-    /**
-     * 注册用户
-     */
+
     private fun registerUser(email: String, password: String, displayName: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user: FirebaseUser? = firebaseAuth.currentUser
                     if (user != null) {
-                        // **更新 Firebase 用户的 `displayName`**
                         val profileUpdates = UserProfileChangeRequest.Builder()
                             .setDisplayName(displayName)
                             .build()
                         user.updateProfile(profileUpdates).addOnCompleteListener {
                             if (it.isSuccessful) {
-                                // **存入 Firestore**
+
                                 saveUserToFirestore(user, displayName)
                             } else {
                                 Toast.makeText(this, "表示名の設定に失敗しました", Toast.LENGTH_SHORT).show()
@@ -75,7 +70,7 @@ class NewAccount : AppCompatActivity() {
                         }
                     }
                 } else {
-                    // **检查错误类型**
+
                     if (task.exception is FirebaseAuthUserCollisionException) {
                         Toast.makeText(this, "このメールアドレスはすでに登録されています", Toast.LENGTH_SHORT).show()
                     } else {
@@ -86,9 +81,7 @@ class NewAccount : AppCompatActivity() {
             }
     }
 
-    /**
-     * 存储用户数据到 Firestore
-     */
+
     private fun saveUserToFirestore(user: FirebaseUser, displayName: String) {
         val userData = hashMapOf(
             "uid" to user.uid,
@@ -113,8 +106,8 @@ class NewAccount : AppCompatActivity() {
             val intent = Intent(this, User::class.java)
             intent.putExtra("USER_NAME", user.displayName)
             intent.putExtra("USER_EMAIL", user.email)
-            startActivity(intent) // **跳转到 User 画面**
-            finish() // **关闭当前注册界面**
+            startActivity(intent)
+            finish()
         }
     }
 }

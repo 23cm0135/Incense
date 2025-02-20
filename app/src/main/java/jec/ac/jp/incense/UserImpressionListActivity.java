@@ -22,13 +22,11 @@ public class UserImpressionListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_impression_list);
-        // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
         recyclerViewImpressions = findViewById(R.id.recyclerViewImpressions);
         postList = new ArrayList<>();
 
-        // 設置 RecyclerView
         recyclerViewImpressions.setLayoutManager(new LinearLayoutManager(this));
         postAdapter = new PostAdapter(postList);
         recyclerViewImpressions.setAdapter(postAdapter);
