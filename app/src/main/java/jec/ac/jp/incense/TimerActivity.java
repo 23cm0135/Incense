@@ -1,6 +1,7 @@
 package jec.ac.jp.incense;
 
 import android.animation.ValueAnimator;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
@@ -49,13 +52,31 @@ public class TimerActivity extends AppCompatActivity {
         // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
-        // 读取上次反馈信息
         // **🔍 读取上次冥想的杂念情况**
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+        boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
         String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", ""); // **获取存储的值**
-//        SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
-//        String lastFeedback = sharedPreferences.getString("lastMeditationFeedback", "");
 
+        // ✅ 添加日志，确保数据正确
+        Log.d("DEBUG", "📌 读取数据: 雑念: " + lastDistractionLevel + " | 废弃状态: " + lastMeditationDiscarded);
+
+// ✅ **如果上次冥想被废弃，优先弹出废弃提示**
+        if (lastMeditationDiscarded) {
+            showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
+
+            // ✅ **清除废弃状态，防止每次启动都弹窗**
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("lastMeditationDiscarded", false);
+            editor.apply();
+        }
+// ✅ **如果上次冥想未被废弃，检查杂念情况**
+        else if (!lastDistractionLevel.isEmpty()) {
+            if (lastDistractionLevel.equals("多い")) {
+                showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n次回は短めの瞑想を試してみましょう！");
+            } else if (lastDistractionLevel.equals("なし") || lastDistractionLevel.equals("少し")) {
+                showMeditationSuggestionDialog("前回の瞑想では雑念が少なかったですね。\n次回はもう少し長めの瞑想に挑戦してみませんか？");
+            }
+        }
         if (!lastDistractionLevel.isEmpty()) {
             showMeditationSuggestionDialog(lastDistractionLevel); // **调用弹窗**
         }
@@ -130,11 +151,9 @@ public class TimerActivity extends AppCompatActivity {
             resetUI();
             return;
         }
-
+        restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
     }
-
-
     private void startCountdown() {
         if (isCounting) return;
 
@@ -153,7 +172,7 @@ public class TimerActivity extends AppCompatActivity {
         totalTimeInMillis = inputMinutes * 60 * 1000;
         isCounting = true;
 
-        // **启动倒计时音乐服务**
+        // 启动倒计时音乐服务
         startMusicService();
 
         btnStop.setVisibility(View.VISIBLE);
@@ -164,6 +183,20 @@ public class TimerActivity extends AppCompatActivity {
 
         startBreathingAnimation();
 
+        // 启动延迟10秒后的屏幕变暗
+        new CountDownTimer(10000, 1000) { // 延迟10秒
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // 可以选择更新界面，比如显示"屏幕将变暗"
+            }
+
+            @Override
+            public void onFinish() {
+                dimScreen(); // 10秒后触发屏幕变暗
+            }
+        }.start();
+
+        // 开始倒计时
         countDownTimer = new CountDownTimer(totalTimeInMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -175,13 +208,33 @@ public class TimerActivity extends AppCompatActivity {
             public void onFinish() {
                 if (isCounting) {
                     isCounting = false;
-                    stopMusicService(); // **冥想结束，停止音乐**
+                    stopMusicService(); // 冥想结束，停止音乐
                     openFeedbackScreen(totalTimeInMillis / 1000);
+
+                    // 恢复屏幕亮度
+                    restoreScreenBrightness();
                 }
             }
         }.start();
     }
 
+    // 变暗屏幕
+    private void dimScreen() {
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        layoutParams.screenBrightness = 0.1f; // 设置为最暗，0表示最暗，1表示最亮
+        getWindow().setAttributes(layoutParams);
+    }
+    private void restoreScreenBrightness() {
+        try {
+            ContentResolver contentResolver = getContentResolver();
+            int currentBrightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
+            WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+            layoutParams.screenBrightness = currentBrightness / 255.0f; // 系统亮度的值是0-255，所以需要转换为0-1的范围
+            getWindow().setAttributes(layoutParams);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace(); // 错误处理
+        }
+    }
     /**
      * 启动音乐播放服务
      */
@@ -303,39 +356,59 @@ public class TimerActivity extends AppCompatActivity {
     }
     private void checkLastMeditationStatus() {
         SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
-        String lastStatus = sharedPreferences.getString("lastMeditationStatus", "");
+        boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
+        String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", "");
 
-        if (!lastStatus.isEmpty()) {
-            if (lastStatus.equals("saved")) {
-                showMeditationSuggestionDialog("前回の冥想が正常に記録されました。");
-            } else if (lastStatus.equals("discarded")) {
-                showMeditationSuggestionDialog("前回の冥想記録は保存されませんでした。");
-            }
+        // ✅ **打印日志，检查数据是否正确**
+        Log.d("DEBUG", "📌 checkLastMeditationStatus() -> 读取数据: 雑念: " + lastDistractionLevel + " | 废弃状态: " + lastMeditationDiscarded);
 
-            // **弹窗只显示一次，清除记录**
+        if (lastMeditationDiscarded) {
+            Log.d("DEBUG", "📌 弹出废弃提示对话框！");
+            showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
+
+            // **清除废弃状态，防止重复弹窗**
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove("lastMeditationStatus");
+            editor.putBoolean("lastMeditationDiscarded", false);
             editor.apply();
+        }
+        // **如果没有废弃，检查杂念情况**
+        else if (!lastDistractionLevel.isEmpty()) {
+            if (lastDistractionLevel.equals("多い")) {
+                showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n次回は短めの瞑想を試してみましょう！");
+            } else if (lastDistractionLevel.equals("なし") || lastDistractionLevel.equals("少し")) {
+                showMeditationSuggestionDialog("前回の瞑想では雑念が少なかったですね。\n次回はもう少し長めの瞑想に挑戦してみませんか？");
+            }
         }
     }
     private void showMeditationSuggestionDialog(String lastDistractionLevel) {
-        String message = "";
-
-        if (lastDistractionLevel.equals("多い")) {
-            message = "前回の冥想では雑念が多かったです。次回は短めの冥想を試してみませんか？";
-        } else if (lastDistractionLevel.equals("少し") || lastDistractionLevel.equals("なし")) {
-            message = "前回の冥想では雑念が少なかったです。次回はもっと長めの冥想に挑戦してみませんか？";
-        } else {
+        if (lastDistractionLevel == null || lastDistractionLevel.isEmpty()) {
+            Log.d("DEBUG", "📌 showMeditationSuggestionDialog() -> lastDistractionLevel 为空，不弹窗");
             return; // **如果数据无效，不弹窗**
         }
 
-        new AlertDialog.Builder(this)
-                .setTitle("冥想ヒント")
-                .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
-                .show();
-    }
+        // ✅ 解决方案：使用 `final` 数组存储 message
+        final String[] messageHolder = new String[1];
 
+        if (lastDistractionLevel.equals("多い")) {
+            messageHolder[0] = "前回の冥想では雑念が多かったです。次回は短めの冥想を試してみませんか？";
+        } else if (lastDistractionLevel.equals("少し") || lastDistractionLevel.equals("なし")) {
+            messageHolder[0] = "前回の冥想では雑念が少なかったです。次回はもっと長めの冥想に挑戦してみませんか？";
+        } else {
+            return;
+        }
+
+        Log.d("DEBUG", "📌 显示弹窗: " + messageHolder[0]);
+
+        runOnUiThread(() -> {
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                new AlertDialog.Builder(TimerActivity.this)
+                        .setTitle("冥想ヒント")
+                        .setMessage(messageHolder[0]) // ✅ 这里使用 `final` 数组
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            }, 500); // **延迟 500ms 确保 UI 线程可用**
+        });
+    }
 
     private String formatTime(long seconds) {
         long min = seconds / 60;

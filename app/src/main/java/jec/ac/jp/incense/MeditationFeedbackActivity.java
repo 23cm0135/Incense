@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,7 +65,7 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         etUsedIncense = findViewById(R.id.etUsedIncense); // **获取输入框**
 
         sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
-        meditationDuration = getIntent().getLongExtra("meditationDuration", 0);
+        //meditationDuration = getIntent().getLongExtra("meditationDuration", 0);
 
         rgDistraction = findViewById(R.id.rgDistraction);
         rbNoDistraction = findViewById(R.id.rbNoDistraction);
@@ -74,18 +75,49 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         Button btnDiscard = findViewById(R.id.btnDiscard);
 
         // ✅ 绑定点击事件
-        btnSave.setOnClickListener(v -> saveMeditationRecord());
-        btnDiscard.setOnClickListener(v -> discardMeditationRecord());
+        btnSave.setOnClickListener(v -> {
+            saveMeditationRecord();
+
+            SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("lastMeditationDiscarded", false); // ✅ 只在保存时清除废弃状态
+            editor.apply();
+
+            Log.d("DEBUG", "📌 冥想已保存，废弃状态清除: " + sharedPreferences.getBoolean("lastMeditationDiscarded", false));
+        });
+
+//        btnDiscard.setOnClickListener(v -> discardMeditationRecord());
+        btnDiscard.setOnClickListener(v -> {
+            SharedPreferences sharedPreferences = getSharedPreferences("MeditationRecords", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putBoolean("lastMeditationDiscarded", true); // ✅ 只在废弃时存储废弃状态
+            editor.putString("lastDistractionLevel", ""); // ✅ 清除杂念记录，防止错误弹窗
+            editor.apply();
+
+            // ✅ 添加日志，确保状态正确存储
+            Log.d("DEBUG", "📌 冥想被废弃: " + sharedPreferences.getBoolean("lastMeditationDiscarded", false));
+
+            Intent discardIntent = new Intent();
+            discardIntent.putExtra("meditationDiscarded", true);
+            setResult(RESULT_CANCELED, discardIntent);
+            finish();
+        });
 
 
-//        // **用户点击“废弃”时**
 //        btnDiscard.setOnClickListener(v -> {
-////            Intent intent = new Intent();
-//            intent.putExtra("meditationDiscarded", true); // **通知 TimerActivity 用户放弃记录**
-//            setResult(RESULT_CANCELED, intent);
+//            SharedPreferences.Editor editor = sharedPreferences.edit();
+//            editor.putBoolean("lastMeditationDiscarded", true);
+//            editor.apply();
+//
+//            Intent discardIntent = new Intent();
+//            discardIntent.putExtra("meditationDiscarded", true);
+//            editor.putString("lastDistractionLevel", ""); // ✅ 清除上次的杂念信息，防止下次误弹窗
+//
+//            setResult(RESULT_CANCELED, discardIntent);
 //            finish();
 //        });
-
     }
 
     private void saveMeditationRecord() {

@@ -116,6 +116,12 @@ public class Question extends AppCompatActivity {
             Intent intent = new Intent(Question.this, User.class);
             startActivity(intent);
         });
+
+        ImageButton alarm = findViewById(R.id.btn_alarm);
+        alarm.setOnClickListener(v -> {
+            Intent intent = new Intent(Question.this, TimerActivity.class);
+            startActivity(intent);
+        });
     }
 
 
