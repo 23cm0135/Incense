@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Question.class);
             startActivity(intent);
         });
+        ImageButton alarm = findViewById(R.id.btn_alarm);
+        alarm.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, TimerActivity.class);
+            startActivity(intent);
+        });
 
         // **初始化推荐商品**
         updateRecommendedProducts();

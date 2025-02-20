@@ -116,69 +116,6 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <!-- 个人使用感受功能 -->
-<!--            <LinearLayout-->
-<!--                android:id="@+id/layout_feedback"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:background="@drawable/rounded_button_background"-->
-<!--                android:clickable="true"-->
-<!--                android:focusable="true"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:padding="10dp">-->
-
-<!--                <ImageButton-->
-<!--                    android:id="@+id/btn_feedback"-->
-<!--                    android:layout_width="48dp"-->
-<!--                    android:layout_height="48dp"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:src="@drawable/emotion" />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginTop="4dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center_vertical"-->
-<!--                    android:paddingStart="10dp"-->
-<!--                    android:text="評価"-->
-<!--                    android:textColor="@android:color/black"-->
-<!--                    android:textSize="18sp" />-->
-<!--            </LinearLayout>-->
-
-            <LinearLayout
-                android:id="@+id/layout_alarm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_button_background"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:foreground="?attr/selectableItemBackground"
-                android:padding="10dp">
-
-                <ImageButton
-                    android:id="@+id/btn_alarm"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/alarm" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:paddingStart="10dp"
-                    android:text="瞑想"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp" />
-            </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_logout"
                 android:layout_width="match_parent"
@@ -239,6 +176,14 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:src="@drawable/page" />
+
+        <ImageButton
+            android:id="@+id/btn_alarm"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:src="@drawable/alarm" />
 
         <!-- User 按钮 -->
         <ImageButton

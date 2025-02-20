@@ -63,12 +63,12 @@ public class User extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // 跳轉到鬧鐘界面
-        LinearLayout alarm = findViewById(R.id.layout_alarm);
-        alarm.setOnClickListener(v -> {
-            Intent intent = new Intent(User.this, TimerActivity.class);
-            startActivity(intent);
-        });
+//        // 跳轉到鬧鐘界面
+//        LinearLayout alarm = findViewById(R.id.layout_alarm);
+//        alarm.setOnClickListener(v -> {
+//            Intent intent = new Intent(User.this, TimerActivity.class);
+//            startActivity(intent);
+//        });
 
         // 返回主頁
         ImageButton homeButton = findViewById(R.id.btn_home);
@@ -82,6 +82,12 @@ public class User extends AppCompatActivity {
         ImageButton question = findViewById(R.id.btn_app);
         question.setOnClickListener(v -> {
             Intent intent = new Intent(User.this, Question.class);
+            startActivity(intent);
+        });
+
+        ImageButton alarm = findViewById(R.id.btn_alarm);
+        alarm.setOnClickListener(v -> {
+            Intent intent = new Intent(User.this, TimerActivity.class);
             startActivity(intent);
         });
 
