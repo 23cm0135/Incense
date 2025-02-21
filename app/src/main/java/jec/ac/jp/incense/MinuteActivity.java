@@ -146,14 +146,12 @@ public class MinuteActivity extends AppCompatActivity {
             FavoriteItem item = browsingHistory.get(i);
             if (item.getName().equals(newItem.getName())) {
                 browsingHistory.remove(i); // 删除旧的记录
-              //  notifyItemRemoved(i);
                 break;
             }
         }
 
         // 将新的历史记录插入到最前面
         browsingHistory.add(0, newItem);
-       // notifyItemInserted(0);
         Log.d("BrowsingHistory", "Browsing history after update: " + browsingHistory.toString());
 
         // 保存更新后的历史记录
