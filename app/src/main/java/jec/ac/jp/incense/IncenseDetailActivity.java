@@ -1,8 +1,6 @@
 package jec.ac.jp.incense;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,210 +8,135 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class IncenseDetailActivity extends AppCompatActivity {
 
-    private static final String PREFS_NAME = "FavoritesPrefs";
-    private static final String FAVORITES_KEY = "favorite_items";
-    private static final String BROWSING_HISTORY_KEY = "browsing_history";
+    private FirebaseFirestore db;
+    private FirebaseUser currentUser;
 
-    public static ArrayList<FavoriteItem> favoriteItems = new ArrayList<>();
-    public static ArrayList<FavoriteItem> browsingHistory = new ArrayList<>();
-    private static Set<String> favoriteNamesSet = new HashSet<>(); // 用于快速检查是否收藏
-    private BrowsingHistoryAdapter browsingHistoryAdapter;
+    private String incenseName, effect, imageUrl, description, url;
+    private Button favoriteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incense_detail);
-        // 启用 Edge-to-Edge 显示效果
         EdgeToEdge.enable(this);
 
-        // 加载收藏数据
-        loadFavorites(this);
+        db = FirebaseFirestore.getInstance();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        IncenseDetailActivity.loadBrowsingHistory(this);
+        // 取得 Intent 数据
+        incenseName = getIntent().getStringExtra("name");
+        effect = getIntent().getStringExtra("effect");
+        imageUrl = getIntent().getStringExtra("imageUrl");
+        description = getIntent().getStringExtra("description");
+        url = getIntent().getStringExtra("url");
 
-        // 获取历史记录列表
-        ArrayList<FavoriteItem> historyItems = IncenseDetailActivity.browsingHistory;
-
-
-        // 获取传递的数据
-        String name = getIntent().getStringExtra("name");
-        String imageUrl = getIntent().getStringExtra("imageUrl");
-        String description = getIntent().getStringExtra("description");
-        String effect = getIntent().getStringExtra("effect");
-        String url = getIntent().getStringExtra("url");
-
-        Log.d("url", "Received url: " + url);
-
-        // 初始化视图
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         ImageView imageView = findViewById(R.id.incense_detail_image);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
-        Button favoriteButton = findViewById(R.id.favorite_button);
+        favoriteButton = findViewById(R.id.favorite_button);
         Button openUrlButton = findViewById(R.id.open_url_button);
+        Button userImpressionButton = findViewById(R.id.UserImpression);
 
-        // 设置数据到视图
-        nameTextView.setText(name);
+        nameTextView.setText(incenseName);
         descriptionTextView.setText(description);
-        Glide.with(this).load(imageUrl).into(imageView);
+        Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.default_image)
+                .error(R.drawable.default_image)
+                .into(imageView);
 
-        // 设置"购买"按钮点击事件，打开浏览器
         openUrlButton.setOnClickListener(v -> {
             if (url == null || url.isEmpty()) {
                 Toast.makeText(this, "無効なURLです", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(browserIntent);
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         });
 
         // 添加到浏览历史
-        addToBrowsingHistory(new FavoriteItem(name, effect, imageUrl, description,url), this);
+        addToBrowsingHistory();
 
-        // 初始化收藏按钮状态
-        if (favoriteNamesSet.contains(name)) {
-            setButtonAsFavorited(favoriteButton);
-        }
+        // 检查是否已收藏
+        checkIfFavorite();
+        favoriteButton.setOnClickListener(v -> addToFavorites());
 
-        // 收藏按钮点击事件
-        favoriteButton.setOnClickListener(v -> {
-            if (favoriteNamesSet.contains(name)) {
-                Toast.makeText(this, "商品はすでにお気に入りに追加されています", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-
-            // 添加到收藏列表 - 在列表顶部插入，而不是追加到最后
-            FavoriteItem newItem = new FavoriteItem(name, effect, imageUrl, description, url);
-            favoriteItems.add(0, newItem); // 新加入的收藏产品放在列表的最上方
-            favoriteNamesSet.add(name); // 更新 HashSet，防止重复收藏
-            saveFavorites(this);
-
-            // 动态更新按钮状态
-            setButtonAsFavorited(favoriteButton);
-
-            Toast.makeText(this, "お気に入りに追加しました: " + name, Toast.LENGTH_SHORT).show();
-        });
-
-        // 1) 找到「投稿します」按鈕
-        Button userImpressionButton = findViewById(R.id.UserImpression);
-
-        // 2) 點擊時，跳到 UserImpression 這個 Activity
+        // 投稿按钮
         userImpressionButton.setOnClickListener(v -> {
-            // 建立 Intent
             Intent intent = new Intent(IncenseDetailActivity.this, UserImpression.class);
-
-            // 例如把「香の名前」傳給投稿頁面
-            // (UserImpression 中可用 getIntent().getStringExtra("INCENSE_NAME") 取得)
-            intent.putExtra("INCENSE_NAME", name);
-
+            intent.putExtra("INCENSE_NAME", incenseName);
             startActivity(intent);
         });
     }
 
+    private void addToBrowsingHistory() {
+        if (currentUser == null) return;
 
-        private void setButtonAsFavorited(Button button) {
-            button.setEnabled(false);
-            button.setText("お気に入り済み");
-            button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-        }
+        FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
 
-    private void addToBrowsingHistory(FavoriteItem item, Context context) {
-        // 遍历历史记录，如果有相同项，则删除旧的记录
-        for (int i = 0; i < browsingHistory.size(); i++) {
-            if (browsingHistory.get(i).getName().equals(item.getName())) {
-                browsingHistory.remove(i); // 删除旧的记录
-                break; // 一旦删除，跳出循环
-            }
-        }
-
-        // 将新的记录添加到最上方
-        browsingHistory.add(0, item);
-
-        // 保存更新后的浏览记录
-        saveBrowsingHistory(context);
-
-        // 确保 UI 更新
-        updateHistoryUI();
+        db.collection("users")
+                .document(currentUser.getUid())
+                .collection("history")
+                .document(incenseName)
+                .set(item)
+                .addOnSuccessListener(aVoid ->
+                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
+                )
+                .addOnFailureListener(e ->
+                        Log.e("Firestore", "浏览历史添加失败", e)
+                );
     }
 
-    public static void saveBrowsingHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+    private void checkIfFavorite() {
+        if (currentUser == null) return;
 
-        Gson gson = new Gson();
-        String json = gson.toJson(browsingHistory);
-
-        editor.putString(BROWSING_HISTORY_KEY, json);
-        editor.apply();
+        db.collection("users").document(currentUser.getUid())
+                .collection("favorites")
+                .document(incenseName)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        setButtonAsFavorited();
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Firestore", "お気に入り检查失败", e)
+                );
     }
 
-    public static void loadBrowsingHistory(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String json = prefs.getString(BROWSING_HISTORY_KEY, null);
-
-        if (json != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
-            browsingHistory = gson.fromJson(json, type);
-        } else {
-            browsingHistory = new ArrayList<>(); // 初始化为空列表
+    private void addToFavorites() {
+        if (currentUser == null) {
+            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+            return;
         }
+        FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
+
+        db.collection("users")
+                .document(currentUser.getUid())
+                .collection("favorites")
+                .document(incenseName)
+                .set(item)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "お気に入りに追加: " + incenseName, Toast.LENGTH_SHORT).show();
+                    setButtonAsFavorited();
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Firestore", "お気に入り保存失败", e)
+                );
     }
 
-    // 更新历史记录UI
-    private void updateHistoryUI() {
-        if (browsingHistoryAdapter != null) {
-            browsingHistoryAdapter.notifyDataSetChanged(); // 刷新适配器
-        }
-    }
-
-    public static void saveFavorites(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(favoriteItems);
-
-        editor.putString(FAVORITES_KEY, json);
-        editor.apply();
-        // 同步 favoriteNamesSet
-        favoriteNamesSet.clear();
-        for (FavoriteItem item : favoriteItems) {
-            favoriteNamesSet.add(item.getName());
-        }
-    }
-
-    public static void loadFavorites(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String json = prefs.getString(FAVORITES_KEY, null);
-
-        if (json != null) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<FavoriteItem>>() {}.getType();
-            favoriteItems = gson.fromJson(json, type);
-        } else {
-            favoriteItems = new ArrayList<>();
-        }
-
-        // 更新 favoriteNamesSet，确保存储的收藏状态正确加载
-        favoriteNamesSet.clear();
-        for (FavoriteItem item : favoriteItems) {
-            favoriteNamesSet.add(item.getName());
-        }
+    private void setButtonAsFavorited() {
+        favoriteButton.setEnabled(false);
+        favoriteButton.setText("お気に入り済み");
+        // 将按钮背景设置为灰色
+        favoriteButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
     }
 }

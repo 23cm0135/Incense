@@ -3,47 +3,44 @@ package jec.ac.jp.incense;
 import java.util.Objects;
 
 public class FavoriteItem {
-    private final String name;
-    private final String effect;
-    private final String imageUrl; // 可能为空
-    private final int imageResId;  // 可能为 0
-    private final String description;
-    private final String url;
+    private String name;         // 香的名称
+    private String effect;       // 功效
+    private String imageUrl;     // 网络图片 URL
+    private String description;  // 描述
+    private String url;          // 购买链接
 
-    // **构造函数 (本地图片)**
-    public FavoriteItem(String name, String effect, int imageResId, String description, String url) {
-        this.name = name;
-        this.effect = effect;
-        this.imageUrl = null;
-        this.imageResId = imageResId;
-        this.description = description;
-        this.url = url;
-    }
+    // Firestore 反射用的默认构造函数
+    public FavoriteItem() {}
 
-    // **构造函数 (网络图片)**
+    // 网络图片用构造函数
     public FavoriteItem(String name, String effect, String imageUrl, String description, String url) {
         this.name = name;
         this.effect = effect;
         this.imageUrl = imageUrl;
-        this.imageResId = 0; // 默认为 0，表示没有本地图片
         this.description = description;
         this.url = url;
     }
 
+    // Getter 方法
     public String getName() { return name; }
     public String getEffect() { return effect; }
     public String getImageUrl() { return imageUrl; }
-    public int getImageResId() { return imageResId; }
     public String getDescription() { return description; }
     public String getUrl() { return url; }
+
+    // Setter 方法
+    public void setName(String name) { this.name = name; }
+    public void setEffect(String effect) { this.effect = effect; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setDescription(String description) { this.description = description; }
+    public void setUrl(String url) { this.url = url; }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FavoriteItem that = (FavoriteItem) o;
-        return imageResId == that.imageResId &&
-                Objects.equals(name, that.name) &&
+        return Objects.equals(name, that.name) &&
                 Objects.equals(effect, that.effect) &&
                 Objects.equals(imageUrl, that.imageUrl) &&
                 Objects.equals(description, that.description) &&
@@ -52,6 +49,6 @@ public class FavoriteItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, effect, imageUrl, imageResId, description, url);
+        return Objects.hash(name, effect, imageUrl, description, url);
     }
 }
