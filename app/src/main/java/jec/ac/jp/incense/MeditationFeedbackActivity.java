@@ -119,7 +119,6 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
 //            finish();
 //        });
     }
-
     private void saveMeditationRecord() {
         if (meditationDuration <= 0) {
             Toast.makeText(this, "エラー: 冥想時間が取得できませんでした。", Toast.LENGTH_SHORT).show();

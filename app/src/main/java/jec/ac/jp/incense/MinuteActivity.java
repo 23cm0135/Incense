@@ -16,13 +16,14 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class MinuteActivity extends AppCompatActivity {
 
     private String url;
     private String incenseId, incenseName;
     private String text;
-    private String imageUrl;    // 网络图片 URL
+    private String imageUrl;
     private Button btnFavorite;
 
     private FirebaseUser currentUser;
@@ -37,7 +38,7 @@ public class MinuteActivity extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        // 取得 Intent 数据（使用 EXTRA_IMAGE_URL 来传递网络图片 URL）
+        // 取得 Intent 数据
         text = getIntent().getStringExtra("EXTRA_TEXT");
         imageUrl = getIntent().getStringExtra("EXTRA_IMAGE_URL");
         url = getIntent().getStringExtra("EXTRA_URL");
@@ -46,7 +47,7 @@ public class MinuteActivity extends AppCompatActivity {
         }
         incenseId = getIntent().getStringExtra("INCENSE_ID");
         incenseName = getIntent().getStringExtra("INCENSE_NAME");
-        if (incenseId == null)  incenseId = "unknown_id";
+        if (incenseId == null) incenseId = "unknown_id";
         if (incenseName == null) incenseName = "不明な香";
 
         // 设置 UI
@@ -98,7 +99,6 @@ public class MinuteActivity extends AppCompatActivity {
     private void addToBrowsingHistory() {
         if (currentUser == null) return;
 
-        // 使用网络图片构造 FavoriteItem
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
 
         db.collection("users")
@@ -149,7 +149,7 @@ public class MinuteActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "お気に入り检查失败", e)
+                        Log.e("Firestore", "お気に入りチェック失败", e)
                 );
     }
 
@@ -157,6 +157,5 @@ public class MinuteActivity extends AppCompatActivity {
         btnFavorite.setEnabled(false);
         btnFavorite.setText("お気に入り済み");
         btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
-
     }
 }

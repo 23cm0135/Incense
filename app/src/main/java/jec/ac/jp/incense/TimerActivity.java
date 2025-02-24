@@ -147,6 +147,7 @@ public class TimerActivity extends AppCompatActivity {
             resetUI();
             return;
         }
+        resetUI();
         restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
         //stopBreathingAnimation();
@@ -217,23 +218,35 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     // 变暗屏幕
+    // 变暗屏幕
     private void dimScreen() {
+        if (!isCounting) {
+            Log.d("DEBUG", "冥想未开始，屏幕不会变暗");
+            return;
+        }
+
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.screenBrightness = 0.1f; // 设置为最暗，0表示最暗，1表示最亮
         getWindow().setAttributes(layoutParams);
+        Log.d("DEBUG", "屏幕已变暗");
     }
+
 
     private void restoreScreenBrightness() {
         try {
             ContentResolver contentResolver = getContentResolver();
             int currentBrightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS);
+
             WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-            layoutParams.screenBrightness = currentBrightness / 255.0f; // 系统亮度的值是0-255，所以需要转换为0-1的范围
+            layoutParams.screenBrightness = currentBrightness / 255.0f;
             getWindow().setAttributes(layoutParams);
+
         } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace(); // 错误处理
+            e.printStackTrace();
         }
     }
+
+
 
     /**
      * 启动音乐播放服务
@@ -317,7 +330,7 @@ public class TimerActivity extends AppCompatActivity {
         startActivityForResult(intent, FEEDBACK_REQUEST_CODE);
     }
 
-    private void resetUI() {
+    public void resetUI() {
         // **确保倒计时完全停止**
         if (countDownTimer != null) {
             countDownTimer.cancel();
@@ -347,6 +360,13 @@ public class TimerActivity extends AppCompatActivity {
             breathingCircle.requestLayout();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resetUI();  // 确保 UI 状态重置
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
