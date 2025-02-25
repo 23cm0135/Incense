@@ -6,6 +6,7 @@
     android:background="@drawable/background_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:paddingTop="30dp">
 
     <!-- 滚动视图 -->
@@ -20,7 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:paddingBottom="24dp">
 
             <!-- 产品图片 -->
             <ImageView

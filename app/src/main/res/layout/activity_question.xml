@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
     android:paddingTop="30dp"
+    android:fitsSystemWindows="true"
     tools:context=".Question">
 
     <!-- 可滚动内容 -->

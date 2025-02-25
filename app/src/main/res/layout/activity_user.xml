@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
     android:orientation="vertical"
-    android:paddingTop="30dp"
-    android:padding="16dp">
+    android:fitsSystemWindows="true"
+>
 
     <!-- 内容部分 -->
     <LinearLayout
