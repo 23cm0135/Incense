@@ -62,6 +62,8 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_anchor="@+id/scrollView"
+        android:fitsSystemWindows="true"
+
         app:layout_anchorGravity="bottom|center">
 
         <!-- 水平布局，包含 投稿 和 购买 按钮 -->
@@ -69,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+
             android:gravity="center">
 
             <!-- 投稿按钮 -->
