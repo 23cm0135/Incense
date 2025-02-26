@@ -56,6 +56,7 @@ public class TimerActivity extends AppCompatActivity {
     private static final int FEEDBACK_REQUEST_CODE = 1;
     private Runnable breathingRunnable;
     private int initialCircleSize; // 記錄圓圈的初始大小
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,15 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_timer);
         EdgeToEdge.enable(this);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        if (user == null) {
+            Intent intent = new Intent(TimerActivity.this, Account.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
         etTime = findViewById(R.id.etTime);
         btnStart = findViewById(R.id.btnStart);
         btnStop = findViewById(R.id.btnStop);
@@ -79,6 +89,7 @@ public class TimerActivity extends AppCompatActivity {
 
         setupMusicSpinner();
         checkLastMeditationStatus();
+
 
         btnStart.setOnClickListener(v -> startMeditationWithCountdown());
         btnStop.setOnClickListener(v -> stopCountdown());
@@ -103,16 +114,17 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void startMeditationWithCountdown() {
-        new CountDownTimer(5000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                btnStart.setText("開始まで " + millisUntilFinished / 1000 + " 秒");
-            }
-            @Override
-            public void onFinish() {
-                btnStart.setText("冥想開始");
-                startCountdown();
-            }
-        }.start();
+        startCountdown();
+//        new CountDownTimer(5000, 1000) {
+////            public void onTick(long millisUntilFinished) {
+////                btnStart.setText("開始まで " + millisUntilFinished / 1000 + " 秒");
+////            }
+//            @Override
+//            public void onFinish() {
+//                btnStart.setText("冥想開始");
+//                startCountdown();
+//            }
+//        }.start();
     }
 
     private void stopCountdown() {
