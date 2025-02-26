@@ -12,6 +12,8 @@
     android:padding="8dp"
     android:id="@+id/item_layout">
 
+
+
     <ImageView
         android:id="@+id/incense_image"
         android:layout_width="80dp"
