@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +23,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
 
     private String incenseName, effect, imageUrl, description, url;
     private Button favoriteButton;
+    private Button btnViewPosts;  // 新增這個變數來修正無法點擊問題
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,27 +41,32 @@ public class IncenseDetailActivity extends AppCompatActivity {
         description = getIntent().getStringExtra("description");
         url = getIntent().getStringExtra("url");
 
+        // 綁定 UI 元件
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         ImageView imageView = findViewById(R.id.incense_detail_image);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         favoriteButton = findViewById(R.id.favorite_button);
         Button openUrlButton = findViewById(R.id.open_url_button);
         Button userImpressionButton = findViewById(R.id.UserImpression);
+        btnViewPosts = findViewById(R.id.btnViewPosts);  // 確保這個按鈕已經正確綁定
 
-        nameTextView.setText(incenseName);
-        descriptionTextView.setText(description);
+        // 設置內容
+        nameTextView.setText(incenseName != null ? incenseName : "不明な香");
+        descriptionTextView.setText(description != null ? description : "説明なし");
+
         Glide.with(this)
-                .load(imageUrl)
+                .load(imageUrl != null ? imageUrl : R.drawable.default_image)
                 .placeholder(R.drawable.default_image)
                 .error(R.drawable.default_image)
                 .into(imageView);
 
+        // 網址打開按鈕
         openUrlButton.setOnClickListener(v -> {
             if (url == null || url.isEmpty()) {
                 Toast.makeText(this, "無効なURLです", Toast.LENGTH_SHORT).show();
-                return;
+            } else {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
             }
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         });
 
         // 添加到浏览历史
@@ -69,10 +76,17 @@ public class IncenseDetailActivity extends AppCompatActivity {
         checkIfFavorite();
         favoriteButton.setOnClickListener(v -> addToFavorites());
 
-        // 投稿按钮
+        // 投稿按鈕
         userImpressionButton.setOnClickListener(v -> {
             Intent intent = new Intent(IncenseDetailActivity.this, UserImpression.class);
             intent.putExtra("INCENSE_NAME", incenseName);
+            startActivity(intent);
+        });
+
+        // **修正 `btnViewPosts` 無反應的問題**
+        btnViewPosts.setOnClickListener(v -> {
+            Log.d("IncenseDetailActivity", "Navigating to UserImpressionListActivity");
+            Intent intent = new Intent(IncenseDetailActivity.this, UserImpressionListActivity.class);
             startActivity(intent);
         });
     }
@@ -80,19 +94,21 @@ public class IncenseDetailActivity extends AppCompatActivity {
     private void addToBrowsingHistory() {
         if (currentUser == null) return;
 
-        FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
+        FavoriteItem item = new FavoriteItem(
+                incenseName != null ? incenseName : "不明な香",
+                effect != null ? effect : "効果不明",
+                imageUrl != null ? imageUrl : "",
+                description != null ? description : "説明なし",
+                url != null ? url : "https://www.google.com"
+        );
 
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("history")
                 .document(incenseName)
                 .set(item)
-                .addOnSuccessListener(aVoid ->
-                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
-                )
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "浏览历史添加失败", e)
-                );
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "浏览历史添加成功: " + incenseName))
+                .addOnFailureListener(e -> Log.e("Firestore", "浏览历史添加失败", e));
     }
 
     private void checkIfFavorite() {
@@ -107,9 +123,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
                         setButtonAsFavorited();
                     }
                 })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "お気に入り检查失败", e)
-                );
+                .addOnFailureListener(e -> Log.e("Firestore", "お気に入り检查失败", e));
     }
 
     private void addToFavorites() {
@@ -117,7 +131,14 @@ public class IncenseDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
             return;
         }
-        FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
+
+        FavoriteItem item = new FavoriteItem(
+                incenseName != null ? incenseName : "不明な香",
+                effect != null ? effect : "効果不明",
+                imageUrl != null ? imageUrl : "",
+                description != null ? description : "説明なし",
+                url != null ? url : "https://www.google.com"
+        );
 
         db.collection("users")
                 .document(currentUser.getUid())
@@ -128,15 +149,12 @@ public class IncenseDetailActivity extends AppCompatActivity {
                     Toast.makeText(this, "お気に入りに追加: " + incenseName, Toast.LENGTH_SHORT).show();
                     setButtonAsFavorited();
                 })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "お気に入り保存失败", e)
-                );
+                .addOnFailureListener(e -> Log.e("Firestore", "お気に入り保存失败", e));
     }
 
     private void setButtonAsFavorited() {
         favoriteButton.setEnabled(false);
         favoriteButton.setText("お気に入り済み");
-        // 将按钮背景设置为灰色
-        favoriteButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+        favoriteButton.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
     }
 }
