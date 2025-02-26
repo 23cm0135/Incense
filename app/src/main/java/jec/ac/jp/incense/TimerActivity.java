@@ -152,7 +152,7 @@ public class TimerActivity extends AppCompatActivity {
             return;
         }
 
-        resetUI(); // 确保调用 resetUI()
+        resetUI();
         restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
     }
@@ -175,7 +175,6 @@ public class TimerActivity extends AppCompatActivity {
         totalTimeInMillis = inputMinutes * 60 * 1000;
         isCounting = true;
 
-        // 启动倒计时音乐服务
         startMusicService();
 
         btnStop.setVisibility(View.VISIBLE);
@@ -186,16 +185,14 @@ public class TimerActivity extends AppCompatActivity {
 
         startBreathingAnimation();
 
-        // 启动延迟10秒后的屏幕变暗
         new CountDownTimer(10000, 1000) { // 延迟10秒
             @Override
             public void onTick(long millisUntilFinished) {
-                // 可以选择更新界面，比如显示"屏幕将变暗"
             }
 
             @Override
             public void onFinish() {
-                dimScreen(); // 10秒后触发屏幕变暗
+                dimScreen();
             }
         }.start();
 
@@ -211,18 +208,16 @@ public class TimerActivity extends AppCompatActivity {
             public void onFinish() {
                 if (isCounting) {
                     isCounting = false;
-                    stopMusicService(); // 冥想结束，停止音乐
+                    stopMusicService();
                     openFeedbackScreen(totalTimeInMillis / 1000);
 
-                    // 恢复屏幕亮度
                     restoreScreenBrightness();
                 }
             }
         }.start();
     }
 
-    // 变暗屏幕
-    // 变暗屏幕
+
     private void dimScreen() {
         if (!isCounting) {
             Log.d("DEBUG", "冥想未开始，屏幕不会变暗");
@@ -252,18 +247,14 @@ public class TimerActivity extends AppCompatActivity {
 
 
 
-    /**
-     * 启动音乐播放服务
-     */
+
     private void startMusicService() {
         Intent serviceIntent = new Intent(this, CountdownTimerService.class);
         serviceIntent.putExtra("MUSIC_RES_ID", selectedMusicResId);
         startService(serviceIntent);
     }
 
-    /**
-     * 停止音乐播放服务
-     */
+
     private void stopMusicService() {
         Intent serviceIntent = new Intent(this, CountdownTimerService.class);
         stopService(serviceIntent);
@@ -276,7 +267,6 @@ public class TimerActivity extends AppCompatActivity {
             return;
         }
 
-        // 确保圆圈恢复到初始大小
         breathingCircle.getLayoutParams().width = initialCircleSize;
         breathingCircle.getLayoutParams().height = initialCircleSize;
         breathingCircle.requestLayout();
@@ -312,13 +302,11 @@ public class TimerActivity extends AppCompatActivity {
         };
         breathingHandler.post(breathingRunnable);
     }
-    // 停止按钮点击时，重置圆圈的大小
     private void stopBreathingAnimation() {
         if (breathingRunnable != null) {
             breathingHandler.removeCallbacks(breathingRunnable);
         }
 
-        // 强制恢复到初始大小
         if (breathingCircle != null) {
             breathingCircle.getLayoutParams().width = initialCircleSize;
             breathingCircle.getLayoutParams().height = initialCircleSize;
@@ -365,15 +353,15 @@ public class TimerActivity extends AppCompatActivity {
         if (breathingCircle != null) {
             breathingCircle.getLayoutParams().width = initialCircleSize;
             breathingCircle.getLayoutParams().height = initialCircleSize;
-            breathingCircle.requestLayout(); // 确保调用 requestLayout()
-            breathingCircle.invalidate();   // 可选：强制重绘
+            breathingCircle.requestLayout();
+            breathingCircle.invalidate();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        resetUI();  // 确保 UI 状态重置
+        resetUI();
     }
 
 
@@ -382,14 +370,12 @@ public class TimerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == FEEDBACK_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            // **获取冥想时间**
             long meditationDuration = data.getLongExtra("meditationDuration", 0);
             String usedIncense = data.getStringExtra("usedIncense");
 
             if (meditationDuration > 0) {
                 saveMeditationRecord(meditationDuration, usedIncense);
             } else {
-                // Toast.makeText(this, "エラー: 冥想時間が正しく取得されませんでした。", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == RESULT_CANCELED && data != null && data.getBooleanExtra("meditationDiscarded", false)) {
             showMeditationSuggestionDialog("冥想記録が保存されませんでした。次回も頑張りましょう！");
@@ -415,19 +401,16 @@ public class TimerActivity extends AppCompatActivity {
         boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
         String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", "");
 
-        // ✅ **打印日志，检查数据是否正确**
         Log.d("DEBUG", "📌 checkLastMeditationStatus() -> 读取数据: 雑念: " + lastDistractionLevel + " | 废弃状态: " + lastMeditationDiscarded);
 
         if (lastMeditationDiscarded) {
             Log.d("DEBUG", "📌 弹出废弃提示对话框！");
             showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
 
-            // **清除废弃状态，防止重复弹窗**
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("lastMeditationDiscarded", false);
             editor.apply();
         }
-        // **如果没有废弃，检查杂念情况**
         else if (!lastDistractionLevel.isEmpty()) {
             if (lastDistractionLevel.equals("多い")) {
                 showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n今回は短めの瞑想を試してみましょう！");
@@ -440,10 +423,10 @@ public class TimerActivity extends AppCompatActivity {
     private void showMeditationSuggestionDialog(String lastDistractionLevel) {
         if (lastDistractionLevel == null || lastDistractionLevel.isEmpty()) {
             Log.d("DEBUG", "📌 showMeditationSuggestionDialog() -> lastDistractionLevel 为空，不弹窗");
-            return; // **如果数据无效，不弹窗**
+            return;
         }
 
-        // ✅ 解决方案：使用 `final` 数组存储 message
+
         final String[] messageHolder = new String[1];
 
         if (lastDistractionLevel.equals("多い")) {
@@ -463,7 +446,7 @@ public class TimerActivity extends AppCompatActivity {
                         .setMessage(messageHolder[0]) // ✅ 这里使用 `final` 数组
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
-            }, 500); // **延迟 500ms 确保 UI 线程可用**
+            }, 500);
         });
     }
 

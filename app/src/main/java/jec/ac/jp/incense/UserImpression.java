@@ -54,7 +54,6 @@ public class UserImpression extends AppCompatActivity {
             incenseName = "不明な香";
         }
 
-        // **顯示香的名稱**
         incenseNameTextView.setText(incenseName);
 
         btnSubmit.setOnClickListener(v -> {
@@ -89,7 +88,7 @@ public class UserImpression extends AppCompatActivity {
         db.collection("posts").add(post)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(UserImpression.this, "投稿成功", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(UserImpression.this, UserImpressionListActivity.class));
+//                    startActivity(new Intent(UserImpression.this, UserImpressionListActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e -> {

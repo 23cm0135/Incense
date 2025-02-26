@@ -79,20 +79,18 @@ public class RecordActivity extends AppCompatActivity {
             }
         }
 
-        // **按时间从最新到最旧排序**
         Collections.sort(sortedRecords, new Comparator<RecordEntry>() {
             @Override
             public int compare(RecordEntry o1, RecordEntry o2) {
-                return o2.date.compareTo(o1.date); // 降序排列（最新的排在最上面）
+                return o2.date.compareTo(o1.date);
+
             }
         });
 
-        // **将排序后的记录添加到 `recordList`**
         for (RecordEntry entry : sortedRecords) {
             recordList.add(entry.recordText);
         }
 
-        // **如果没有记录，显示 "記録がありません"**
         if (recordList.isEmpty()) {
             recordList.add("記録がありません");
             Toast.makeText(this, "記録が見つかりません", Toast.LENGTH_SHORT).show();
@@ -107,7 +105,7 @@ public class RecordActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if (sharedPreferences.contains(timestamp)) {
-            editor.remove(timestamp); // **删除特定时间戳的冥想记录**
+            editor.remove(timestamp); //
             editor.apply();
             Toast.makeText(this, "記録が削除されました: " + timestamp, Toast.LENGTH_SHORT).show();
         } else {
@@ -121,7 +119,6 @@ public class RecordActivity extends AppCompatActivity {
         ArrayList<String> recordList = new ArrayList<>();
         ArrayList<RecordEntry> sortedRecords = new ArrayList<>();
 
-        // **解析时间戳并存入临时列表**
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             try {
                 Date date = dateFormat.parse(entry.getKey()); // 解析时间戳
@@ -133,27 +130,22 @@ public class RecordActivity extends AppCompatActivity {
             }
         }
 
-        // **按时间从最新到最旧排序**
         Collections.sort(sortedRecords, (o1, o2) -> o2.date.compareTo(o1.date));
 
-        // **将排序后的记录添加到 `recordList`**
         for (RecordEntry entry : sortedRecords) {
             recordList.add(entry.recordText);
         }
 
-        // **如果没有记录，显示 "記録がありません"**
         if (recordList.isEmpty()) {
             recordList.add("記録がありません");
             Toast.makeText(this, "記録が見つかりません", Toast.LENGTH_SHORT).show();
         }
 
-        // **显示记录**
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recordList);
         listViewRecords.setAdapter(adapter);
     }
 
 
-    // **记录类**
     private static class RecordEntry {
         Date date;
         String recordText;
