@@ -84,6 +84,7 @@ public class MinuteActivity extends AppCompatActivity {
         Button btnViewPosts = findViewById(R.id.btnViewPosts);
         btnViewPosts.setOnClickListener(v -> {
             Intent intent = new Intent(MinuteActivity.this, UserImpressionListActivity.class);
+            intent.putExtra("INCENSE_NAME",incenseName);
             startActivity(intent);
         });
 

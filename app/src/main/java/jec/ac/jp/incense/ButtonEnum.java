@@ -82,10 +82,6 @@ public enum ButtonEnum {
 //            "香木の香りは、時の権力者たちに古くから愛されてきました。そんな香りの歴史に想いを馳せつつ、芳醇な香りをどうぞお楽しみください。",
 //            R.drawable.senkou29, "https://www.kohgen.com/i/kc-okoh-M0002");
 
-
-
-
-
     private final String id;
     private final String text;
     private final String imageUrl;

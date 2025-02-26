@@ -1,6 +1,7 @@
 package jec.ac.jp.incense;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,13 +18,16 @@ public class UserImpressionListActivity extends AppCompatActivity {
     private RecyclerView recyclerViewImpressions;
     private PostAdapter postAdapter;
     private List<Post> postList;
-
+    private String incenseName; // 用来存储传递过来的香名
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_impression_list);
         EdgeToEdge.enable(this);
 
+        // 获取香名
+        incenseName = getIntent().getStringExtra("INCENSE_NAME");
+        Log.d("UserImpressionListActivity", "Received incense name: " + incenseName);
         recyclerViewImpressions = findViewById(R.id.recyclerViewImpressions);
         postList = new ArrayList<>();
 
@@ -46,9 +50,14 @@ public class UserImpressionListActivity extends AppCompatActivity {
                             String username = document.getString("username");
                             String content = document.getString("content");
                             String incenseName = document.getString("incenseName");
+                            String postIncenseName = document.getString("incenseName"); // 使用不同的变量名
                             long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L; // **🔥 讀取時間戳記**
-
-                            postList.add(new Post(username, content, incenseName, timestamp));
+                            // 打印日志查看数据
+                            Log.d("UserImpressionListActivity", "incenseNameInPost: " + incenseName);
+                            // 只添加与当前香名匹配的评论
+                            if (postIncenseName != null && postIncenseName.trim().equals(this.incenseName.trim())) {
+                                postList.add(new Post(username, content, postIncenseName, timestamp));
+                            }
                         }
                         postAdapter.notifyDataSetChanged(); // **🔥 更新 RecyclerView**
                     }
