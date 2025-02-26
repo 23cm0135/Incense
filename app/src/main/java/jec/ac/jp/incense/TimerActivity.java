@@ -45,6 +45,7 @@ public class TimerActivity extends AppCompatActivity {
     private final Handler breathingHandler = new Handler();
     private static final int FEEDBACK_REQUEST_CODE = 1;
     private Runnable breathingRunnable;
+    private int initialCircleSize; // 记录圆圈的初始大小
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,8 @@ public class TimerActivity extends AppCompatActivity {
         spinnerMusic = findViewById(R.id.spinnerMusic);
         tvCountdown = findViewById(R.id.tvCountdown);
         breathingCircle = findViewById(R.id.breathingCircle);
+        // 记录圆圈的初始大小
+        initialCircleSize = breathingCircle.getLayoutParams().width;
         breathingText = findViewById(R.id.breathingText);
         breathingGuideText = findViewById(R.id.breathingGuideText);
         progressBar = findViewById(R.id.progressBar);
@@ -132,25 +135,26 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void stopCountdown() {
-        if (!isCounting) return; // 确保当前正在倒计时才执行
+        if (!isCounting) return;
 
+        stopBreathingAnimation(); // 停止呼吸动画
         if (countDownTimer != null) {
             countDownTimer.cancel(); // 取消倒计时
         }
 
         isCounting = false;
-        stopMusicService(); // **确保音乐停止**
+        stopMusicService(); // 停止音乐
 
         long elapsedTime = (totalTimeInMillis / 1000) - progressBar.getProgress();
         if (elapsedTime < 1) {
             Toast.makeText(this, "冥想時間が短すぎます", Toast.LENGTH_SHORT).show();
-            resetUI();
+            resetUI(); // 确保调用 resetUI()
             return;
         }
-        resetUI();
+
+        resetUI(); // 确保调用 resetUI()
         restoreScreenBrightness();
         openFeedbackScreen(elapsedTime);
-        //stopBreathingAnimation();
     }
 
     private void startCountdown() {
@@ -267,14 +271,17 @@ public class TimerActivity extends AppCompatActivity {
 
 
     private void startBreathingAnimation() {
-        breathingCircle = findViewById(R.id.breathingCircle);
         if (breathingCircle == null) {
             Toast.makeText(this, "エラー: breathingCircle が見つかりません", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        final int initialSize = breathingCircle.getLayoutParams().width;
-        final int expandedSize = (int) (initialSize * 1.4);
+        // 确保圆圈恢复到初始大小
+        breathingCircle.getLayoutParams().width = initialCircleSize;
+        breathingCircle.getLayoutParams().height = initialCircleSize;
+        breathingCircle.requestLayout();
+
+        final int expandedSize = (int) (initialCircleSize * 1.4); // 放大后的尺寸
 
         breathingRunnable = new Runnable() {
             boolean isInhale = true;
@@ -283,7 +290,10 @@ public class TimerActivity extends AppCompatActivity {
             public void run() {
                 if (!isCounting) return;
 
-                ValueAnimator animator = ValueAnimator.ofInt(isInhale ? initialSize : expandedSize, isInhale ? expandedSize : initialSize);
+                ValueAnimator animator = ValueAnimator.ofInt(
+                        isInhale ? initialCircleSize : expandedSize,
+                        isInhale ? expandedSize : initialCircleSize
+                );
                 animator.setDuration(isInhale ? inhaleTime : exhaleTime);
                 animator.addUpdateListener(animation -> {
                     int animatedValue = (int) animation.getAnimatedValue();
@@ -308,15 +318,17 @@ public class TimerActivity extends AppCompatActivity {
             breathingHandler.removeCallbacks(breathingRunnable);
         }
 
-        // 恢复圆圈的大小到最小
+        // 强制恢复到初始大小
         if (breathingCircle != null) {
-            breathingCircle.getLayoutParams().width = breathingCircle.getLayoutParams().height = (int) (breathingCircle.getLayoutParams().width / 1.4);
-            breathingCircle.requestLayout();
+            breathingCircle.getLayoutParams().width = initialCircleSize;
+            breathingCircle.getLayoutParams().height = initialCircleSize;
+            breathingCircle.requestLayout(); // 确保调用 requestLayout()
+            breathingCircle.invalidate();   // 可选：强制重绘
         }
 
-        breathingCircle.setVisibility(View.INVISIBLE);
-        breathingText.setVisibility(View.INVISIBLE);
-        breathingGuideText.setVisibility(View.INVISIBLE);
+        breathingCircle.setVisibility(View.VISIBLE);
+        breathingText.setVisibility(View.VISIBLE);
+        breathingGuideText.setVisibility(View.VISIBLE);
     }
 
     private void openFeedbackScreen(long meditationDuration) {
@@ -330,34 +342,31 @@ public class TimerActivity extends AppCompatActivity {
         startActivityForResult(intent, FEEDBACK_REQUEST_CODE);
     }
 
-    public void resetUI() {
-        // **确保倒计时完全停止**
+    private void resetUI() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;
         }
 
-        // **确保呼吸动画完全停止**
         if (breathingHandler != null && breathingRunnable != null) {
             breathingHandler.removeCallbacks(breathingRunnable);
         }
 
-        // **停止背景音乐**
         stopGuidedMeditation();
 
-        // **重置 UI**
         tvCountdown.setText("00:00");
         progressBar.setProgress(0);
         btnStart.setVisibility(View.VISIBLE);
         btnStop.setVisibility(View.GONE);
         etTime.setEnabled(true);
-        etTime.setText(""); // **清除用户输入的时间**
-        // **恢复圆圈大小到初始大小**
+        etTime.setText("");
+
+        // 恢复圆圈大小到初始大小
         if (breathingCircle != null) {
-            final int initialSize = breathingCircle.getLayoutParams().width;
-            breathingCircle.getLayoutParams().width = initialSize;
-            breathingCircle.getLayoutParams().height = initialSize;
-            breathingCircle.requestLayout();
+            breathingCircle.getLayoutParams().width = initialCircleSize;
+            breathingCircle.getLayoutParams().height = initialCircleSize;
+            breathingCircle.requestLayout(); // 确保调用 requestLayout()
+            breathingCircle.invalidate();   // 可选：强制重绘
         }
     }
 

@@ -160,10 +160,6 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         finish();
     }
 
-
-
-
-
     private class Product {
         String name;
         String effect;
