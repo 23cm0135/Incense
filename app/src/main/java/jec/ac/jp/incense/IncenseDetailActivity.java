@@ -44,6 +44,7 @@ public class IncenseDetailActivity extends AppCompatActivity {
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         favoriteButton = findViewById(R.id.favorite_button);
         Button openUrlButton = findViewById(R.id.open_url_button);
+        Button btnViewPosts = findViewById(R.id.btnViewPosts);
         Button userImpressionButton = findViewById(R.id.UserImpression);
 
         nameTextView.setText(incenseName);
@@ -72,6 +73,12 @@ public class IncenseDetailActivity extends AppCompatActivity {
         // 投稿按钮
         userImpressionButton.setOnClickListener(v -> {
             Intent intent = new Intent(IncenseDetailActivity.this, UserImpression.class);
+            intent.putExtra("INCENSE_NAME", incenseName);
+            startActivity(intent);
+        });
+
+        btnViewPosts.setOnClickListener(v -> {
+            Intent intent = new Intent(IncenseDetailActivity.this, UserImpressionListActivity.class);
             intent.putExtra("INCENSE_NAME", incenseName);
             startActivity(intent);
         });
