@@ -1,22 +1,29 @@
 package jec.ac.jp.incense;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private FavoriteAdapter adapter;
+    private TextView tvEmptyMessage;
     private ArrayList<FavoriteItem> favoriteItems = new ArrayList<>();
+    private FavoriteAdapter adapter;
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -28,6 +35,7 @@ public class FavoritesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorites);
         EdgeToEdge.enable(this);
 
+        tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
         recyclerView = findViewById(R.id.favorites_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -56,6 +64,14 @@ public class FavoritesActivity extends AppCompatActivity {
                         FavoriteItem item = doc.toObject(FavoriteItem.class);
                         favoriteItems.add(item);
                     }
+                    if (favoriteItems.isEmpty()) {
+                        // 資料為空，顯示「お気に入りがありません」
+                        tvEmptyMessage.setVisibility(TextView.VISIBLE);
+                        recyclerView.setVisibility(RecyclerView.GONE);
+                    } else {
+                        tvEmptyMessage.setVisibility(TextView.GONE);
+                        recyclerView.setVisibility(RecyclerView.VISIBLE);
+                    }
                     adapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e ->
@@ -75,6 +91,11 @@ public class FavoritesActivity extends AppCompatActivity {
                     favoriteItems.remove(item);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(this, "削除しました: " + item.getName(), Toast.LENGTH_SHORT).show();
+                    // 如果刪除後列表變空，也顯示提示訊息
+                    if (favoriteItems.isEmpty()) {
+                        tvEmptyMessage.setVisibility(TextView.VISIBLE);
+                        recyclerView.setVisibility(RecyclerView.GONE);
+                    }
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "削除に失敗しました", Toast.LENGTH_SHORT).show()

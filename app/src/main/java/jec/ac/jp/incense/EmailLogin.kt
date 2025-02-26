@@ -59,7 +59,7 @@ class EmailLogin : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth?.currentUser
                     if (user != null) {
-                        Toast.makeText(this, "登録成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "ログイン成功", Toast.LENGTH_SHORT).show()
                         navigateToUserScreen(user)
                     }
                 } else {

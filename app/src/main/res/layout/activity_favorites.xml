@@ -6,6 +6,25 @@
     android:orientation="vertical"
     android:paddingTop="30dp">
 
+    <TextView
+        android:id="@+id/favorites_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="お気に入り一覧" />
+    <TextView
+        android:id="@+id/tvEmptyMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="お気に入りがありません"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:gravity="center"
+        android:padding="16dp"
+        android:visibility="gone" />
     <!-- 使用 RecyclerView 替代 ListView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favorites_list"

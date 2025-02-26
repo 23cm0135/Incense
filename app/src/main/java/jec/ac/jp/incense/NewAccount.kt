@@ -3,6 +3,7 @@ package jec.ac.jp.incense
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -36,7 +37,6 @@ class NewAccount : AppCompatActivity() {
         edtDisplayName = findViewById(R.id.etDisplayName)
         val btnRegister: Button = findViewById(R.id.btnRegister)
 
-
         btnRegister.setOnClickListener {
             val email = edtEmail.text.toString()
             val password = edtPassword.text.toString()
@@ -44,12 +44,15 @@ class NewAccount : AppCompatActivity() {
 
             if (email.isEmpty() || password.isEmpty() || displayName.isEmpty()) {
                 Toast.makeText(this, "全ての項目を入力してください", Toast.LENGTH_SHORT).show()
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "正しいメールアドレスを入力してください", Toast.LENGTH_SHORT).show()
+            } else if (password.length < 6) {
+                Toast.makeText(this, "パスワードは6文字以上にしてください", Toast.LENGTH_SHORT).show()
             } else {
                 registerUser(email, password, displayName)
             }
         }
     }
-
 
     private fun registerUser(email: String, password: String, displayName: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -62,7 +65,6 @@ class NewAccount : AppCompatActivity() {
                             .build()
                         user.updateProfile(profileUpdates).addOnCompleteListener {
                             if (it.isSuccessful) {
-
                                 saveUserToFirestore(user, displayName)
                             } else {
                                 Toast.makeText(this, "表示名の設定に失敗しました", Toast.LENGTH_SHORT).show()
@@ -70,7 +72,6 @@ class NewAccount : AppCompatActivity() {
                         }
                     }
                 } else {
-
                     if (task.exception is FirebaseAuthUserCollisionException) {
                         Toast.makeText(this, "このメールアドレスはすでに登録されています", Toast.LENGTH_SHORT).show()
                     } else {
@@ -80,7 +81,6 @@ class NewAccount : AppCompatActivity() {
                 }
             }
     }
-
 
     private fun saveUserToFirestore(user: FirebaseUser, displayName: String) {
         val userData = hashMapOf(

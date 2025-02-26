@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -64,7 +65,7 @@ public class MinuteActivity extends AppCompatActivity {
                 .error(R.drawable.default_image)
                 .into(imageView);
 
-        // 「購入」按钮
+        // 「購入」按钮 (始终可用)
         Button btnPurchase = findViewById(R.id.btnPurchase);
         btnPurchase.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -73,28 +74,37 @@ public class MinuteActivity extends AppCompatActivity {
 
         // 「投稿する」按钮
         Button btnSubmitImpression = findViewById(R.id.btnSubmitImpression);
-        btnSubmitImpression.setOnClickListener(v -> {
-            Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
+        // 「お気に入りに追加」按钮
+        btnFavorite = findViewById(R.id.btnFavorite);
+        // 「他のユーザーの投稿」按钮 (此處保持不變)
+        Button btnViewPosts = findViewById(R.id.btnViewPosts);
+        btnViewPosts.setOnClickListener(v -> {
+            Intent intent = new Intent(MinuteActivity.this, UserImpressionListActivity.class);
+            // 若需要也可傳送 incenseName，但這裡主要傳送 incenseId
             intent.putExtra("INCENSE_ID", incenseId);
             intent.putExtra("INCENSE_NAME", incenseName);
             startActivity(intent);
         });
 
-        // 「他のユーザーの投稿」按钮
-        Button btnViewPosts = findViewById(R.id.btnViewPosts);
-        btnViewPosts.setOnClickListener(v -> {
-            Intent intent = new Intent(MinuteActivity.this, UserImpressionListActivity.class);
-            intent.putExtra("INCENSE_NAME",incenseName);
-            startActivity(intent);
-        });
+        // 未登入狀態下，禁用「投稿する」與「お気に入りに追加」按鈕
+        if (currentUser == null) {
+            btnSubmitImpression.setOnClickListener(v ->
+                    Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
+            btnFavorite.setOnClickListener(v ->
+                    Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
+        } else {
+            // 登入狀態：設置正常行為
+            btnSubmitImpression.setOnClickListener(v -> {
+                Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
+                intent.putExtra("INCENSE_ID", incenseId);
+                intent.putExtra("INCENSE_NAME", incenseName);
+                startActivity(intent);
+            });
+            checkIfFavorited();
+            btnFavorite.setOnClickListener(v -> addToFavorites());
+        }
 
-        // 添加到浏览历史（Firestore）
         addToBrowsingHistory();
-
-        // 设置お気に入り按钮
-        btnFavorite = findViewById(R.id.btnFavorite);
-        checkIfFavorited();
-        btnFavorite.setOnClickListener(v -> addToFavorites());
     }
 
     private void addToBrowsingHistory() {
