@@ -99,7 +99,8 @@ class Account : AppCompatActivity() {
                     .addOnCompleteListener(this) { signInTask ->
                         if (signInTask.isSuccessful) {
                             val user = firebaseAuth.currentUser
-                            Toast.makeText(this, "ログイン成功", Toast.LENGTH_SHORT).show()
+                            // 修改這裡的 Toast 文字顯示 "ようこそ 用戶名 さん"
+                            Toast.makeText(this, "ようこそ ${user?.displayName ?: user?.email} さん", Toast.LENGTH_SHORT).show()
                             navigateToUserScreen(user)
                         } else {
                             Log.e(TAG, "Firebase 登録失敗", signInTask.exception)
@@ -112,6 +113,7 @@ class Account : AppCompatActivity() {
             Toast.makeText(this, "Google 登録失敗，もう一度お試しください", Toast.LENGTH_SHORT).show()
         }
     }
+
 
 
     private fun navigateToUserScreen(user: FirebaseUser?) {
