@@ -1,6 +1,7 @@
 package jec.ac.jp.incense;
 
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
@@ -22,16 +24,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-
         etEmail = findViewById(R.id.etEmail);
         btnSendReset = findViewById(R.id.btnSendReset);
 
         btnSendReset.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
-            if (!email.isEmpty()) {
-                sendResetEmail(email);
-            } else {
+            if (email.isEmpty()) {
                 Toast.makeText(this, "メールアドレスを入力してください", Toast.LENGTH_SHORT).show();
+            } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "正しいメールアドレスの形式で入力してください", Toast.LENGTH_SHORT).show();
+            } else {
+                sendResetEmail(email);
             }
         });
     }
@@ -47,11 +50,19 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         ).show();
                         finish();
                     } else {
-                        Toast.makeText(
-                                ResetPasswordActivity.this,
-                                "送信に失敗しました。もう一度お試しください。",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                            Toast.makeText(
+                                    ResetPasswordActivity.this,
+                                    "このメールアドレスは登録されていません",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        } else {
+                            Toast.makeText(
+                                    ResetPasswordActivity.this,
+                                    "送信に失敗しました。もう一度お試しください。",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
                     }
                 });
     }
