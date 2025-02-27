@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                     ? currentUser.getDisplayName() : currentUser.getEmail();
             tvUserName.setText("ようこそ、" + name + "さん！");
         } else {
-            tvUserName.setText("ゲスト");
+            tvUserName.setText("ようこそ、ゲストさん！");
         }
 
         // 用戶圖示按鈕
