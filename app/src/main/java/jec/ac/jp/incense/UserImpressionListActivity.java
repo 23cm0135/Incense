@@ -50,11 +50,9 @@ public class UserImpressionListActivity extends AppCompatActivity {
                             String username = document.getString("username");
                             String content = document.getString("content");
                             String incenseName = document.getString("incenseName");
-                            String postIncenseName = document.getString("incenseName"); // 使用不同的变量名
-                            long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L; // **🔥 讀取時間戳記**
-                            // 打印日志查看数据
+                            String postIncenseName = document.getString("incenseName");
+                            long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L;
                             Log.d("UserImpressionListActivity", "incenseNameInPost: " + incenseName);
-                            // 只添加与当前香名匹配的评论
                             if (postIncenseName != null && postIncenseName.trim().equals(this.incenseName.trim())) {
                                 postList.add(new Post(username, content, postIncenseName, timestamp));
                             }
