@@ -35,7 +35,6 @@ public class RecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record);
         EdgeToEdge.enable(this);
 
-        // 檢查是否已登錄
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();

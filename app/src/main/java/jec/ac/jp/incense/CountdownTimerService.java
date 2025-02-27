@@ -42,7 +42,7 @@ public class CountdownTimerService extends Service {
         }
 
         mediaPlayer.setLooping(false);
-        mediaPlayer.start();  
+        mediaPlayer.start();
         return START_STICKY;
     }
 
