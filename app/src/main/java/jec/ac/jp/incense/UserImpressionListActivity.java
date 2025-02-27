@@ -18,7 +18,7 @@ public class UserImpressionListActivity extends AppCompatActivity {
     private RecyclerView recyclerViewImpressions;
     private PostAdapter postAdapter;
     private List<Post> postList;
-    private String incenseName; // 用来存储传递过来的香名
+    private String incenseName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +41,7 @@ public class UserImpressionListActivity extends AppCompatActivity {
     private void fetchPosts() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts")
-                .orderBy("timestamp", Query.Direction.DESCENDING) // **🔥 按時間降序排列**
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -59,7 +59,7 @@ public class UserImpressionListActivity extends AppCompatActivity {
                                 postList.add(new Post(username, content, postIncenseName, timestamp));
                             }
                         }
-                        postAdapter.notifyDataSetChanged(); // **🔥 更新 RecyclerView**
+                        postAdapter.notifyDataSetChanged();
                     }
                 });
     }
