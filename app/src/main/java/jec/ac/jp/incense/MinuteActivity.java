@@ -39,7 +39,6 @@ public class MinuteActivity extends AppCompatActivity {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        // 取得 Intent 数据
         text = getIntent().getStringExtra("EXTRA_TEXT");
         imageUrl = getIntent().getStringExtra("EXTRA_IMAGE_URL");
         url = getIntent().getStringExtra("EXTRA_URL");
@@ -51,7 +50,6 @@ public class MinuteActivity extends AppCompatActivity {
         if (incenseId == null) incenseId = "unknown_id";
         if (incenseName == null) incenseName = "不明な香";
 
-        // 设置 UI
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         ImageView imageView = findViewById(R.id.incense_detail_image);
@@ -65,35 +63,28 @@ public class MinuteActivity extends AppCompatActivity {
                 .error(R.drawable.default_image)
                 .into(imageView);
 
-        // 「購入」按钮 (始终可用)
         Button btnPurchase = findViewById(R.id.btnPurchase);
         btnPurchase.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(intent);
         });
 
-        // 「投稿する」按钮
         Button btnSubmitImpression = findViewById(R.id.btnSubmitImpression);
-        // 「お気に入りに追加」按钮
         btnFavorite = findViewById(R.id.btnFavorite);
-        // 「他のユーザーの投稿」按钮 (此處保持不變)
         Button btnViewPosts = findViewById(R.id.btnViewPosts);
         btnViewPosts.setOnClickListener(v -> {
             Intent intent = new Intent(MinuteActivity.this, UserImpressionListActivity.class);
-            // 若需要也可傳送 incenseName，但這裡主要傳送 incenseId
             intent.putExtra("INCENSE_ID", incenseId);
             intent.putExtra("INCENSE_NAME", incenseName);
             startActivity(intent);
         });
 
-        // 未登入狀態下，禁用「投稿する」與「お気に入りに追加」按鈕
         if (currentUser == null) {
             btnSubmitImpression.setOnClickListener(v ->
                     Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
             btnFavorite.setOnClickListener(v ->
                     Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {
-            // 登入狀態：設置正常行為
             btnSubmitImpression.setOnClickListener(v -> {
                 Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
                 intent.putExtra("INCENSE_ID", incenseId);

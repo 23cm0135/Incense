@@ -49,7 +49,6 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meditation_feedback);
         EdgeToEdge.enable(this);
 
-        // 正確取得冥想時間
         meditationDuration = getIntent().getLongExtra("meditationDuration", -1);
         String usedIncense = getIntent().getStringExtra("usedIncense");
 
@@ -59,10 +58,9 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
             return;
         }
 
-        loadMeditationProducts(); // 加载推薦產品（此部分保持不變）
+        loadMeditationProducts();
         etUsedIncense = findViewById(R.id.etUsedIncense);
 
-        // 為了讓數據跟帳號綁定，這裡需要修改為根據當前用戶設定 SharedPreferences 名稱
         FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
         String spName;
         if (currentUser != null) {
@@ -133,7 +131,6 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         finish();
     }
 
-    // 以下 loadMeditationProducts() 等方法保持不變
     private void loadMeditationProducts() {
         try {
             AssetManager assetManager = getAssets();

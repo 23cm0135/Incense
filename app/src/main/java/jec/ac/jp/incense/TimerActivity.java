@@ -336,7 +336,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void saveMeditationRecord(long duration, String incense) {
-        // 根據當前用戶的 UID 使用專屬 SharedPreferences 名稱
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String spName;
         if (currentUser != null) {
@@ -352,7 +351,6 @@ public class TimerActivity extends AppCompatActivity {
         editor.putString(timestamp, record);
         editor.apply();
 
-        // 輸出 Log 確認保存數據
         Map<String, ?> allEntries = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             Log.d("TimerActivity", "保存 - Key: " + entry.getKey() + ", Value: " + entry.getValue());
@@ -360,7 +358,6 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void checkLastMeditationStatus() {
-        // 使用用戶專屬的 SharedPreferences
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String spName;
         if (currentUser != null) {
