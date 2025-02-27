@@ -49,7 +49,7 @@
 
             <!-- 效果选择 -->
 
-            <!-- 问题 2 -->
+            <!-- 新增问题 1：天气选择 -->
             <RadioGroup
                 android:id="@+id/recommendation_grid"
                 android:layout_width="match_parent"
@@ -127,12 +127,91 @@
             </RadioGroup>
 
             <TextView
+                android:id="@+id/question_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="2. 今日の天気はどうですか"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_weather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <RadioButton
+                    android:id="@+id/radio_sunny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="晴れ"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_rainy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="雨"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_cloudy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="曇り"
+                    android:textSize="16sp" />
+
+            </RadioGroup>
+
+            <!-- 新增问题 2：年龄层选择 -->
+            <TextView
+                android:id="@+id/question_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="3. 年齢層はどっちらでしょうか"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <RadioGroup
+                android:id="@+id/radio_group_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <RadioButton
+                    android:id="@+id/radio_young"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="18-30歳"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_middle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="31-50歳"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio_old"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="51歳以上"
+                    android:textSize="16sp" />
+
+            </RadioGroup>
+
+            <TextView
                 android:id="@+id/question_1"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
                 android:layout_marginBottom="8dp"
                 android:padding="16dp"
-                android:text="2. 材料を選択してください"
+                android:text="4. 材料を選択してください"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
@@ -161,8 +240,6 @@
                     android:textSize="16sp" />
 
             </RadioGroup>
-
-
 
             <Button
                 android:id="@+id/submit_button"
@@ -226,4 +303,3 @@
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
-
