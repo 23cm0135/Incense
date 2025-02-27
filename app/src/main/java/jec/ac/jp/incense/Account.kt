@@ -99,7 +99,7 @@ class Account : AppCompatActivity() {
                     .addOnCompleteListener(this) { signInTask ->
                         if (signInTask.isSuccessful) {
                             val user = firebaseAuth.currentUser
-                            Toast.makeText(this, "登録成功", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "ログイン成功", Toast.LENGTH_SHORT).show()
                             navigateToUserScreen(user)
                         } else {
                             Log.e(TAG, "Firebase 登録失敗", signInTask.exception)
