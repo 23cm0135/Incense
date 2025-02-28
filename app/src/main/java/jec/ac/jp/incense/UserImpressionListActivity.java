@@ -7,6 +7,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -50,15 +52,25 @@ public class UserImpressionListActivity extends AppCompatActivity {
                             String username = document.getString("username");
                             String content = document.getString("content");
                             String incenseName = document.getString("incenseName");
-                            String postIncenseName = document.getString("incenseName");
-                            long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L;
+
+                            long timestamp = 0L;
+                            Object timestampObj = document.get("timestamp");
+
+                            if (timestampObj instanceof com.google.firebase.Timestamp) {
+                                timestamp = ((com.google.firebase.Timestamp) timestampObj).toDate().getTime();
+                            } else if (timestampObj instanceof Long) {
+                                timestamp = (Long) timestampObj;
+                            }
+
                             Log.d("UserImpressionListActivity", "incenseNameInPost: " + incenseName);
-                            if (postIncenseName != null && postIncenseName.trim().equals(this.incenseName.trim())) {
-                                postList.add(new Post(username, content, postIncenseName, timestamp));
+
+                            if (incenseName != null && incenseName.trim().equals(this.incenseName.trim())) {
+                                postList.add(new Post(username, content, incenseName, timestamp));
                             }
                         }
                         postAdapter.notifyDataSetChanged();
                     }
                 });
     }
+
 }

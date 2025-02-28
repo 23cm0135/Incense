@@ -140,6 +140,9 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         editor.putString("lastDistractionLevel", distractionLevel);
         editor.apply();
 
+        Toast.makeText(this, "保存が成功しました！", Toast.LENGTH_SHORT).show();
+
+
         Intent resultIntent = new Intent();
         resultIntent.putExtra("meditationSuggestion", distractionLevel);
         setResult(RESULT_OK, resultIntent);

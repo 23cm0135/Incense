@@ -137,7 +137,7 @@ public class Question extends AppCompatActivity {
     private void startAiAnalysis() {
         // 检查每个问题是否已被选择
         if (!isAllQuestionsAnswered()) {
-            Toast.makeText(this, "请回答所有问题！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
             return;  // 如果未回答所有问题，则返回
         }
         isAiAnalyzing = true; // 设置AI分析标志为true
@@ -159,7 +159,7 @@ public class Question extends AppCompatActivity {
     private void handleButtonClick() {
         // 检查每个问题是否已被选择
         if (!isAllQuestionsAnswered()) {
-            Toast.makeText(this, "请回答所有问题！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
             return;  // 如果未回答所有问题，则返回
         }
         isAiAnalyzing = true; // 设置AI分析标志为true
@@ -334,11 +334,28 @@ public class Question extends AppCompatActivity {
     private String buildAiPrompt(String userPreferences, List<Incense> incenseList) {
         Gson gson = new Gson();
         String incenseJson = gson.toJson(incenseList);
-        return "以下是用户的需求：" + userPreferences + "\n" +
-                "以下是香列表：" + incenseJson + "\n" +
-                "请根据用户的需求，从香列表中选择符合条件的香（最多5个），返回仅包含JSON格式的香列表，不要添加任何额外的文本解释。" +
-                "你必须确保返回可被Gson直接解析的有效JSON数组，格式应该是 [{},{},{}] 这样的。";
+
+        return "### 你的任務：\n" +
+                "根據使用者的選擇條件，從提供的香列表中，**嚴格篩選**最符合的 3-5 款香。\n" +
+                "如果找不到完全匹配的 5 款，請選擇最接近的 3-5 款。\n" +
+                "\n" +
+                "### 使用者的需求：\n" + userPreferences + "\n" +
+                "\n" +
+                "### 可選的香列表：\n" + incenseJson + "\n" +
+                "\n" +
+                "### 回應格式：\n" +
+                "請**務必**回傳 **純 JSON 陣列**（不要有額外的說明或文字），格式如下：\n" +
+                "[\n" +
+                "  {\"name\": \"香A\", \"effect\": \"效果A\", \"material\": \"材料A\", \"imageUrl\": \"URL_A\", \"description\": \"描述A\", \"url\": \"購買連結A\"},\n" +
+                "  {\"name\": \"香B\", \"effect\": \"效果B\", \"material\": \"材料B\", \"imageUrl\": \"URL_B\", \"description\": \"描述B\", \"url\": \"購買連結B\"}\n" +
+                "]\n" +
+                "\n" +
+                "⚠️ **注意**：\n" +
+                "1. **不要回應任何解釋或額外的文字**，只回傳 JSON 陣列。\n" +
+                "2. **嚴格按照使用者需求篩選**，請**確保結果會隨使用者選擇的條件改變**。\n" +
+                "3. **不要每次都回傳相同的商品**，請確保選擇與條件最匹配的商品。\n";
     }
+
 
     private List<Incense> parseAiResponse(String aiResponse) {
         if (aiResponse == null || aiResponse.trim().isEmpty()) {

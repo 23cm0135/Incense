@@ -46,7 +46,7 @@ class Account : AppCompatActivity() {
 
     private fun setupGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id)) // 替换为你的客户端 ID
+            .requestIdToken(getString(R.string.default_web_client_id)) // 替换为你的 Web 客户端 ID
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
@@ -77,8 +77,7 @@ class Account : AppCompatActivity() {
     }
 
     private fun startGoogleSignIn() {
-        googleSignInClient.revokeAccess().addOnCompleteListener {
-            // 再次启动 Google 登入意图
+        googleSignInClient.signOut().addOnCompleteListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
         }
