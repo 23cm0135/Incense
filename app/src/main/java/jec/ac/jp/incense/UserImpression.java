@@ -11,6 +11,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
@@ -83,8 +84,7 @@ public class UserImpression extends AppCompatActivity {
         post.put("content", impression);
         post.put("incenseId", incenseId);
         post.put("incenseName", incenseName);
-        post.put("timestamp", System.currentTimeMillis());
-
+        post.put("timestamp", FieldValue.serverTimestamp());
         db.collection("posts").add(post)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(UserImpression.this, "投稿成功", Toast.LENGTH_SHORT).show();
