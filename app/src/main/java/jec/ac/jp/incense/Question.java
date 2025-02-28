@@ -84,7 +84,7 @@ public class Question extends AppCompatActivity {
             if (!isNetworkAvailable()) {
                 new AlertDialog.Builder(Question.this)
                         .setTitle("ネットワークエラー")
-                        .setMessage("ネットワークに接続されていません。\nGPT にリクエストを送信できません。")
+                        .setMessage("ネットワークに接続されていません。\nAI にリクエストを送信できません。")
                         .setPositiveButton("OK", null)
                         .show();
                 return;
