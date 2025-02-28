@@ -10,6 +10,9 @@ android {
     namespace = "jec.ac.jp.incense"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "jec.ac.jp.incense1"
@@ -19,6 +22,8 @@ android {
         versionName = "1.0"
         renderscriptSupportModeEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "API_KEY", "\"AIzaSyBTlGdeQBiS0ZNWeAQOrmZ_Rb6lrYFnWfM\"")
     }
 
     buildTypes {
@@ -44,6 +49,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation ("com.google.android.gms:play-services-auth:20.7.0")
+    //new
+    implementation("com.google.ai.client.generativeai:generativeai:0.6.0")
+    implementation("io.projectreactor:reactor-core:3.4.0")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0")
     // Firebase libraries
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
