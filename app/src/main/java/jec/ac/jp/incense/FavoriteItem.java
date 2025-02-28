@@ -21,14 +21,12 @@ public class FavoriteItem {
         this.url = url;
     }
 
-    // Getter 方法
     public String getName() { return name; }
     public String getEffect() { return effect; }
     public String getImageUrl() { return imageUrl; }
     public String getDescription() { return description; }
     public String getUrl() { return url; }
 
-    // Setter 方法
     public void setName(String name) { this.name = name; }
     public void setEffect(String effect) { this.effect = effect; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }

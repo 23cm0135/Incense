@@ -22,6 +22,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.common.reflect.TypeToken;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -49,7 +50,6 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         setContentView(R.layout.activity_meditation_feedback);
         EdgeToEdge.enable(this);
 
-        // 正確取得冥想時間
         meditationDuration = getIntent().getLongExtra("meditationDuration", -1);
         String usedIncense = getIntent().getStringExtra("usedIncense");
 
@@ -59,15 +59,15 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
             return;
         }
 
-        loadMeditationProducts(); // 加载推薦產品（此部分保持不變）
+        loadMeditationProducts();
         etUsedIncense = findViewById(R.id.etUsedIncense);
 
-        // 為了讓數據跟帳號綁定，這裡需要修改為根據當前用戶設定 SharedPreferences 名稱
-        FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String spName;
         if (currentUser != null) {
             spName = "MeditationRecords_" + currentUser.getUid();
         } else {
+
             spName = "MeditationRecords";
         }
         sharedPreferences = getSharedPreferences(spName, Context.MODE_PRIVATE);
@@ -105,8 +105,9 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
             Toast.makeText(this, "エラー: 冥想時間が取得できませんでした。", Toast.LENGTH_SHORT).show();
             return;
         }
+
         int selectedId = rgDistraction.getCheckedRadioButtonId();
-        String distractionLevel = "なし";
+        String distractionLevel = "なし"; // 默认无杂念
         if (selectedId == -1) {
             Toast.makeText(this, "エラー: 雑念レベルを選択してください。", Toast.LENGTH_SHORT).show();
             return;
@@ -116,24 +117,35 @@ public class MeditationFeedbackActivity extends AppCompatActivity {
         } else if (selectedId == R.id.rbLittleDistraction) {
             distractionLevel = "少し";
         }
+
         String usedIncenseInput = etUsedIncense.getText().toString().trim();
         if (usedIncenseInput.isEmpty()) {
             usedIncenseInput = "不明";
         }
+
+        // 由于已经要求登录，所以当前用户一定存在
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String username = currentUser.getDisplayName();
+        if (username == null || username.isEmpty()) {
+            username = currentUser.getEmail();
+        }
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
-        String record = "時間: " + (meditationDuration / 60) + "分 " + (meditationDuration % 60)
-                + "秒 | 使用した香: " + usedIncenseInput + " | 雑念: " + distractionLevel;
+        String record = "ユーザー: " + username +
+                " | 時間: " + (meditationDuration / 60) + "分 " + (meditationDuration % 60) +
+                "秒 | 使用した香: " + usedIncenseInput +
+                " | 雑念: " + distractionLevel;
         editor.putString(timestamp, record);
         editor.putString("lastDistractionLevel", distractionLevel);
         editor.apply();
+
         Intent resultIntent = new Intent();
         resultIntent.putExtra("meditationSuggestion", distractionLevel);
         setResult(RESULT_OK, resultIntent);
         finish();
     }
 
-    // 以下 loadMeditationProducts() 等方法保持不變
     private void loadMeditationProducts() {
         try {
             AssetManager assetManager = getAssets();

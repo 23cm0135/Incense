@@ -18,7 +18,7 @@ public class UserImpressionListActivity extends AppCompatActivity {
     private RecyclerView recyclerViewImpressions;
     private PostAdapter postAdapter;
     private List<Post> postList;
-    private String incenseName; // 用来存储传递过来的香名
+    private String incenseName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +41,7 @@ public class UserImpressionListActivity extends AppCompatActivity {
     private void fetchPosts() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts")
-                .orderBy("timestamp", Query.Direction.DESCENDING) // **🔥 按時間降序排列**
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -50,16 +50,14 @@ public class UserImpressionListActivity extends AppCompatActivity {
                             String username = document.getString("username");
                             String content = document.getString("content");
                             String incenseName = document.getString("incenseName");
-                            String postIncenseName = document.getString("incenseName"); // 使用不同的变量名
-                            long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L; // **🔥 讀取時間戳記**
-                            // 打印日志查看数据
+                            String postIncenseName = document.getString("incenseName");
+                            long timestamp = document.getLong("timestamp") != null ? document.getLong("timestamp") : 0L;
                             Log.d("UserImpressionListActivity", "incenseNameInPost: " + incenseName);
-                            // 只添加与当前香名匹配的评论
                             if (postIncenseName != null && postIncenseName.trim().equals(this.incenseName.trim())) {
                                 postList.add(new Post(username, content, postIncenseName, timestamp));
                             }
                         }
-                        postAdapter.notifyDataSetChanged(); // **🔥 更新 RecyclerView**
+                        postAdapter.notifyDataSetChanged();
                     }
                 });
     }

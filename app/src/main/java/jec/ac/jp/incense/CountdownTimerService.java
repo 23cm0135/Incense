@@ -23,18 +23,16 @@ public class CountdownTimerService extends Service {
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
-        // 启用 Edge-to-Edge 显示效果
-       // EdgeToEdge.enable(this);// 适配 Android 8.0+
-        startForeground(1, getNotification()); // 让服务在前台运行
+
+        startForeground(1, getNotification());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int musicResId = intent.getIntExtra("MUSIC_RES_ID", R.raw.music1);
 
-        // 如果无法创建媒体播放器，则返回错误信息
         if (mediaPlayer != null) {
-            mediaPlayer.release();  // 释放旧的播放器
+            mediaPlayer.release();
         }
 
         mediaPlayer = MediaPlayer.create(this, musicResId);
@@ -44,7 +42,7 @@ public class CountdownTimerService extends Service {
         }
 
         mediaPlayer.setLooping(false);
-        mediaPlayer.start();  // 播放音乐
+        mediaPlayer.start();
         return START_STICKY;
     }
 

@@ -12,7 +12,6 @@ class PostAdapter(private val postList: MutableList<Post>) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     init {
-        // **按時間降序排列 (最新的顯示在最前面)**
         postList.sortByDescending { it.timestamp }
     }
 

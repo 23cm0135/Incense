@@ -60,7 +60,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             }
         });
 
-        // 点击商品，统一跳转到 MinuteActivity 并传递网络图片 URL
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, MinuteActivity.class);
             intent.putExtra("EXTRA_TEXT", item.getDescription());

@@ -35,14 +35,12 @@ public class IncenseDetailActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // 取得 Intent 数据
         incenseName = getIntent().getStringExtra("name");
         effect = getIntent().getStringExtra("effect");
         imageUrl = getIntent().getStringExtra("imageUrl");
         description = getIntent().getStringExtra("description");
         url = getIntent().getStringExtra("url");
 
-        // UI 元件綁定
         TextView nameTextView = findViewById(R.id.incense_detail_name);
         TextView descriptionTextView = findViewById(R.id.incense_detail_description);
         ImageView imageView = findViewById(R.id.incense_detail_image);
@@ -60,7 +58,6 @@ public class IncenseDetailActivity extends AppCompatActivity {
                 .error(R.drawable.default_image)
                 .into(imageView);
 
-        // 「購入」按钮始终可用
         openUrlButton.setOnClickListener(v -> {
             if (url == null || url.isEmpty()) {
                 Toast.makeText(this, "無効なURLです", Toast.LENGTH_SHORT).show();
@@ -69,22 +66,18 @@ public class IncenseDetailActivity extends AppCompatActivity {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         });
 
-        // 添加到浏览历史
         addToBrowsingHistory();
 
-        // 檢查是否已收藏（僅對登錄用戶有效）
         if (currentUser != null) {
             checkIfFavorite();
         }
 
-        // 如果未登錄，投稿與お気に入り按鈕僅彈提示
         if (currentUser == null) {
             userImpressionButton.setOnClickListener(v ->
                     Toast.makeText(IncenseDetailActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
             favoriteButton.setOnClickListener(v ->
                     Toast.makeText(IncenseDetailActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {
-            // 登錄狀態：正常進行投稿與お気に入り操作
             userImpressionButton.setOnClickListener(v -> {
                 Intent intent = new Intent(IncenseDetailActivity.this, UserImpression.class);
                 intent.putExtra("INCENSE_NAME", incenseName);
@@ -93,10 +86,8 @@ public class IncenseDetailActivity extends AppCompatActivity {
             favoriteButton.setOnClickListener(v -> addToFavorites());
         }
 
-        // 「他のユーザーの投稿」按鈕（不受登錄限制）
         btnViewPosts.setOnClickListener(v -> {
             Intent intent = new Intent(IncenseDetailActivity.this, UserImpressionListActivity.class);
-            // 這裡傳送香的名稱，如果需要用 incenseId 請自行傳送對應的參數
             intent.putExtra("INCENSE_NAME", incenseName);
             startActivity(intent);
         });
@@ -162,7 +153,6 @@ public class IncenseDetailActivity extends AppCompatActivity {
     private void setButtonAsFavorited() {
         favoriteButton.setEnabled(false);
         favoriteButton.setText("お気に入り済み");
-        // 將按鈕背景設置為灰色
         favoriteButton.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
     }
 }

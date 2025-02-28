@@ -33,7 +33,6 @@ public class Post {
         return timestamp;
     }
 
-    // 格式化時間 (YYYY/MM/DD HH:mm)
     public String getFormattedTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm", Locale.JAPAN);
         return sdf.format(new Date(timestamp));

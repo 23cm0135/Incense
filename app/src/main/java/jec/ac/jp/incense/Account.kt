@@ -77,8 +77,11 @@ class Account : AppCompatActivity() {
     }
 
     private fun startGoogleSignIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
+        googleSignInClient.revokeAccess().addOnCompleteListener {
+            // 再次启动 Google 登入意图
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -59,7 +59,7 @@ class EmailLogin : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth?.currentUser
                     if (user != null) {
-                        val userName = user.displayName ?: user.email // 若沒有名稱則顯示 email
+                        val userName = user.displayName ?: user.email
                         Toast.makeText(this, "ようこそ ${userName} さん", Toast.LENGTH_SHORT).show()
                         navigateToUserScreen(user)
                     }

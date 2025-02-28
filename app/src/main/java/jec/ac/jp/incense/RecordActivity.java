@@ -27,7 +27,6 @@ import java.util.Map;
 public class RecordActivity extends AppCompatActivity {
     private ListView listViewRecords;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-    // 預設 SharedPreferences 名稱
     private String spName = "MeditationRecords";
 
     @Override
@@ -36,7 +35,6 @@ public class RecordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_record);
         EdgeToEdge.enable(this);
 
-        // 檢查是否已登錄
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
@@ -45,7 +43,6 @@ public class RecordActivity extends AppCompatActivity {
             finish();
             return;
         } else {
-            // 使用當前用戶 UID 生成專屬 SharedPreferences 名稱
             spName = "MeditationRecords_" + currentUser.getUid();
         }
 
