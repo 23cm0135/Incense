@@ -405,45 +405,45 @@ public class Question extends AppCompatActivity {
     }
 
     // 辅助方法，从 AI 响应中提取 JSON 部分
-    private String extractJsonFromResponse(String response) {
-        // 尝试找到响应中的 JSON 数组开始和结束位置
-        int startIndex = response.indexOf('[');
-        int endIndex = response.lastIndexOf(']') + 1;
-
-        if (startIndex >= 0 && endIndex > startIndex) {
-            return response.substring(startIndex, endIndex);
-        }
-
-        // 如果没有找到数组格式，尝试查找单个对象格式
-        startIndex = response.indexOf('{');
-        endIndex = response.lastIndexOf('}') + 1;
-
-        if (startIndex >= 0 && endIndex > startIndex) {
-            return "[" + response.substring(startIndex, endIndex) + "]"; // 将单个对象包装为数组
-        }
-
-        return response; // 如果无法识别 JSON 格式，返回原始响应
-    }
-
-    private void processAiResponse(List<Incense> aiSelectedIncenses) {
-        if (aiSelectedIncenses != null && !aiSelectedIncenses.isEmpty()) {
-            displaySelectedIncense(aiSelectedIncenses);
-        } else {
-            displayNoIncenseFound();
-        }
-    }
-
-    private void displaySelectedIncense(List<Incense> selectedIncenses) {
-        Log.d("AI Response", "Found " + selectedIncenses.size() + " incense(s):");
-        for (Incense incense : selectedIncenses) {
-            Log.d("AI Response", "Name: " + incense.getName());
-        }
-    }
-
-    private void displayNoIncenseFound() {
-        Log.d("AI Response", "No incense found.");
-        Toast.makeText(this, "条件に合う線香はございません", Toast.LENGTH_SHORT).show();
-    }
+//    private String extractJsonFromResponse(String response) {
+//        // 尝试找到响应中的 JSON 数组开始和结束位置
+//        int startIndex = response.indexOf('[');
+//        int endIndex = response.lastIndexOf(']') + 1;
+//
+//        if (startIndex >= 0 && endIndex > startIndex) {
+//            return response.substring(startIndex, endIndex);
+//        }
+//
+//        // 如果没有找到数组格式，尝试查找单个对象格式
+//        startIndex = response.indexOf('{');
+//        endIndex = response.lastIndexOf('}') + 1;
+//
+//        if (startIndex >= 0 && endIndex > startIndex) {
+//            return "[" + response.substring(startIndex, endIndex) + "]"; // 将单个对象包装为数组
+//        }
+//
+//        return response; // 如果无法识别 JSON 格式，返回原始响应
+//    }
+//
+//    private void processAiResponse(List<Incense> aiSelectedIncenses) {
+//        if (aiSelectedIncenses != null && !aiSelectedIncenses.isEmpty()) {
+//            displaySelectedIncense(aiSelectedIncenses);
+//        } else {
+//            displayNoIncenseFound();
+//        }
+//    }
+//
+//    private void displaySelectedIncense(List<Incense> selectedIncenses) {
+//        Log.d("AI Response", "Found " + selectedIncenses.size() + " incense(s):");
+//        for (Incense incense : selectedIncenses) {
+//            Log.d("AI Response", "Name: " + incense.getName());
+//        }
+//    }
+//
+//    private void displayNoIncenseFound() {
+//        Log.d("AI Response", "No incense found.");
+//        Toast.makeText(this, "条件に合う線香はございません", Toast.LENGTH_SHORT).show();
+//    }
     private void passDataToIncenseListActivity(List<Incense> incenseList) {
         // 检查已经在 handleButtonClick 中完成，这里可以直接使用
         ArrayList<Incense> parcelableIncenseList = new ArrayList<>(incenseList);

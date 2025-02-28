@@ -63,7 +63,7 @@ public class BrowsingHistoryActivity extends AppCompatActivity {
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         FavoriteItem item = doc.toObject(FavoriteItem.class);
                         if (item != null) {
-                            historyList.add(item);
+                            historyList.add(0,item);
                         }
                     }
                     adapter.notifyDataSetChanged();
