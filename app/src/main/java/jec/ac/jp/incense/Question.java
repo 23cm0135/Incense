@@ -1,6 +1,9 @@
 package jec.ac.jp.incense;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import com.google.ai.client.generativeai.type.Content;
 import android.util.Log;
@@ -58,14 +61,11 @@ public class Question extends AppCompatActivity {
         model = GenerativeModelFutures.from(gm);
 
         Button submitButton = findViewById(R.id.submit_button);
-        submitButton.setEnabled(false);  // 初始状态禁用按钮
 
         // 每次用户选择选项时，检查是否启用提交按钮
         RadioGroup.OnCheckedChangeListener listener = (group, checkedId) -> {
             if (isAllQuestionsAnswered()) {
                 submitButton.setEnabled(true);  // 如果所有问题都已回答，启用按钮
-            } else {
-                submitButton.setEnabled(false);  // 否则禁用按钮
             }
         };
 
@@ -81,11 +81,19 @@ public class Question extends AppCompatActivity {
         materialGroup.setOnCheckedChangeListener(listener);
 
         submitButton.setOnClickListener(v -> {
+            if (!isNetworkAvailable()) {
+                new AlertDialog.Builder(Question.this)
+                        .setTitle("ネットワークエラー")
+                        .setMessage("ネットワークに接続されていません。\nGPT にリクエストを送信できません。")
+                        .setPositiveButton("OK", null)
+                        .show();
+                return;
+            }
             if (!isAllQuestionsAnswered()) {
                 // 如果没有回答所有问题，弹出提示框
                 showMissingAnswersDialog();
             } else {
-                handleButtonClick();
+               handleButtonClick();
             }
         });
 
@@ -108,14 +116,44 @@ public class Question extends AppCompatActivity {
             startActivity(intent);
         });
     }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
+        return false;
+    }
 
     // 弹出提示框，提示用户未回答所有问题
     private void showMissingAnswersDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("未回答所有问题")
-                .setMessage("请回答所有问题后再提交。")
-                .setPositiveButton("确定", null)
+                .setTitle("すべての質問に回答してください")
+                .setMessage("すべての質問に回答してから送信してください。")
+                .setPositiveButton("はい", null)
                 .show();
+    }
+
+    private void startAiAnalysis() {
+        // 检查每个问题是否已被选择
+        if (!isAllQuestionsAnswered()) {
+            Toast.makeText(this, "请回答所有问题！", Toast.LENGTH_SHORT).show();
+            return;  // 如果未回答所有问题，则返回
+        }
+        isAiAnalyzing = true; // 设置AI分析标志为true
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("AIが応答を生成しています...");
+        builder.setCancelable(false); // キャンセル不可
+
+        if (dialog == null) {
+            dialog = builder.create();
+        } else {
+            dialog.setMessage("AIが応答を生成しています...");
+        }
+
+        dialog.show();
+        // ... 其他 AI 分析相关代码 ...
     }
 
     private void handleButtonClick() {
@@ -158,6 +196,7 @@ public class Question extends AppCompatActivity {
         Publisher<GenerateContentResponse> streamingResponse = model.generateContentStream(content);
         StringBuilder outputContent = new StringBuilder();
 
+       // Toast.makeText(this, "分析しています...", Toast.LENGTH_SHORT).show();
 
         streamingResponse.subscribe(
                 new Subscriber<GenerateContentResponse>() {
