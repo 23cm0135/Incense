@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.google.firebase.Timestamp; // 导入 Timestamp 类
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -98,6 +99,9 @@ public class IncenseDetailActivity extends AppCompatActivity {
 
         FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
 
+        // 设置 timestamp 字段
+        item.setTimestamp(Timestamp.now()); // 使用 Firestore 的 Timestamp.now() 获取当前时间戳
+
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("history")
@@ -105,7 +109,8 @@ public class IncenseDetailActivity extends AppCompatActivity {
                 .set(item)
                 .addOnSuccessListener(aVoid ->
                         // 日誌輸出
-                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
+//                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
+                        Log.d("TimestampDebug", "Setting timestamp for history: " + item.getTimestamp())
                 )
                 .addOnFailureListener(e ->
                         Log.e("Firestore", "浏览历史添加失败", e)
@@ -136,6 +141,11 @@ public class IncenseDetailActivity extends AppCompatActivity {
         }
         FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
 
+        // timestamp フィールドを設定
+        Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+        item.setTimestamp(Timestamp.now());
+        Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("favorites")
@@ -149,7 +159,6 @@ public class IncenseDetailActivity extends AppCompatActivity {
                         Log.e("Firestore", "お気に入り保存失败", e)
                 );
     }
-
     private void setButtonAsFavorited() {
         favoriteButton.setEnabled(false);
         favoriteButton.setText("お気に入り済み");

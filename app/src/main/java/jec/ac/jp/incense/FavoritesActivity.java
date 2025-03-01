@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -57,6 +58,7 @@ public class FavoritesActivity extends AppCompatActivity {
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("favorites")
+                .orderBy("timestamp", Query.Direction.ASCENDING) // timestamp フィールドで昇順にソート
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     favoriteItems.clear();

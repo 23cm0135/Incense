@@ -1,5 +1,6 @@
 package jec.ac.jp.incense;
 
+import com.google.firebase.Timestamp;
 import java.util.Objects;
 
 public class FavoriteItem {
@@ -8,6 +9,7 @@ public class FavoriteItem {
     private String imageUrl;     // 网络图片 URL
     private String description;  // 描述
     private String url;          // 购买链接
+    private Timestamp timestamp; // 将类型更改为 Timestamp
 
     // Firestore 反射用的默认构造函数
     public FavoriteItem() {}
@@ -32,6 +34,14 @@ public class FavoriteItem {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setDescription(String description) { this.description = description; }
     public void setUrl(String url) { this.url = url; }
+
+    public Timestamp getTimestamp() { //更改返回类型
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 
     @Override
     public boolean equals(Object o) {

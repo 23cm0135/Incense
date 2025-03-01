@@ -33,7 +33,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- 搜索栏的CardView容器 -->
         <androidx.cardview.widget.CardView
             android:id="@+id/searchCardView"
             android:layout_width="match_parent"

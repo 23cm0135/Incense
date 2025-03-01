@@ -2,6 +2,8 @@ package jec.ac.jp.incense;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +71,16 @@ public class UserImpressionListActivity extends AppCompatActivity {
                             }
                         }
                         postAdapter.notifyDataSetChanged();
+
+                        // 检查评论列表是否为空
+                        TextView noImpressionsTextView = findViewById(R.id.noImpressionsTextView);
+                        if (postList.isEmpty()) {
+                            noImpressionsTextView.setVisibility(View.VISIBLE);
+                            recyclerViewImpressions.setVisibility(View.GONE);
+                        } else {
+                            noImpressionsTextView.setVisibility(View.GONE);
+                            recyclerViewImpressions.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
     }

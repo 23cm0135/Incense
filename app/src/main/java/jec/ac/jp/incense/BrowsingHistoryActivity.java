@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -57,13 +58,14 @@ public class BrowsingHistoryActivity extends AppCompatActivity {
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("history")
+                .orderBy("timestamp", Query.Direction.DESCENDING) // 添加这一行，按时间戳升序排序
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     historyList.clear();
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         FavoriteItem item = doc.toObject(FavoriteItem.class);
                         if (item != null) {
-                            historyList.add(0,item);
+                            historyList.add(item); // 直接添加到列表末尾，保持时间顺序
                         }
                     }
                     adapter.notifyDataSetChanged();

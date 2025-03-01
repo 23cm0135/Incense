@@ -47,14 +47,14 @@
             android:textStyle="bold" />
 
         <!-- 香的效果 -->
-        <TextView
-            android:id="@+id/incense_effect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:text="效果"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
+<!--        <TextView-->
+<!--            android:id="@+id/incense_effect"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:maxLines="1"-->
+<!--            android:text="效果"-->
+<!--            android:textColor="@android:color/darker_gray"-->
+<!--            android:textSize="14sp" />-->
 
         <!-- 删除按钮 -->
         <Button
