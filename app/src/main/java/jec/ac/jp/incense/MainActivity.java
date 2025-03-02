@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         TextView tvUserName = findViewById(R.id.tvUserName);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String name = (currentUser.getDisplayName() != null && !currentUser.getDisplayName().isEmpty())
-                    ? currentUser.getDisplayName() : currentUser.getEmail();
+            String name = currentUser.getDisplayName();
+            if (name == null || name.isEmpty()) {
+                name = currentUser.getEmail();
+            }
             tvUserName.setText("ようこそ、" + name + "さん！");
         } else {
             tvUserName.setText("ようこそ、ゲストさん！");
