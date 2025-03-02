@@ -6,16 +6,19 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,24 +35,17 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // 适配状态栏和刘海
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        TextView tvUserName = findViewById(R.id.tvUserName);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String name = currentUser.getDisplayName();
-            if (name == null || name.isEmpty()) {
-                name = currentUser.getEmail();
-            }
-            tvUserName.setText("ようこそ、" + name + "さん！");
-        } else {
-            tvUserName.setText("ようこそ、ゲストさん！");
-        }
+        // 初始化用户名称显示
+        updateUserName();
 
+        // 按钮设置
         ImageButton userButton = findViewById(R.id.btn_user);
         userButton.setOnClickListener(v -> {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -81,11 +77,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        updateUserName();
         updateRecommendedProducts();
     }
 
+    /**
+     * 更新欢迎用戶名稱
+     */
+    private void updateUserName() {
+        TextView tvUserName = findViewById(R.id.tvUserName);
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String name = currentUser.getDisplayName();
+            if (name == null || name.isEmpty()) {
+                name = currentUser.getEmail();
+            }
+            tvUserName.setText("ようこそ、" + name + "さん！");
+        } else {
+            tvUserName.setText("ようこそ、ゲストさん！");
+        }
+    }
 
     private void updateRecommendedProducts() {
+        // 隨機獲取一組 ButtonEnum 數據
         List<ButtonEnum> randomButtons = ButtonEnum.getRandomButtons();
         for (int i = 0; i < randomButtons.size(); i++) {
             ImageButton button = findViewById(buttonIds[i]);
