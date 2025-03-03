@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "500626586922",
+    "project_id": "incense2-29d3f",
+    "storage_bucket": "incense2-29d3f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500626586922:android:d4ea6dd34f255bb2f7f253",
+        "android_client_info": {
+          "package_name": "jec.ac.jp.incense1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500626586922-lsbfogfkib2srvmerau4a1n9ra0rl10p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jec.ac.jp.incense1",
+            "certificate_hash": "554045e5b77741e9c78880f7bb2a77e6eeda090f"
+          }
+        },
+        {
+          "client_id": "500626586922-4dkmd7opli8mibodcjcf6okna7cut96g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-WuuBzNS5pHTXXYI8A6UO8eXV97G_ekQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500626586922-4dkmd7opli8mibodcjcf6okna7cut96g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
