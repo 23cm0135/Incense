@@ -1,17 +1,17 @@
 package jec.ac.jp.incense
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
-import java.util.*
 
 class PostAdapter(private val postList: MutableList<Post>) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
     init {
+        // 根據 timestamp 降序排序貼文
         postList.sortByDescending { it.timestamp }
     }
 
@@ -26,17 +26,23 @@ class PostAdapter(private val postList: MutableList<Post>) :
         holder.usernameTextView.text = post.username
         holder.contentTextView.text = post.content
         holder.incenseNameTextView.text = post.incenseName
-        holder.timestampTextView.text = post.getFormattedTimestamp() // **顯示時間**
+        holder.timestampTextView.text = post.getFormattedTimestamp()
+
+        // 將用戶名稱設為可點擊，點擊後傳入該貼文作者的 UID 跳轉到 FavoritesActivity
+        holder.usernameTextView.setOnClickListener { view ->
+            val context = view.context
+            val intent = Intent(context, FavoritesActivity::class.java)
+            intent.putExtra("USER_ID", post.userId) // 假設 Post 中有 userId 屬性
+            context.startActivity(intent)
+        }
     }
 
-    override fun getItemCount(): Int {
-        return postList.size
-    }
+    override fun getItemCount(): Int = postList.size
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val usernameTextView: TextView = itemView.findViewById(R.id.usernameTextView)
         val contentTextView: TextView = itemView.findViewById(R.id.contentTextView)
         val incenseNameTextView: TextView = itemView.findViewById(R.id.incenseNameTextView)
-        val timestampTextView: TextView = itemView.findViewById(R.id.timestampTextView) // **時間**
+        val timestampTextView: TextView = itemView.findViewById(R.id.timestampTextView)
     }
 }

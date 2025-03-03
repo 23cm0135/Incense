@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -40,9 +41,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FavoriteItem item = favoriteList.get(position);
+        // 顯示香的名稱
         holder.nameTextView.setText(item.getName());
 
-        // 使用 Glide 加载网络图片
+        // 使用 Glide 加载图片
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(item.getImageUrl())
@@ -53,13 +55,26 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             holder.imageView.setImageResource(R.drawable.default_image);
         }
 
-        // 删除按钮点击事件
+        // 刪除按鈕事件
         holder.deleteButton.setOnClickListener(v -> {
             if (onDeleteClickListener != null) {
                 onDeleteClickListener.onDeleteClick(item);
             }
         });
 
+        // 讓用戶名稱可點擊：點擊後跳轉到收藏該香的用戶 FavoritesActivity
+        holder.nameTextView.setOnClickListener(v -> {
+            if (item.getUserId() == null || item.getUserId().isEmpty()) {
+                Toast.makeText(context, "ユーザー情報が取得できません", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(context, FavoritesActivity.class);
+                // 傳遞目標用戶ID（這裡用 "TARGET_USER_ID" 作為鍵）
+                intent.putExtra("TARGET_USER_ID", item.getUserId());
+                context.startActivity(intent);
+            }
+        });
+
+        // 整個項目點擊事件：跳轉到商品詳細頁面（例如 MinuteActivity）
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, MinuteActivity.class);
             intent.putExtra("EXTRA_TEXT", item.getDescription());

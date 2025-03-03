@@ -83,6 +83,8 @@ public class UserImpression extends AppCompatActivity {
         post.put("username", username);
         post.put("content", impression);
         post.put("incenseId", incenseId);
+        post.put("userId", currentUser.getUid());
+
         post.put("incenseName", incenseName);
         post.put("timestamp", FieldValue.serverTimestamp());
         db.collection("posts").add(post)

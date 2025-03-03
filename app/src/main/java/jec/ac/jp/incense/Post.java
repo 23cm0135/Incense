@@ -8,14 +8,20 @@ public class Post {
     private String username;
     private String content;
     private String incenseName;
-    private long timestamp; // 新增時間戳記
+    private long timestamp;
+    private String userId; // 貼文作者的 UID
 
-    public Post(String username, String content, String incenseName, long timestamp) {
+    // 完整構造函數
+    public Post(String username, String content, String incenseName, long timestamp, String userId) {
         this.username = username;
         this.content = content;
         this.incenseName = incenseName;
         this.timestamp = timestamp;
+        this.userId = userId;
     }
+
+    // 無參構造函數（Firestore 反射用）
+    public Post() {}
 
     public String getUsername() {
         return username;
@@ -31,6 +37,10 @@ public class Post {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getFormattedTimestamp() {

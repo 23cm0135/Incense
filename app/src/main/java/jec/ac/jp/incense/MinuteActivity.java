@@ -8,11 +8,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
 import com.bumptech.glide.Glide;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -85,13 +83,10 @@ public class MinuteActivity extends AppCompatActivity {
             btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
             btnSubmitImpression.setEnabled(false);
             btnSubmitImpression.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
-            //btnFavorite.setText("ログインしてください");
-
             btnSubmitImpression.setOnClickListener(v ->
                     Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {
             btnFavorite.setEnabled(true);
-            //btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this,));
             btnFavorite.setText("お気に入りに追加");
             btnSubmitImpression.setOnClickListener(v -> {
                 Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
@@ -111,6 +106,8 @@ public class MinuteActivity extends AppCompatActivity {
 
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
         item.setTimestamp(Timestamp.now());
+        // 設置當前用戶 UID
+        item.setUserId(currentUser.getUid());
 
         db.collection("users")
                 .document(currentUser.getUid())
@@ -156,9 +153,9 @@ public class MinuteActivity extends AppCompatActivity {
             return;
         }
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
-
-        Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
         item.setTimestamp(Timestamp.now());
+        // 設置當前用戶 UID
+        item.setUserId(currentUser.getUid());
         Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
 
         db.collection("users")
