@@ -161,27 +161,51 @@ private void addToBrowsingHistory() {
             );
 }
 
-    private void addToFavorites() {
-        if (currentUser == null) {
-            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
-
-        db.collection("users")
-                .document(currentUser.getUid())
-                .collection("favorites")
-                .document(incenseName)
-                .set(item)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
-                    setButtonAsFavorited();
-                })
-                .addOnFailureListener(e ->
-                        Log.e("Firestore", "お気に入り保存失败", e)
-                );
+//    private void addToFavorites() {
+//        if (currentUser == null) {
+//            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
+//
+//        db.collection("users")
+//                .document(currentUser.getUid())
+//                .collection("favorites")
+//                .document(incenseName)
+//                .set(item)
+//                .addOnSuccessListener(aVoid -> {
+//                    Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
+//                    setButtonAsFavorited();
+//                })
+//                .addOnFailureListener(e ->
+//                        Log.e("Firestore", "お気に入り保存失败", e)
+//                );
+//    }
+private void addToFavorites() {
+    if (currentUser == null) {
+        Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+        return;
     }
+    FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
 
+    // timestamp フィールドを設定
+    Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+    item.setTimestamp(Timestamp.now());
+    Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+
+    db.collection("users")
+            .document(currentUser.getUid())
+            .collection("favorites")
+            .document(incenseName)
+            .set(item)
+            .addOnSuccessListener(aVoid -> {
+                Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
+                setButtonAsFavorited();
+            })
+            .addOnFailureListener(e ->
+                    Log.e("Firestore", "お気に入り保存失败", e)
+            );
+}
     private void checkIfFavorited() {
         if (currentUser == null) return;
 
