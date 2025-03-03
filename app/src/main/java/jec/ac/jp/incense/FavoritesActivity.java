@@ -2,6 +2,7 @@ package jec.ac.jp.incense;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -18,6 +20,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private TextView tvEmptyMessage;
+    private TextView favoritesTitleTextView; // 添加 TextView 变量
     private ArrayList<FavoriteItem> favoriteItems = new ArrayList<>();
     private FavoriteAdapter adapter;
     private FirebaseFirestore db;
@@ -32,6 +35,7 @@ public class FavoritesActivity extends AppCompatActivity {
         tvEmptyMessage = findViewById(R.id.tvEmptyMessage);
         recyclerView = findViewById(R.id.favorites_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        favoritesTitleTextView = findViewById(R.id.favorites_title); // 初始化 TextView
 
         db = FirebaseFirestore.getInstance();
 
@@ -46,6 +50,9 @@ public class FavoritesActivity extends AppCompatActivity {
                 return;
             }
         }
+
+        // 设置标题
+        setActivityTitle(userId);
 
         adapter = new FavoriteAdapter(this, favoriteItems, item -> {
             showDetails(item);
@@ -93,5 +100,15 @@ public class FavoritesActivity extends AppCompatActivity {
         intent.putExtra("description", item.getDescription());
         intent.putExtra("url", item.getUrl());
         startActivity(intent);
+    }
+
+    private void setActivityTitle(String userId) {
+        if (userId != null && !userId.isEmpty() && !userId.equals(com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            // 如果userId不为空，并且不是当前用户的id，则设置为他人的收藏
+            favoritesTitleTextView.setText("他の人のコレクション");
+        } else {
+            // 否则设置为我的收藏
+            favoritesTitleTextView.setText("私のコレクション");
+        }
     }
 }
