@@ -198,7 +198,7 @@ public class Question extends AppCompatActivity {
                     @Override
                     public void onError(Throwable t) {
                         Log.e(TAG, "AI请求出错", t);
-                        Toast.makeText(Question.this, "AI 请求出错，请稍后再试", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Question.this, "エラーが発生しました、もう一回試してください", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -249,7 +249,7 @@ public class Question extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e(TAG, "处理AI响应时出错", e);
-            Toast.makeText(Question.this, "处理响应时出错，请重试", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Question.this, "エラーが発生しました、もう一回試してください", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -303,7 +303,7 @@ public class Question extends AppCompatActivity {
             inputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "加载产品数据出错", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "商品データが読み取れません、もう一回試してください", Toast.LENGTH_SHORT).show();
         }
         return incenseList;
     }
@@ -472,7 +472,6 @@ public class Question extends AppCompatActivity {
 //        }
 //
 //        dialog.show();
-//        // ... 其他 AI 分析相关代码 ...
 //    }
 
 }

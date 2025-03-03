@@ -115,16 +115,6 @@ public class TimerActivity extends AppCompatActivity {
 
     private void startMeditationWithCountdown() {
         startCountdown();
-//        new CountDownTimer(5000, 1000) {
-////            public void onTick(long millisUntilFinished) {
-////                btnStart.setText("開始まで " + millisUntilFinished / 1000 + " 秒");
-////            }
-//            @Override
-//            public void onFinish() {
-//                btnStart.setText("冥想開始");
-//                startCountdown();
-//            }
-//        }.start();
     }
 
     private void stopCountdown() {
