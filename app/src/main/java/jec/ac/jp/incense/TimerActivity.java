@@ -366,19 +366,36 @@ public class TimerActivity extends AppCompatActivity {
             spName = "MeditationRecords";
         }
         SharedPreferences sharedPreferences = getSharedPreferences(spName, Context.MODE_PRIVATE);
-        boolean lastMeditationDiscarded = sharedPreferences.getBoolean("lastMeditationDiscarded", false);
-        String lastDistractionLevel = sharedPreferences.getString("lastDistractionLevel", "");
-        Log.d("DEBUG", "📌 checkLastMeditationStatus() -> 读取数据: 雑念: " + lastDistractionLevel + " | 废弃状态: " + lastMeditationDiscarded);
-        if (lastMeditationDiscarded) {
-            Log.d("DEBUG", "📌 弹出废弃提示对话框！");
-            showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("lastMeditationDiscarded", false);
-            editor.apply();
-        } else if (!lastDistractionLevel.isEmpty()) {
-            if (lastDistractionLevel.equals("多い")) {
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+
+        if (allEntries.isEmpty()) {
+            Log.d("DEBUG", " checkLastMeditationStatus() -> 没有历史记录，不弹窗");
+            return;
+        }
+
+        // 获取最近一次的冥想记录
+        String lastRecordKey = null;
+        long lastRecordTimestamp = 0;
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            try {
+                long timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).parse(entry.getKey()).getTime();
+                if (timestamp > lastRecordTimestamp) {
+                    lastRecordTimestamp = timestamp;
+                    lastRecordKey = entry.getKey();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (lastRecordKey != null) {
+            String lastRecord = (String) allEntries.get(lastRecordKey);
+            if (lastRecord.contains("破棄")) { // 假设记录中包含“破棄”表示记录被废弃
+                Log.d("DEBUG", " 弹出废弃提示对话框！");
+                showMeditationSuggestionDialog("上回の瞑想記録は破棄されました。次回も頑張りましょう！");
+            } else if (lastRecord.contains("雑念: 多い")) {
                 showMeditationSuggestionDialog("前回の瞑想では雑念が多かったですね。\n今回は短めの冥想を試してみましょう！");
-            } else if (lastDistractionLevel.equals("なし") || lastDistractionLevel.equals("少し")) {
+            } else if (lastRecord.contains("雑念: なし") || lastRecord.contains("雑念: 少し")) {
                 showMeditationSuggestionDialog("前回の瞑想では雑念が少なかったですね。\n今回はもう少し長めの冥想に挑戦してみませんか？");
             }
         }

@@ -134,27 +134,27 @@ public class Question extends AppCompatActivity {
                 .show();
     }
 
-    private void startAiAnalysis() {
-        // 检查每个问题是否已被选择
-        if (!isAllQuestionsAnswered()) {
-            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
-            return;  // 如果未回答所有问题，则返回
-        }
-        isAiAnalyzing = true; // 设置AI分析标志为true
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("AIが応答を生成しています...");
-        builder.setCancelable(false); // キャンセル不可
-
-        if (dialog == null) {
-            dialog = builder.create();
-        } else {
-            dialog.setMessage("AIが応答を生成しています...");
-        }
-
-        dialog.show();
-        // ... 其他 AI 分析相关代码 ...
-    }
+//    private void startAiAnalysis() {
+//        // 检查每个问题是否已被选择
+//        if (!isAllQuestionsAnswered()) {
+//            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
+//            return;  // 如果未回答所有问题，则返回
+//        }
+//        isAiAnalyzing = true; // 设置AI分析标志为true
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage("AIが応答を生成しています...");
+//        builder.setCancelable(false); // キャンセル不可
+//
+//        if (dialog == null) {
+//            dialog = builder.create();
+//        } else {
+//            dialog.setMessage("AIが応答を生成しています...");
+//        }
+//
+//        dialog.show();
+//        // ... 其他 AI 分析相关代码 ...
+//    }
 
     private void handleButtonClick() {
         // 检查每个问题是否已被选择
@@ -268,7 +268,8 @@ public class Question extends AppCompatActivity {
                 passDataToIncenseListActivity(aiSelectedIncenses);
             } else {
                 Log.e(TAG, "未找到符合条件的香");
-                Toast.makeText(Question.this, "没有找到符合条件的香，请尝试其他选项", Toast.LENGTH_LONG).show();
+                //TODO 改成日文
+                Toast.makeText(Question.this, "条件に合う線香はございません", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Log.e(TAG, "处理AI响应时出错", e);
