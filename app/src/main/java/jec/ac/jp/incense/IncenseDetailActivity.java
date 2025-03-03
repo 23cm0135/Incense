@@ -75,8 +75,12 @@ public class IncenseDetailActivity extends AppCompatActivity {
         }
 
         if (currentUser == null) {
+            userImpressionButton.setEnabled(false);
+            userImpressionButton.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
             userImpressionButton.setOnClickListener(v ->
                     Toast.makeText(IncenseDetailActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
+            favoriteButton.setEnabled(false);
+            favoriteButton.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
             favoriteButton.setOnClickListener(v ->
                     Toast.makeText(IncenseDetailActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {

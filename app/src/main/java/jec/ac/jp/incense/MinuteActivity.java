@@ -18,7 +18,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class MinuteActivity extends AppCompatActivity {
@@ -82,11 +81,18 @@ public class MinuteActivity extends AppCompatActivity {
         });
 
         if (currentUser == null) {
+            btnFavorite.setEnabled(false);
+            btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
+            btnSubmitImpression.setEnabled(false);
+            btnSubmitImpression.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
+            //btnFavorite.setText("ログインしてください");
+
             btnSubmitImpression.setOnClickListener(v ->
                     Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
-            btnFavorite.setOnClickListener(v ->
-                    Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {
+            btnFavorite.setEnabled(true);
+            //btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this,));
+            btnFavorite.setText("お気に入りに追加");
             btnSubmitImpression.setOnClickListener(v -> {
                 Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
                 intent.putExtra("INCENSE_ID", incenseId);
@@ -100,112 +106,75 @@ public class MinuteActivity extends AppCompatActivity {
         addToBrowsingHistory();
     }
 
-//    private void addToBrowsingHistory() {
-//        if (currentUser == null) return;
-//
-//        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
-//
-//        db.collection("users")
-//                .document(currentUser.getUid())
-//                .collection("history")
-//                .document(incenseName)
-//                .set(item)
-//                .addOnSuccessListener(aVoid ->
-//                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
-//                )
-//                .addOnFailureListener(e ->
-//                        Log.e("Firestore", "浏览历史添加失败", e)
-//                );
-//    }
-private void addToBrowsingHistory() {
-    if (currentUser == null) return;
+    private void addToBrowsingHistory() {
+        if (currentUser == null) return;
 
-    FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
-    item.setTimestamp(Timestamp.now());
+        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
+        item.setTimestamp(Timestamp.now());
 
-    db.collection("users")
-            .document(currentUser.getUid())
-            .collection("history")
-            .whereEqualTo("name", incenseName)
-            .get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (!queryDocumentSnapshots.isEmpty()) {
-                    Log.d("Firestore", "找到 " + queryDocumentSnapshots.size() + " 条同名记录，准备删除");
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        document.getReference().delete()
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("Firestore", "成功删除记录: " + document.getId());
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("Firestore", "删除记录失败: " + document.getId(), e);
-                                });
+        db.collection("users")
+                .document(currentUser.getUid())
+                .collection("history")
+                .whereEqualTo("name", incenseName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        Log.d("Firestore", "找到 " + queryDocumentSnapshots.size() + " 条同名记录，准备删除");
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            document.getReference().delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("Firestore", "成功删除记录: " + document.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "删除记录失败: " + document.getId(), e);
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "未找到同名记录，直接添加新记录");
                     }
-                } else {
-                    Log.d("Firestore", "未找到同名记录，直接添加新记录");
-                }
 
-                db.collection("users")
-                        .document(currentUser.getUid())
-                        .collection("history")
-                        .document(incenseName)
-                        .set(item)
-                        .addOnSuccessListener(aVoid -> {
-                            Log.d("TimestampDebug", "Setting timestamp for history: " + item.getTimestamp());
-                        })
-                        .addOnFailureListener(e ->
-                                Log.e("Firestore", "浏览历史添加失败", e)
-                        );
-            })
-            .addOnFailureListener(e ->
-                    Log.e("Firestore", "浏览历史检查失败", e)
-            );
-}
-
-//    private void addToFavorites() {
-//        if (currentUser == null) {
-//            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
-//
-//        db.collection("users")
-//                .document(currentUser.getUid())
-//                .collection("favorites")
-//                .document(incenseName)
-//                .set(item)
-//                .addOnSuccessListener(aVoid -> {
-//                    Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
-//                    setButtonAsFavorited();
-//                })
-//                .addOnFailureListener(e ->
-//                        Log.e("Firestore", "お気に入り保存失败", e)
-//                );
-//    }
-private void addToFavorites() {
-    if (currentUser == null) {
-        Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
-        return;
+                    db.collection("users")
+                            .document(currentUser.getUid())
+                            .collection("history")
+                            .document(incenseName)
+                            .set(item)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("TimestampDebug", "Setting timestamp for history: " + item.getTimestamp());
+                            })
+                            .addOnFailureListener(e ->
+                                    Log.e("Firestore", "浏览历史添加失败", e)
+                            );
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Firestore", "浏览历史检查失败", e)
+                );
     }
-    FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
 
-    // timestamp フィールドを設定
-    Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
-    item.setTimestamp(Timestamp.now());
-    Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+    private void addToFavorites() {
+        if (currentUser == null) {
+            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
 
-    db.collection("users")
-            .document(currentUser.getUid())
-            .collection("favorites")
-            .document(incenseName)
-            .set(item)
-            .addOnSuccessListener(aVoid -> {
-                Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
-                setButtonAsFavorited();
-            })
-            .addOnFailureListener(e ->
-                    Log.e("Firestore", "お気に入り保存失败", e)
-            );
-}
+        Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+        item.setTimestamp(Timestamp.now());
+        Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
+
+        db.collection("users")
+                .document(currentUser.getUid())
+                .collection("favorites")
+                .document(incenseName)
+                .set(item)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
+                    setButtonAsFavorited();
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Firestore", "お気に入り保存失败", e)
+                );
+    }
+
     private void checkIfFavorited() {
         if (currentUser == null) return;
 

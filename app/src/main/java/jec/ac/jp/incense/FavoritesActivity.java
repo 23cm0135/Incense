@@ -59,7 +59,7 @@ public class FavoritesActivity extends AppCompatActivity {
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("favorites")
-                .orderBy("timestamp", Query.Direction.DESCENDING) // timestamp フィールドで昇順にソート
+                .orderBy("timestamp", Query.Direction.DESCENDING) // timestamp フィールドで降順にソート
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     favoriteItems.clear();
