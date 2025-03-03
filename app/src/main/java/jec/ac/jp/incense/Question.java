@@ -7,8 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import com.google.ai.client.generativeai.type.Content;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -45,7 +44,6 @@ public class Question extends AppCompatActivity {
     private GenerativeModelFutures model; // 在类级别声明 model 变量
     private AlertDialog dialog; // メンバー変数として宣言
     private boolean isAiAnalyzing = false; // 添加一个标志来跟踪AI分析状态
-    //private AlertDialog dialog;
 
 
     @Override
@@ -133,28 +131,6 @@ public class Question extends AppCompatActivity {
                 .setPositiveButton("はい", null)
                 .show();
     }
-
-//    private void startAiAnalysis() {
-//        // 检查每个问题是否已被选择
-//        if (!isAllQuestionsAnswered()) {
-//            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
-//            return;  // 如果未回答所有问题，则返回
-//        }
-//        isAiAnalyzing = true; // 设置AI分析标志为true
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("AIが応答を生成しています...");
-//        builder.setCancelable(false); // キャンセル不可
-//
-//        if (dialog == null) {
-//            dialog = builder.create();
-//        } else {
-//            dialog.setMessage("AIが応答を生成しています...");
-//        }
-//
-//        dialog.show();
-//        // ... 其他 AI 分析相关代码 ...
-//    }
 
     private void handleButtonClick() {
         // 检查每个问题是否已被选择
@@ -422,6 +398,21 @@ public class Question extends AppCompatActivity {
         return result; // 可能为空
     }
 
+    private void passDataToIncenseListActivity(List<Incense> incenseList) {
+        // 检查已经在 handleButtonClick 中完成，这里可以直接使用
+        ArrayList<Incense> parcelableIncenseList = new ArrayList<>(incenseList);
+        ArrayList<String> urlList = new ArrayList<>();
+
+        for (Incense incense : incenseList) {
+            urlList.add(incense.getUrl());
+        }
+
+        Intent intent = new Intent(Question.this, IncenseListActivity.class);
+        intent.putParcelableArrayListExtra("incenseList", parcelableIncenseList);
+        intent.putStringArrayListExtra("urlList", urlList);
+        startActivity(intent);
+    }
+
     // 辅助方法，从 AI 响应中提取 JSON 部分
 //    private String extractJsonFromResponse(String response) {
 //        // 尝试找到响应中的 JSON 数组开始和结束位置
@@ -462,18 +453,26 @@ public class Question extends AppCompatActivity {
 //        Log.d("AI Response", "No incense found.");
 //        Toast.makeText(this, "条件に合う線香はございません", Toast.LENGTH_SHORT).show();
 //    }
-    private void passDataToIncenseListActivity(List<Incense> incenseList) {
-        // 检查已经在 handleButtonClick 中完成，这里可以直接使用
-        ArrayList<Incense> parcelableIncenseList = new ArrayList<>(incenseList);
-        ArrayList<String> urlList = new ArrayList<>();
+    //    private void startAiAnalysis() {
+//        // 检查每个问题是否已被选择
+//        if (!isAllQuestionsAnswered()) {
+//            Toast.makeText(this, "すべての質問に回答してください", Toast.LENGTH_SHORT).show();
+//            return;  // 如果未回答所有问题，则返回
+//        }
+//        isAiAnalyzing = true; // 设置AI分析标志为true
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage("AIが応答を生成しています...");
+//        builder.setCancelable(false); // キャンセル不可
+//
+//        if (dialog == null) {
+//            dialog = builder.create();
+//        } else {
+//            dialog.setMessage("AIが応答を生成しています...");
+//        }
+//
+//        dialog.show();
+//        // ... 其他 AI 分析相关代码 ...
+//    }
 
-        for (Incense incense : incenseList) {
-            urlList.add(incense.getUrl());
-        }
-
-        Intent intent = new Intent(Question.this, IncenseListActivity.class);
-        intent.putParcelableArrayListExtra("incenseList", parcelableIncenseList);
-        intent.putStringArrayListExtra("urlList", urlList);
-        startActivity(intent);
-    }
 }

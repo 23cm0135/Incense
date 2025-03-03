@@ -372,7 +372,6 @@ public class TimerActivity extends AppCompatActivity {
             Log.d("DEBUG", " checkLastMeditationStatus() -> 没有历史记录，不弹窗");
             return;
         }
-
         // 获取最近一次的冥想记录
         String lastRecordKey = null;
         long lastRecordTimestamp = 0;
@@ -387,7 +386,6 @@ public class TimerActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         if (lastRecordKey != null) {
             String lastRecord = (String) allEntries.get(lastRecordKey);
             if (lastRecord.contains("破棄")) { // 假设记录中包含“破棄”表示记录被废弃
@@ -400,7 +398,6 @@ public class TimerActivity extends AppCompatActivity {
             }
         }
     }
-
     private void showMeditationSuggestionDialog(String message) {
         if (message == null || message.isEmpty()) {
             Log.d("DEBUG", "📌 showMeditationSuggestionDialog() -> message 为空，不弹窗");
@@ -417,13 +414,11 @@ public class TimerActivity extends AppCompatActivity {
             }, 500);
         });
     }
-
     private String formatTime(long seconds) {
         long min = seconds / 60;
         long sec = seconds % 60;
         return String.format("%02d:%02d", min, sec);
     }
-
     private void stopGuidedMeditation() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();

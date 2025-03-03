@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class IncenseDetailActivity extends AppCompatActivity {
 
@@ -98,22 +99,43 @@ public class IncenseDetailActivity extends AppCompatActivity {
         if (currentUser == null) return;
 
         FavoriteItem item = new FavoriteItem(incenseName, effect, imageUrl, description, url);
-
-        // 设置 timestamp 字段
-        item.setTimestamp(Timestamp.now()); // 使用 Firestore 的 Timestamp.now() 获取当前时间戳
+        item.setTimestamp(Timestamp.now());
 
         db.collection("users")
                 .document(currentUser.getUid())
                 .collection("history")
-                .document(incenseName)
-                .set(item)
-                .addOnSuccessListener(aVoid ->
-                        // 日誌輸出
-//                        Log.d("Firestore", "浏览历史添加成功: " + incenseName)
-                        Log.d("TimestampDebug", "Setting timestamp for history: " + item.getTimestamp())
-                )
+                .whereEqualTo("name", incenseName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        Log.d("Firestore", "找到 " + queryDocumentSnapshots.size() + " 条同名记录，准备删除");
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            document.getReference().delete()
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("Firestore", "成功删除记录: " + document.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Firestore", "删除记录失败: " + document.getId(), e);
+                                    });
+                        }
+                    } else {
+                        Log.d("Firestore", "未找到同名记录，直接添加新记录");
+                    }
+
+                    db.collection("users")
+                            .document(currentUser.getUid())
+                            .collection("history")
+                            .document(incenseName)
+                            .set(item)
+                            .addOnSuccessListener(aVoid -> {
+                                Log.d("TimestampDebug", "Setting timestamp for history: " + item.getTimestamp());
+                            })
+                            .addOnFailureListener(e ->
+                                    Log.e("Firestore", "浏览历史添加失败", e)
+                            );
+                })
                 .addOnFailureListener(e ->
-                        Log.e("Firestore", "浏览历史添加失败", e)
+                        Log.e("Firestore", "浏览历史检查失败", e)
                 );
     }
 
