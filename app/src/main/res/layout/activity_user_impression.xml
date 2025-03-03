@@ -26,7 +26,6 @@
         android:hint="ここに感想を入力..."
         android:textSize="16sp"
         android:inputType="textMultiLine"
-        android:minLines="3"
         android:gravity="top"
         android:layout_marginBottom="16dp"/>
 
