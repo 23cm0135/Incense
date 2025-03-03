@@ -28,6 +28,7 @@ public class MinuteActivity extends AppCompatActivity {
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
+    private boolean isFavorited = false; // 添加一个标志来跟踪收藏状态
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,6 @@ public class MinuteActivity extends AppCompatActivity {
                     Toast.makeText(MinuteActivity.this, "ログインしてください", Toast.LENGTH_SHORT).show());
         } else {
             btnFavorite.setEnabled(true);
-            btnFavorite.setText("お気に入りに追加");
             btnSubmitImpression.setOnClickListener(v -> {
                 Intent intent = new Intent(MinuteActivity.this, UserImpression.class);
                 intent.putExtra("INCENSE_ID", incenseId);
@@ -95,7 +95,7 @@ public class MinuteActivity extends AppCompatActivity {
                 startActivity(intent);
             });
             checkIfFavorited();
-            btnFavorite.setOnClickListener(v -> addToFavorites());
+            btnFavorite.setOnClickListener(v -> toggleFavorite()); // 修改点击监听器
         }
 
         addToBrowsingHistory();
@@ -106,7 +106,6 @@ public class MinuteActivity extends AppCompatActivity {
 
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
         item.setTimestamp(Timestamp.now());
-        // 設置當前用戶 UID
         item.setUserId(currentUser.getUid());
 
         db.collection("users")
@@ -147,6 +146,33 @@ public class MinuteActivity extends AppCompatActivity {
                 );
     }
 
+    private void toggleFavorite() {
+        if (currentUser == null) {
+            Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (isFavorited) {
+            // 取消收藏
+            db.collection("users")
+                    .document(currentUser.getUid())
+                    .collection("favorites")
+                    .document(incenseName)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "お気に入りから削除しました: " + incenseName, Toast.LENGTH_SHORT).show();
+                        isFavorited = false;
+                        setButtonAsNotFavorited();
+                    })
+                    .addOnFailureListener(e ->
+                            Log.e("Firestore", "Error deleting favorite", e)
+                    );
+        } else {
+            // 添加到收藏
+            addToFavorites();
+        }
+    }
+
     private void addToFavorites() {
         if (currentUser == null) {
             Toast.makeText(this, "ログインしてください", Toast.LENGTH_SHORT).show();
@@ -154,7 +180,6 @@ public class MinuteActivity extends AppCompatActivity {
         }
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
         item.setTimestamp(Timestamp.now());
-        // 設置當前用戶 UID
         item.setUserId(currentUser.getUid());
         Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
 
@@ -165,6 +190,7 @@ public class MinuteActivity extends AppCompatActivity {
                 .set(item)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "お気に入りに追加しました: " + incenseName, Toast.LENGTH_SHORT).show();
+                    isFavorited = true;
                     setButtonAsFavorited();
                 })
                 .addOnFailureListener(e ->
@@ -182,17 +208,27 @@ public class MinuteActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+                        isFavorited = true;
                         setButtonAsFavorited();
+                    } else {
+                        isFavorited = false;
+                        setButtonAsNotFavorited();
                     }
                 })
                 .addOnFailureListener(e ->
                         Log.e("Firestore", "お気に入りチェック失败", e)
                 );
     }
-
     private void setButtonAsFavorited() {
-        btnFavorite.setEnabled(false);
+        btnFavorite.setEnabled(true); // 启用按钮，以便可以取消收藏
         btnFavorite.setText("お気に入り済み");
         btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this, android.R.color.darker_gray));
     }
+
+    private void setButtonAsNotFavorited() {
+        btnFavorite.setEnabled(true); // 启用按钮，以便可以添加到收藏
+        btnFavorite.setText("お気に入り");
+        btnFavorite.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.black)); // 或者其他适合的颜色
+    }
+
 }

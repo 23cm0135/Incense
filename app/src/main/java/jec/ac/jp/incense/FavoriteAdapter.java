@@ -17,17 +17,17 @@ import java.util.ArrayList;
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
     private ArrayList<FavoriteItem> favoriteList;
-    private OnDeleteClickListener onDeleteClickListener;
+    private OnDetailsClickListener onDetailsClickListener;
     private Context context;
 
-    public interface OnDeleteClickListener {
-        void onDeleteClick(FavoriteItem item);
+    public interface OnDetailsClickListener {
+        void onDetailsClick(FavoriteItem item);
     }
 
-    public FavoriteAdapter(Context context, ArrayList<FavoriteItem> favoriteList, OnDeleteClickListener listener) {
+    public FavoriteAdapter(Context context, ArrayList<FavoriteItem> favoriteList, OnDetailsClickListener listener) {
         this.context = context;
         this.favoriteList = favoriteList;
-        this.onDeleteClickListener = listener;
+        this.onDetailsClickListener = listener;
     }
 
     @NonNull
@@ -55,10 +55,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             holder.imageView.setImageResource(R.drawable.default_image);
         }
 
-        // 刪除按鈕事件
-        holder.deleteButton.setOnClickListener(v -> {
-            if (onDeleteClickListener != null) {
-                onDeleteClickListener.onDeleteClick(item);
+        // 详细信息按钮事件
+        holder.detailsButton.setOnClickListener(v -> {
+            if (onDetailsClickListener != null) {
+                onDetailsClickListener.onDetailsClick(item);
             }
         });
 
@@ -94,13 +94,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         ImageView imageView;
-        Button deleteButton;
+        Button detailsButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.incense_name);
             imageView = itemView.findViewById(R.id.incense_image);
-            deleteButton = itemView.findViewById(R.id.delete_button);
+            detailsButton = itemView.findViewById(R.id.delete_button); // 修改为正确的ID
         }
     }
 }
