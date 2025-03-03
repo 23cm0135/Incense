@@ -35,17 +35,14 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // 适配状态栏和刘海
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // 初始化用户名称显示
         updateUserName();
 
-        // 按钮设置
         ImageButton userButton = findViewById(R.id.btn_user);
         userButton.setOnClickListener(v -> {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
