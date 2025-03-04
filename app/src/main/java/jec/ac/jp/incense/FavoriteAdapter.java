@@ -62,17 +62,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             }
         });
 
-        // 讓用戶名稱可點擊：點擊後跳轉到收藏該香的用戶 FavoritesActivity
-        holder.nameTextView.setOnClickListener(v -> {
-            if (item.getUserId() == null || item.getUserId().isEmpty()) {
-                Toast.makeText(context, "ユーザー情報が取得できません", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent intent = new Intent(context, FavoritesActivity.class);
-                // 傳遞目標用戶ID（這裡用 "TARGET_USER_ID" 作為鍵）
-                intent.putExtra("TARGET_USER_ID", item.getUserId());
-                context.startActivity(intent);
-            }
-        });
+//        // 讓用戶名稱可點擊：點擊後跳轉到收藏該香的用戶 FavoritesActivity
+//        holder.nameTextView.setOnClickListener(v -> {
+//            if (item.getUserId() == null || item.getUserId().isEmpty()) {
+//                Toast.makeText(context, "ユーザー情報が取得できません", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Intent intent = new Intent(context, FavoritesActivity.class);
+//                // 傳遞目標用戶ID（這裡用 "TARGET_USER_ID" 作為鍵）
+//                intent.putExtra("TARGET_USER_ID", item.getUserId());
+//                context.startActivity(intent);
+//            }
+//        });
 
         // 整個項目點擊事件：跳轉到商品詳細頁面（例如 MinuteActivity）
         holder.itemView.setOnClickListener(v -> {
