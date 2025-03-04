@@ -28,7 +28,7 @@ public class MinuteActivity extends AppCompatActivity {
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db;
-    private boolean isFavorited = false; // 添加一个标志来跟踪收藏状态
+    private boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
