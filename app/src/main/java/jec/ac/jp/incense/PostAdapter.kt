@@ -33,6 +33,7 @@ class PostAdapter(private val postList: MutableList<Post>) :
             val context = view.context
             val intent = Intent(context, FavoritesActivity::class.java)
             val userId = intent.getStringExtra("USER_ID")
+            intent.putExtra("DISPLAY_NAME", post.username) // 添加 displayName
             android.util.Log.d("FavoritesActivity", "Received USER_ID: $userId") // 添加日志
             intent.putExtra("USER_ID", post.userId) // 假設 Post 中有 userId 屬性
             context.startActivity(intent)

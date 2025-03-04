@@ -180,6 +180,7 @@ public class MinuteActivity extends AppCompatActivity {
         }
         FavoriteItem item = new FavoriteItem(incenseName, "", imageUrl, text, url);
         item.setTimestamp(Timestamp.now());
+        Log.d("favorites", "tiam" + Timestamp.now());
         item.setUserId(currentUser.getUid());
         Log.d("TimestampDebug", "Setting timestamp: " + Timestamp.now());
 

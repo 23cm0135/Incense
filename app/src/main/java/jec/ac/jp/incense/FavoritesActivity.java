@@ -41,6 +41,7 @@ public class FavoritesActivity extends AppCompatActivity {
 
         // 優先從 Intent 中取得 USER_ID（例如：當從其他用戶的帖子點擊後傳入），若未提供則使用當前用戶 UID
         userId = getIntent().getStringExtra("USER_ID");
+        String displayName = getIntent().getStringExtra("DISPLAY_NAME");
         if (userId == null || userId.isEmpty()) {
             if (com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser() != null) {
                 userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -52,8 +53,7 @@ public class FavoritesActivity extends AppCompatActivity {
         }
 
         // 设置标题
-        setActivityTitle(userId);
-
+        setActivityTitle(userId, displayName); // 修改为传递 displayName
         adapter = new FavoriteAdapter(this, favoriteItems, item -> {
             showDetails(item);
         });
@@ -102,12 +102,35 @@ public class FavoritesActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void setActivityTitle(String userId) {
+    private void setActivityTitle(String userId, String displayName) {
+        Log.d("FavoritesActivity", "setActivityTitle called with userId: " + userId + ", displayName: " + displayName);
         if (userId != null && !userId.isEmpty() && !userId.equals(com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            // 如果userId不为空，并且不是当前用户的id，则设置为他人的收藏
-            favoritesTitleTextView.setText("他の人のコレクション");
+            if (displayName != null && !displayName.isEmpty()) {
+                favoritesTitleTextView.setText(displayName + "さんのコレクション");
+            } else {
+                db.collection("users").document(userId).get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            Log.d("FavoritesActivity", "Document snapshot received for userId: " + userId);
+                            if (documentSnapshot.exists()) {
+                                String username = documentSnapshot.getString("displayName"); // 修改为 displayName
+                                Log.d("FavoritesActivity", "displayName: " + username);
+                                if (username != null && !username.isEmpty()) {
+                                    favoritesTitleTextView.setText(username + "さんのコレクション");
+                                } else {
+                                    Log.d("FavoritesActivity", "displayName is null or empty");
+                                    favoritesTitleTextView.setText("他の人のコレクション");
+                                }
+                            } else {
+                                Log.d("FavoritesActivity", "Document does not exist for userId: " + userId);
+                                favoritesTitleTextView.setText("他の人のコレクション");
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FavoritesActivity", "Error getting username", e);
+                            favoritesTitleTextView.setText("他の人のコレクション");
+                        });
+            }
         } else {
-            // 否则设置为我的收藏
             favoritesTitleTextView.setText("私のコレクション");
         }
     }
