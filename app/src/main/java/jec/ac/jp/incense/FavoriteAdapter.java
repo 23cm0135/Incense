@@ -74,16 +74,16 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 //            }
 //        });
 
-        // 整個項目點擊事件：跳轉到商品詳細頁面（例如 MinuteActivity）
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MinuteActivity.class);
-            intent.putExtra("EXTRA_TEXT", item.getDescription());
-            intent.putExtra("EXTRA_IMAGE_URL", item.getImageUrl());
-            intent.putExtra("EXTRA_URL", item.getUrl());
-            intent.putExtra("INCENSE_ID", item.getName());
-            intent.putExtra("INCENSE_NAME", item.getName());
-            context.startActivity(intent);
-        });
+//        // 整個項目點擊事件：跳轉到商品詳細頁面（例如 MinuteActivity）
+//        holder.itemView.setOnClickListener(v -> {
+//            Intent intent = new Intent(context, MinuteActivity.class);
+//            intent.putExtra("EXTRA_TEXT", item.getDescription());
+//            intent.putExtra("EXTRA_IMAGE_URL", item.getImageUrl());
+//            intent.putExtra("EXTRA_URL", item.getUrl());
+//            intent.putExtra("INCENSE_ID", item.getName());
+//            intent.putExtra("INCENSE_NAME", item.getName());
+//            context.startActivity(intent);
+//        });
     }
 
     @Override
